@@ -361,7 +361,7 @@ The **LoginController** is responsible for handling user authentication. It mana
   - Calls the `Util.displayScene` method to load the `CreateAccountView.fxml` page, which is the user interface for account creation.
 
 ### Diagram:
-![Diagram](Diagrams/ClassDiagram2.png)
+![Diagram](Diagrams/ClassDiagram2.jpg)
 
 # Interaction Flow
 
@@ -563,7 +563,7 @@ The diagram follows the **Model-View-Controller (MVC)** pattern and demonstrates
 
 
 ## **Final Diagram:**
-![Diagram](Diagrams\FinalDiagram.PNG)
+![Diagram](Diagrams\FinalDiagram.jpg)
 
 This class diagram illustrates the **MVC architecture** of the BookNow system, with a clear separation between models, views, and controllers. It highlights the following key aspects:
 
