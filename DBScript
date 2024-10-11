@@ -1,0 +1,91 @@
+DROP DATABASE IF EXISTS booknow;
+CREATE DATABASE booknow;
+USE booknow;
+
+-- Create users table
+CREATE TABLE users (
+    user_id INT PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    password VARCHAR(50) NOT NULL
+);
+
+-- Create restaurants table without max_guests
+CREATE TABLE restaurants (
+    restaurant_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    city VARCHAR(255) NOT NULL,
+    cuisine_type VARCHAR(50) NOT NULL,
+    description TEXT NOT NULL,
+    menu_pdf VARCHAR(255),
+    image_path VARCHAR(255)
+);
+
+-- Minneapolis
+INSERT INTO restaurants (name, city, cuisine_type, description, menu_pdf, image_path)
+VALUES
+    ('Quick Bite', 'Minneapolis', 'Fast Food', 'Serving fast, delicious food with a variety of quick meal options for people on the go.', 'fastfood_menu.pdf', 'images/fastfood1.png'),
+    ('Speedy Snacks', 'Minneapolis', 'Fast Food', 'A variety of delicious, affordable, and fast meals for those in a hurry.', 'fastfood_menu.pdf', 'images/fastfood2.png'),
+    ('Charcoal Flame', 'Minneapolis', 'BBQ', 'Experience perfectly grilled meats and smoky flavors from the finest barbeque in town.', 'bbq_menu.pdf', 'images/bbq1.png'),
+    ('Smoky Pit', 'Minneapolis', 'BBQ', 'Slow-cooked BBQ meats, tender and full of flavor with a homemade touch.', 'bbq_menu.pdf', 'images/bbq2.png'),
+    ('Green Plate', 'Minneapolis', 'Vegan', 'Offering a fresh and healthy variety of plant-based dishes that cater to all tastes.', 'vegan_menu.pdf', 'images/vegan1.png'),
+    ('Vibrant Earth', 'Minneapolis', 'Vegan', 'Creative, healthy vegan meals that burst with flavor and nutrition.', 'vegan_menu.pdf', 'images/vegan2.png'),
+    ('Urban Slice', 'Minneapolis', 'Pizza', 'Authentic, stone-baked pizza with a variety of classic and creative toppings.', 'pizza_menu.pdf', 'images/pizza1.png'),
+    ('Pizza Point', 'Minneapolis', 'Pizza', 'Serving fresh, hand-tossed pizzas made with the finest ingredients.', 'pizza_menu.pdf', 'images/pizza2.png'),
+    ('Fiesta Mexicana', 'Minneapolis', 'Mexican', 'Traditional Mexican tacos, burritos, and street food made with fresh ingredients.', 'mexican_menu.pdf', 'images/mexican1.png'),
+    ('Casa de Tacos', 'Minneapolis', 'Mexican', 'Authentic Mexican street food with bold flavors and fresh ingredients.', 'mexican_menu.pdf', 'images/mexican2.png');
+
+-- Saint Paul
+INSERT INTO restaurants (name, city, cuisine_type, description, menu_pdf, image_path)
+VALUES
+    ('Burger Haven', 'Saint Paul', 'Fast Food', 'Juicy burgers with a range of toppings, served with crispy fries and classic milkshakes.', 'fastfood_menu.pdf', 'images/fastfood1.png'),
+    ('Snack Shack', 'Saint Paul', 'Fast Food', 'A variety of fast, mouthwatering snacks and meals.', 'fastfood_menu.pdf', 'images/fastfood2.png'),
+    ('Dragon Fire', 'Saint Paul', 'BBQ', 'Traditional Chinese meals with bold flavors, including dim sum, noodles, and stir-fry.', 'bbq_menu.pdf', 'images/bbq1.png'),
+    ('Grill Master', 'Saint Paul', 'BBQ', 'Slow-cooked BBQ dishes with tender meats and savory sauces.', 'bbq_menu.pdf', 'images/bbq2.png'),
+    ('Spice Trail', 'Saint Paul', 'Vegan', 'A journey through India’s culinary regions with flavorful curries, tandoori, and naan.', 'vegan_menu.pdf', 'images/vegan1.png'),
+    ('Earthy Delights', 'Saint Paul', 'Vegan', 'Delicious plant-based meals made from the freshest ingredients.', 'vegan_menu.pdf', 'images/vegan2.png'),
+    ('Bella Italia', 'Saint Paul', 'Pizza', 'Authentic Italian dishes made from family recipes, including handmade pasta and sauces.', 'pizza_menu.pdf', 'images/pizza1.png'),
+    ('Slice King', 'Saint Paul', 'Pizza', 'Serving gourmet pizzas with a variety of toppings and sauces.', 'pizza_menu.pdf', 'images/pizza2.png'),
+    ('Neptune’s Catch', 'Saint Paul', 'Mexican', 'Freshly sourced seafood platters, including lobster, shrimp, and oysters.', 'mexican_menu.pdf', 'images/mexican1.png'),
+    ('El Sombrero', 'Saint Paul', 'Mexican', 'Tasty Mexican dishes with a vibrant, family-friendly atmosphere.', 'mexican_menu.pdf', 'images/mexican2.png');
+
+-- Brooklyn Park
+INSERT INTO restaurants (name, city, cuisine_type, description, menu_pdf, image_path)
+VALUES
+    ('Burger Express', 'Brooklyn Park', 'Fast Food', 'Classic fast food with a modern twist, offering a variety of quick bites.', 'fastfood_menu.pdf', 'images/fastfood1.png'),
+    ('Snack Stop', 'Brooklyn Park', 'Fast Food', 'Serving quick and delicious meals for on-the-go customers.', 'fastfood_menu.pdf', 'images/fastfood2.png'),
+    ('Grill Nation', 'Brooklyn Park', 'BBQ', 'Unlimited BBQ with bold flavors, including ribs, brisket, and smoked sausages.', 'bbq_menu.pdf', 'images/bbq1.png'),
+    ('Smoky Shack', 'Brooklyn Park', 'BBQ', 'Sizzling BBQ dishes cooked to perfection.', 'bbq_menu.pdf', 'images/bbq2.png'),
+    ('Sakura Sushi', 'Brooklyn Park', 'Vegan', 'Fresh and flavorful vegan sushi rolls and traditional Japanese dishes.', 'vegan_menu.pdf', 'images/vegan1.png'),
+    ('Vital Veggie', 'Brooklyn Park', 'Vegan', 'Fresh, vibrant, plant-based meals made with care.', 'vegan_menu.pdf', 'images/vegan2.png'),
+    ('Pizza Paradise', 'Brooklyn Park', 'Pizza', 'Stone-baked pizza with a variety of classic toppings and gourmet options.', 'pizza_menu.pdf', 'images/pizza1.png'),
+    ('Slice Corner', 'Brooklyn Park', 'Pizza', 'Delicious hand-tossed pizzas with a wide variety of toppings.', 'pizza_menu.pdf', 'images/pizza2.png'),
+    ('Casa Mexicana', 'Brooklyn Park', 'Mexican', 'A colorful and vibrant atmosphere serving delicious Mexican food.', 'mexican_menu.pdf', 'images/mexican1.png'),
+    ('Taco Fiesta', 'Brooklyn Park', 'Mexican', 'A variety of authentic Mexican street food, including tacos and burritos.', 'mexican_menu.pdf', 'images/mexican2.png');
+
+-- Maple Grove
+INSERT INTO restaurants (name, city, cuisine_type, description, menu_pdf, image_path)
+VALUES
+    ('Burger Block', 'Maple Grove', 'Fast Food', 'Delicious burgers with all the fixings, served with crispy sides and house-made sauces.', 'fastfood_menu.pdf', 'images/fastfood1.png'),
+    ('Fast Feast', 'Maple Grove', 'Fast Food', 'Affordable and quick meals with great flavor.', 'fastfood_menu.pdf', 'images/fastfood2.png'),
+    ('Grove Grill', 'Maple Grove', 'BBQ', 'Grilled dishes including juicy steaks, chicken, and vegetables, prepared with care.', 'bbq_menu.pdf', 'images/bbq1.png'),
+    ('Smokin’ Barbecue', 'Maple Grove', 'BBQ', 'Hearty, flavorful BBQ with a wide range of meats and sauces.', 'bbq_menu.pdf', 'images/bbq2.png'),
+    ('Vital Bowls', 'Maple Grove', 'Vegan', 'A health-conscious menu of fresh salads, bowls, and smoothies for a balanced diet.', 'vegan_menu.pdf', 'images/vegan1.png'),
+    ('Green Eats', 'Maple Grove', 'Vegan', 'Delicious vegan dishes packed with nutrition and flavor.', 'vegan_menu.pdf', 'images/vegan2.png'),
+    ('Steak Spot', 'Maple Grove', 'Pizza', 'A top-tier steakhouse offering premium cuts of beef, cooked to your preference.', 'pizza_menu.pdf', 'images/pizza1.png'),
+    ('Pizza Hub', 'Maple Grove', 'Pizza', 'Gourmet pizza dishes with a selection of fresh toppings.', 'pizza_menu.pdf', 'images/pizza2.png'),
+    ('Taco Corner', 'Maple Grove', 'Mexican', 'A cozy place to enjoy classic Mexican dishes with a modern twist.', 'mexican_menu.pdf', 'images/mexican1.png'),
+    ('Burrito Bros', 'Maple Grove', 'Mexican', 'Classic Mexican burritos made with fresh, flavorful ingredients.', 'mexican_menu.pdf', 'images/mexican2.png');
+
+-- Bloomington
+INSERT INTO restaurants (name, city, cuisine_type, description, menu_pdf, image_path)
+VALUES
+    ('Burger Zone', 'Bloomington', 'Fast Food', 'Fast food with a focus on flavor, offering tasty meals for everyone.', 'fastfood_menu.pdf', 'images/fastfood1.png'),
+    ('Fries N\'Burgers', 'Bloomington', 'Fast Food', 'Delicious fast food burgers, fries, and shakes in a casual setting.', 'fastfood_menu.pdf', 'images/fastfood2.png'),
+    ('The Grill Room', 'Bloomington', 'BBQ', 'Slow-smoked BBQ meats served with a variety of house-made sides.', 'bbq_menu.pdf', 'images/bbq1.png'),
+    ('Smokehouse BBQ', 'Bloomington', 'BBQ', 'Classic BBQ with bold flavors and a focus on high-quality meats.', 'bbq_menu.pdf', 'images/bbq2.png'),
+    ('Plant Feast', 'Bloomington', 'Vegan', 'A creative menu of plant-based meals that are both healthy and delicious.', 'vegan_menu.pdf', 'images/vegan1.png'),
+    ('Earthy Eats', 'Bloomington', 'Vegan', 'Sustainable, plant-based dishes made from local ingredients.', 'vegan_menu.pdf', 'images/vegan2.png'),
+    ('Slice Station', 'Bloomington', 'Pizza', 'Handmade pizza with a wide variety of toppings.', 'pizza_menu.pdf', 'images/pizza1.png'),
+    ('Pizza Place', 'Bloomington', 'Pizza', 'Freshly made pizzas served with a choice of traditional and creative toppings.', 'pizza_menu.pdf', 'images/pizza2.png'),
+    ('Cantina Mexicana', 'Bloomington', 'Mexican', 'Bold Mexican flavors with fresh ingredients.', 'mexican_menu.pdf', 'images/mexican1.png'),
+    ('Taco Town', 'Bloomington', 'Mexican', 'Delicious tacos and burritos with authentic Mexican taste.', 'mexican_menu.pdf', 'images/mexican2.png');

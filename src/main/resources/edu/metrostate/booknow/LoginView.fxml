@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="600.0" prefWidth="1200.0" style="-fx-background-color: #f0f2f5;"
+            xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="edu.metrostate.booknow.Controllers.LoginController">
+    <children>
+        <HBox fillHeight="true" spacing="20" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+              AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+                <VBox alignment="CENTER" HBox.hgrow="ALWAYS" prefWidth="800.0">
+                    <children>
+                        <Text fx:id="titleText" fill="#1877f2" text="BookNow" wrappingWidth="800"
+                              textAlignment="CENTER">
+                            <font>
+                                <Font name="System Bold" size="96"/>
+                            </font>
+                        </Text>
+                        <Text fx:id="subTitleText" strokeWidth="0.0"
+                              text="Discover and reserve tables at the best restaurants."
+                              wrappingWidth="800" textAlignment="CENTER">
+                            <font>
+                                <Font size="24"/>
+                            </font>
+                        </Text>
+                    </children>
+                </VBox>
+                <VBox alignment="CENTER" fillWidth="true"
+                      style="-fx-background-color: white; -fx-padding: 30; -fx-spacing: 10;"
+                      HBox.hgrow="ALWAYS">
+                    <children>
+                        <TextField fx:id="tf_Username" promptText="Username"
+                                   style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);"
+                                   VBox.vgrow="ALWAYS" maxWidth="Infinity">
+                            <font>
+                                <Font size="14.0"/>
+                            </font>
+                        </TextField>
+                        <PasswordField fx:id="pf_Password" promptText="Password"
+                                       style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);"
+                                       VBox.vgrow="ALWAYS" maxWidth="Infinity">
+                            <font>
+                                <Font size="14.0"/>
+                            </font>
+                        </PasswordField>
+                        <!-- Wrap the Log in Button inside an HBox to allow stretching -->
+                        <HBox>
+                            <Button defaultButton="true" onAction="#onLoginButtonAction" prefHeight="35.0"
+                                    style="-fx-background-color: #1877f2; -fx-text-fill: white; -fx-background-radius: 20; -fx-border-radius: 20;"
+                                    text="Login" maxWidth="Infinity" HBox.hgrow="ALWAYS">
+                                <font>
+                                    <Font name="System Bold" size="14.0"/>
+                                </font>
+                            </Button>
+                        </HBox>
+                        <Text fill="#1877f2" strokeType="OUTSIDE" text="Forgot Password?"/>
+                        <!-- Wrap the Create New Account Button inside an HBox to allow stretching -->
+                        <HBox>
+                            <Button onAction="#onCreateAccountButtonAction" prefHeight="35.0"
+                                    style="-fx-background-color: #42b72a; -fx-text-fill: white; -fx-background-radius: 20; -fx-border-radius: 20;"
+                                    text="Create New Account" maxWidth="Infinity" HBox.hgrow="ALWAYS">
+                                <font>
+                                    <Font name="System Bold" size="14.0"/>
+                                </font>
+                            </Button>
+                        </HBox>
+                        <Text strokeType="OUTSIDE" text="Create a Page for a restaurant, brand, or business."/>
+
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
+    </children>
+</AnchorPane>
