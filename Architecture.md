@@ -8,7 +8,7 @@ This is a high-level overview of the attributes, constructors, and methods for e
 implementing the actual logic. Adjustments, additions, or removals will be made during development, depending on real-world use cases and business logic. The goal 
 here is to establish the structural framework, while detailed implementation will evolve as the project progresses. If for any reason you were cross checking and happen to see that the code
 is different from what's on here that means a changed happened and have not been updated to architecture.md. 
-
+If Diagram doesn't show on github no idea. Tried trouble shooting can't fix. Working fine on intellij. Look in Diagrams folder for Diagrams.
 
 ## **Entities:**
 
