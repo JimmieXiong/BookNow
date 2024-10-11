@@ -1,7 +1,7 @@
 # Requirements
 
 ## Use Case Diagram
-![Diagrams](Diagrams/usecasediagram.png)
+![Diagrams](Diagrams/usecasediagram.jpg)
 
 ## Non-Functional Requirements
 
