@@ -563,7 +563,7 @@ The diagram follows the **Model-View-Controller (MVC)** pattern and demonstrates
 
 
 ## **Final Diagram:**
-![Diagram](Diagrams/FinalDiagram.png)
+![Diagram](Diagrams\FinalDiagram.PNG)
 
 This class diagram illustrates the **MVC architecture** of the BookNow system, with a clear separation between models, views, and controllers. It highlights the following key aspects:
 
