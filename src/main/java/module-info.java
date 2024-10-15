@@ -1,4 +1,4 @@
-module edu.metrostate.booknow.booknow {
+module edu.metrostate.booknow {
     requires javafx.controls;
     requires javafx.fxml;
     requires java.sql;

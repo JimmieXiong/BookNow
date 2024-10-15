@@ -7,7 +7,9 @@
 #### 1. Switch to JavaFX 21 and Java 21 (if needed):
 - Ensure you have **JavaFX 21** installed.
 - Update to **Java 21** if required to ensure compatibility with the project environment.
-- You might need to manually add javafx 21.0.4 lib if so download, will have to add VM options in edit configurations and fill out the necessary 
+- You might need to manually add javafx 21.0.4 lib if so download it. If 21.0.4 is no longer available I believe any version of 21 will work (correct me if im wrong), 
+will have to add VM options in edit configurations and fill out the necessary 
+- Vm option ex: --module-path C:\Javafx21.0.4\javafx-sdk-21.0.4\lib --add-modules javafx.controls,javafx.fxml
 
 #### 2. Set Up MySQL Workbench:
 - Download and install **MySQL-8.4.2**, and **MySQL Workbench**. 
@@ -29,6 +31,7 @@
 - Future updates will include an executable JAR file, eliminating the need for manually building the program. However, database setup will still be required.
 - The feature called **Manual Restaurant Data Management** involves managing restaurant data using an SQL script. Once all related functionality—such as adding, updating, and 
 retrieving restaurant information—has been fully implemented, this feature will be considered complete.
+- If you encounter an error related to some configurations, it may be due to settings specific to my environment that i'm not aware of. You will need to manually adjust these settings. If you happen to find any please let me know.
 
 ---
 

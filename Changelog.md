@@ -1,5 +1,9 @@
 # ChangeLog
 
+## [1.0.5] - 10/15/24 - Jimmie Xiong
+- Fixed an issue in module-info.java where the .booknow module was incorrectly pointing to edu.metrostate.booknow.booknow instead of edu.metrostate.booknow
+- Added notes about implementation errors in implementation.md
+
 ## [1.0.4] - 10/10/24 - Jimmie Xiong
 - Updated `Architecture.md`.
 - Added final touches to milestone 3 deliverables.
@@ -26,7 +30,6 @@
 - Implemented `DBConnection` logic
 - Added `Util` class.
 - Updated models for enhanced functionality.
-
 ## [1.0.1] - 09/29/24 - Jimmie Xiong
 ### Added
 - Implemented the `displayRestaurantDetails(Restaurant restaurant)` method in `BookNowController` for displaying detailed information about selected restaurants.
