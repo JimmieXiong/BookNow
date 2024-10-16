@@ -27,14 +27,20 @@ will have to add VM options in edit configurations and fill out the necessary
 ### Issues and Future Enhancements
 
 - Any issues encountered during setup should be addressed. MacOS users may face errors that require manual troubleshooting, while the setup has been tested and works fine on Windows.
-- If mac gives an error, related so mac internal when building then create a virtual windows machine or linux and run code from there. 
+- If mac gives an error, related so mac internal when building then create a virtual windows machine and run code from there. 
 - Future updates will include an executable JAR file, eliminating the need for manually building the program. However, database setup will still be required.
 - The feature called **Manual Restaurant Data Management** involves managing restaurant data using an SQL script. Once all related functionality—such as adding, updating, and 
 retrieving restaurant information—has been fully implemented, this feature will be considered complete.
 - If you encounter an error related to some configurations, it may be due to settings specific to my environment that i'm not aware of. You will need to manually adjust these settings. If you happen to find any please let me know.
 
----
+### Faced Issues
+- Tried setting up project, DB, etc. on a linux environment and proven to be unnecessarily complex because it involves multiple manual configurations, including installing IntelliJ IDEA, setting up JavaFX, and configuring the database. These steps, especially in the terminal, difficult and 
+time-consuming. The BookNow database is configured to run locally at 127.0.0.1:3306, which means the project depends on the database being set up on the same machine where the project is running. Since the project is tightly coupled with this locally hosted database, running the project 
+without manually setting up the database makes it non-functional. Due to the local database dependency, the previously defined non-functional requirement for 'portability' no longer makes sense. Portability refers to the ability 
+to easily move the application between different environments, but since the project requires a local database configuration for each environment, it lacks true portability.  If the database were hosted online or on a remote server, the setup would be much simpler and more flexible across different environments. We will remove 'portability' as 
+a non-functional requirement and replace it with a more relevant requirement, such as 'Maintainability' this new focus will ensure that the system is easy to maintain, with clear documentation and an understandable system structure, making future updates and fixes simpler to implement.
 
+---
 ### Error Handling (Work in Progress)
 
 - Several areas of the application still require better error handling. If you prefer strict error checks, note that this aspect is currently under development.

@@ -11,11 +11,12 @@
     1. Implement database indexing.
     2. Optimize SQL queries to speed up the search for restaurants based on location, cuisine type, and other filters.
 
-### Portability
-- **Explanation**: The application should be able to run on different operating systems (Windows, macOS, Linux) without needing significant changes to the codebase.
+### Maintainability
+- **Explanation**: The system should be easy to maintain and update, with clear documentation, modular design, and an understandable code structure. This will allow future developers or maintainers to easily comprehend the system and make necessary changes or improvements without significant difficulty.
 - **Implementation**:
-    1. Leverage Java's "write once, run anywhere" (WORA).
-    2. Build the application into an executable JAR to be easily executed on any system with the Java Runtime Environment (JRE) installed.
+  1. Ensure the project is well-documented, with clear explanations of how the code works, setup instructions, and how to modify or extend the system.
+  3. Use standard coding practices, including meaningful naming conventions and appropriate commenting, to improve readability and long-term maintainability.
+  4. Regularly review and refactor the code to remove technical debt and ensure consistency across the codebase.
 
 ### Usability
 - **Explanation**: The interface will be intuitive and user-friendly, enabling users to quickly navigate the application.

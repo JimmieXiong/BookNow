@@ -1,5 +1,10 @@
 # ChangeLog
 
+## [1.0.6] - 10/15/25 - Jimmie Xiong
+- Replaced **Portability** non-functional requirement with **Maintainability**.
+- The project relies on a locally hosted database, which makes it non-portable between different environments without manual configuration. This 
+dependency rendered the portability requirement irrelevant.
+- updated 
 ## [1.0.5] - 10/15/24 - Jimmie Xiong
 - Fixed an issue in module-info.java where the .booknow module was incorrectly pointing to edu.metrostate.booknow.booknow instead of edu.metrostate.booknow
 - Added notes about implementation errors in implementation.md
