@@ -1,17 +1,20 @@
+-- Drop the existing database if it exists
 DROP DATABASE IF EXISTS booknow;
+
+-- Create a new database
 CREATE DATABASE booknow;
 USE booknow;
 
--- Create users table
+-- Create users table for storing account data
 CREATE TABLE users (
     user_id INT PRIMARY KEY AUTO_INCREMENT,
     username VARCHAR(50) UNIQUE NOT NULL,
-    password VARCHAR(50) NOT NULL
+    password VARCHAR(255) NOT NULL  -- Store password as VARCHAR(255) in case you want to hash them
 );
 
--- Create restaurants table without max_guests
+-- Create restaurants table for storing restaurant information
 CREATE TABLE restaurants (
-    restaurant_id INT AUTO_INCREMENT PRIMARY KEY,
+    restaurant_id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL,
     city VARCHAR(255) NOT NULL,
     cuisine_type VARCHAR(50) NOT NULL,
@@ -19,6 +22,18 @@ CREATE TABLE restaurants (
     menu_pdf VARCHAR(255),
     image_path VARCHAR(255)
 );
+
+-- Create reservations table for storing restaurant availability
+CREATE TABLE reservations (
+    reservation_id INT PRIMARY KEY AUTO_INCREMENT,
+    restaurant_id INT NOT NULL,
+    reservation_date DATE NOT NULL,
+    CONSTRAINT fk_restaurant
+        FOREIGN KEY (restaurant_id) REFERENCES restaurants(restaurant_id)
+        ON DELETE CASCADE
+);
+
+-- Insert restaurant data
 
 -- Minneapolis
 INSERT INTO restaurants (name, city, cuisine_type, description, menu_pdf, image_path)
@@ -89,3 +104,61 @@ VALUES
     ('Pizza Place', 'Bloomington', 'Pizza', 'Freshly made pizzas served with a choice of traditional and creative toppings.', 'pizza_menu.pdf', 'images/pizza2.png'),
     ('Cantina Mexicana', 'Bloomington', 'Mexican', 'Bold Mexican flavors with fresh ingredients.', 'mexican_menu.pdf', 'images/mexican1.png'),
     ('Taco Town', 'Bloomington', 'Mexican', 'Delicious tacos and burritos with authentic Mexican taste.', 'mexican_menu.pdf', 'images/mexican2.png');
+
+-- Insert reservation data
+
+-- Minneapolis Reservations
+INSERT INTO reservations (restaurant_id, reservation_date)
+VALUES
+    (1, '2024-11-01'),
+    (2, '2024-11-02'),
+    (3, '2024-11-03'),
+    (4, '2024-11-01'),
+    (5, '2024-11-01'),
+    (6, '2024-11-02'),
+    (7, '2024-11-03'),
+    (8, '2024-11-01'),
+    (9, '2024-11-01'),
+    (10, '2024-11-02');
+
+-- Saint Paul Reservations
+INSERT INTO reservations (restaurant_id, reservation_date)
+VALUES
+    (11, '2024-11-01'),
+    (12, '2024-11-02'),
+    (13, '2024-11-03'),
+    (14, '2024-11-04'),
+    (15, '2024-11-05'),
+    (16, '2024-11-01'),
+    (17, '2024-11-02'),
+    (18, '2024-11-01'),
+    (19, '2024-11-02'),
+    (20, '2024-11-03');
+
+-- Maple Grove Reservations
+INSERT INTO reservations (restaurant_id, reservation_date)
+VALUES
+    (21, '2024-11-01'),
+    (22, '2024-11-02'),
+    (23, '2024-11-03'),
+    (24, '2024-11-04'),
+    (25, '2024-11-05'),
+    (26, '2024-11-01'),
+    (27, '2024-11-02'),
+    (28, '2024-11-01'),
+    (29, '2024-11-02'),
+    (30, '2024-11-03');
+
+-- Bloomington Reservations
+INSERT INTO reservations (restaurant_id, reservation_date)
+VALUES
+    (31, '2024-11-01'),
+    (32, '2024-11-02'),
+    (33, '2024-11-03'),
+    (34, '2024-11-04'),
+    (35, '2024-11-05'),
+    (36, '2024-11-01'),
+    (37, '2024-11-02'),
+    (38, '2024-11-01'),
+    (39, '2024-11-02'),
+    (40, '2024-11-03');

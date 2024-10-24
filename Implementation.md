@@ -52,44 +52,48 @@ a non-functional requirement and replace it with a more relevant requirement, su
 
 ### User Authentication
 
-This feature enables users to create new accounts and log in to the system.
+This feature allows users to create new accounts and log in to the system using a unique username and password.
 
 #### Implementation:
-- Users can create an account with a unique username and password.
-- Upon successful login with valid credentials, the user is directed to the main page.
-- Basic error handling for incorrect credentials and duplicate usernames has been implemented.
-- Further validation checks (e.g., password length) will be added soon.
+- Users can create an account with a unique username and password through the `CreateNewAccountController`.
+  - Input validation ensures that the username is at least 8 characters long, and the password is validated for length and matching confirmation.
+- The `LoginController` manages the login process, ensuring that both fields (username and password) are filled before verifying the credentials through `UserServices`.
+- Upon successful login, the user is redirected to the **BookNowView** (main page).
+- Error handling for incorrect credentials and existing usernames is implemented, providing specific alerts via `AlertUtil`.
+- Password validation includes checks for empty fields, matching passwords, and password length (at least 8 characters).
+- A logout feature is not yet implemented but is planned for future updates.
 
 #### Testing:
-1. Create a new account by entering a unique username, a password, and confirming the password.
-2. Log in using the valid credentials, which should take you to the **BookNow Dashboard**.
+1. Create a new account by entering a unique username, password, and confirming the password.
+  - Ensure that the username is at least 8 characters long, and the passwords match.
+2. Log in using valid credentials, which should redirect you to the **BookNowView**.
 3. Attempt to log in with incorrect credentials to trigger an error message.
-  - A logout button will be implemented soon to avoid restarting the program after each session.
+  - Verify that appropriate validation messages are displayed for missing or invalid inputs.
 
 ---
 
 ### Search Restaurants
 
-This feature enables users to search for restaurants based on criteria such as location, cuisine type, date, and number of guests.
+This feature allows users to search for restaurants based on location, cuisine type, date, and number of guests.
 
 #### Implementation:
-- Users can filter restaurants by location, cuisine type, date, and number of guests (adults/children).
-- Matching restaurants based on the selected filters will be fetched and displayed.
+- The `BookNowController` handles restaurant search functionality.
+  - Users can filter restaurants by **location** and **cuisine type** using dropdown menus populated by `RestaurantServices`.
+  - The user must select a **date** from the date picker, and validation ensures that the selected date is not in the past. Any invalid date selection triggers an error message using `AlertUtil`.
+  - Users can specify the number of **guests** (adults and children) through dropdowns, which are populated using `IntStream`.
+- Upon clicking the "Search" button, the search criteria are validated using `RestaurantServices.isSearchCriteriaValid()`, and matching restaurants are fetched from the database via `RestaurantServices.findAvailableRestaurants()`.
+- The matching restaurants are dynamically displayed in the **BookNowView** using JavaFX `VBox` components.
 
 #### Testing:
 1. Select a **location** and **cuisine type** from the dropdown menus.
-2. Choose a **date**. Note that the selected date cannot be older than the current local date, and selecting an invalid date will trigger an error message.
-3. Specify the **number of guests** (adults and children).
+2. Choose a **date** from the date picker. Ensure that selecting a past date triggers an error.
+3. Specify the number of **guests** (adults and children) using the dropdowns.
 4. Click the "Search" button and verify that matching restaurants are displayed.
+  - Ensure that no restaurants are displayed if no matches are found, and an appropriate message is shown.
+  - Test validation for missing or invalid input (e.g., no location or date selected).
 
-## Note
-- You'll only see the Restaurant Name, location and a brief description. 
-- Adding pictures, menus, reviews, etc will be implemented soon. 
-
+#### Note:
+- Advanced filtering based on the number of guests (e.g., checking table availability for a specific number of guests) is not yet implemented.
+- This feature will be added in the upcoming implementation of the **Restaurant Detail Page** and **Reservation** system, where the total number of guests will be cross-checked against the restaurant's available capacity.
+- Aside from this, the search functionality is fully operational.
 ---
-
-### Upcoming Features
-
-- **Restaurant Details & Reviews**: Features to display detailed restaurant information, images, and customer reviews will be implemented soon.
-- **Max Number of Guests**: The dropdowns for selecting the number of adults and children are currently placeholders. These will be functional soon, with proper validation for guest selection.
-- Additional features and improvements will follow in the next milestone.

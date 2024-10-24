@@ -13,19 +13,19 @@
               AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
                 <!-- Left section for BookNow title and subtitle -->
-                <VBox alignment="CENTER" HBox.hgrow="ALWAYS" prefWidth="800.0" spacing="10">
+                <VBox alignment="CENTER" HBox.hgrow="ALWAYS" prefWidth="800.0">
                     <children>
                         <Text fx:id="titleText" fill="#1877f2" text="BookNow" wrappingWidth="800"
                               textAlignment="CENTER">
                             <font>
-                                <Font name="System Bold" size="96.0"/>
+                                <Font name="System Bold" size="96"/>
                             </font>
                         </Text>
                         <Text fx:id="subTitleText" strokeWidth="0.0"
-                              text="Create an account to reserve tables at the best restaurants."
+                              text="Discover and reserve tables at the best restaurants."
                               wrappingWidth="800" textAlignment="CENTER">
                             <font>
-                                <Font size="24.0"/>
+                                <Font size="24"/>
                             </font>
                         </Text>
                     </children>
@@ -36,52 +36,54 @@
                       style="-fx-background-color: white; -fx-padding: 30; -fx-spacing: 10;"
                       HBox.hgrow="ALWAYS">
                     <children>
-                        <!-- Username TextField -->
-                        <TextField fx:id="tf_Username" promptText="Username"
+                        <TextField fx:id="usernameField" promptText="Username"
                                    style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);"
-                                   VBox.vgrow="ALWAYS">
+                                   VBox.vgrow="ALWAYS" maxWidth="Infinity">
                             <font>
                                 <Font size="14.0"/>
                             </font>
                         </TextField>
 
-                        <!-- Password TextField -->
-                        <PasswordField fx:id="pf_Password" promptText="Password"
+                        <PasswordField fx:id="passwordField" promptText="Password"
                                        style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);"
-                                       VBox.vgrow="ALWAYS">
+                                       VBox.vgrow="ALWAYS" maxWidth="Infinity">
                             <font>
                                 <Font size="14.0"/>
                             </font>
                         </PasswordField>
 
                         <!-- Confirm Password TextField -->
-                        <PasswordField fx:id="pf_ConfirmPassword" promptText="Confirm Password"
+                        <PasswordField fx:id="confirmPasswordField" promptText="Confirm Password"
                                        style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);"
-                                       VBox.vgrow="ALWAYS">
+                                       VBox.vgrow="ALWAYS" maxWidth="Infinity">
                             <font>
                                 <Font size="14.0"/>
                             </font>
                         </PasswordField>
 
-                        <!-- Create New Account Button -->
-                        <Button onAction="#onCreateAccountButtonAction"
-                                style="-fx-background-color: #42b72a; -fx-text-fill: white; -fx-background-radius: 20; -fx-border-radius: 20;"
-                                text="Create New Account" VBox.vgrow="ALWAYS" maxWidth="Infinity">
-                            <font>
-                                <Font name="System Bold" size="14.0"/>
-                            </font>
-                        </Button>
+                        <!-- Wrap the Create Account Button inside an HBox to allow stretching -->
+                        <HBox>
+                            <Button onAction="#onCreateAccountButton" prefHeight="35.0"
+                                    style="-fx-background-color: #42b72a; -fx-text-fill: white; -fx-background-radius: 20; -fx-border-radius: 20;"
+                                    text="Create Account" maxWidth="Infinity" HBox.hgrow="ALWAYS">
+                                <font>
+                                    <Font name="System Bold" size="14.0"/>
+                                </font>
+                            </Button>
+                        </HBox>
 
-                        <!-- Text and Log in Button -->
                         <Text text="Already have an account?" VBox.vgrow="NEVER"/>
 
-                        <Button onAction="#onButton_Login"
-                                style="-fx-background-color: #1877f2; -fx-text-fill: white; -fx-background-radius: 20; -fx-border-radius: 20;"
-                                text="Log in" VBox.vgrow="ALWAYS" maxWidth="Infinity">
-                            <font>
-                                <Font name="System Bold" size="14.0"/>
-                            </font>
-                        </Button>
+                        <!-- Wrap the Log in Button inside an HBox to allow stretching -->
+                        <HBox>
+                            <Button onAction="#onLoginButton" prefHeight="35.0"
+                                    style="-fx-background-color: #1877f2; -fx-text-fill: white; -fx-background-radius: 20; -fx-border-radius: 20;"
+                                    text="Log in" maxWidth="Infinity" HBox.hgrow="ALWAYS">
+                                <font>
+                                    <Font name="System Bold" size="14.0"/>
+                                </font>
+                            </Button>
+                        </HBox>
                     </children>
                 </VBox>
             </children>

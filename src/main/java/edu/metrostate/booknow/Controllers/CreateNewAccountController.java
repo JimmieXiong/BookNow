@@ -1,77 +1,63 @@
 package edu.metrostate.booknow.Controllers;
 
-import edu.metrostate.booknow.DBConnection;
-import edu.metrostate.booknow.Util;
+import edu.metrostate.booknow.Services.UserServices;
+import edu.metrostate.booknow.Utils.AlertUtil;
+import edu.metrostate.booknow.Utils.SwitchSceneUtil;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Alert;
 
 import java.io.IOException;
 import java.sql.SQLException;
 
+/**
+ * Controller class for handling the creation of new user accounts.
+ */
+
 public class CreateNewAccountController {
-
     @FXML
-    private TextField tf_Username;
-
+    private TextField usernameField;
     @FXML
-    private PasswordField pf_Password;
-
+    private PasswordField passwordField;
     @FXML
-    private PasswordField pf_ConfirmPassword;
+    private PasswordField confirmPasswordField;
 
-    private DBConnection dbHandler;
+    private final UserServices userService;
+    private static final String loginViewPath = "/edu/metrostate/booknow/LoginView.fxml";
 
     public CreateNewAccountController() {
-        System.out.println("CreateNewAccountController Constructor Called");
-        dbHandler = new DBConnection();
+        this.userService = new UserServices();
     }
 
-    // Handles the Create Account button action
-    public void onCreateAccountButtonAction(ActionEvent event) {
+    public void onCreateAccountButton(ActionEvent event) {
+        String username = usernameField.getText();
+        String password = passwordField.getText();
+        String confirmPassword = confirmPasswordField.getText();
 
-        String username = tf_Username.getText();
-        String password = pf_Password.getText();
-        String confirmPassword = pf_ConfirmPassword.getText();
+        // Validate inputs and get the error message if any
+        String validationMessage = userService.validateInput(username, password, confirmPassword);
 
-        if (username.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
-            Util.displayAlert("Validation Error", "All fields must be filled!");
-            return;
-        }
-
-        if (!password.equals(confirmPassword)) {
-            Util.displayAlert("Password Mismatch", "Password and confirm password do not match");
+        if (validationMessage != null) {
+            // Show the specific validation error message(s)
+            AlertUtil.showInfoAlert("Validation Error", validationMessage);
             return;
         }
 
         try {
-            // Check if the username already exists
-            boolean userExists = dbHandler.checkUserRecordExists(username);
-            if (userExists) {
-                Util.displayAlert("Username Error", "Username already exists!");
-                return;
-            }
-
-            // Create the account
-            boolean accountCreated = dbHandler.createAccount(username, password);
-            if (accountCreated) {
-                Util.displayAlert("Success", "Account created successfully!");
-                // Redirect to login page after successful account creation
-                Util.displayScene(getClass().getResource("/edu/metrostate/booknow/LoginView.fxml"), event);
+            if (userService.createAccount(username, password)) {
+                AlertUtil.showInfoAlert("Success", "Account created successfully!");
+                SwitchSceneUtil.switchScene(getClass().getResource(loginViewPath), event);
             } else {
-                Util.displayAlert("Account Error", "Failed to create account. Try again.");
+                AlertUtil.showErrorAlert("Username Error", "Username already exists!");
             }
-
         } catch (SQLException | IOException e) {
-            Util.displayAlert("Error", "Error occurred: " + e.getMessage());
-            e.printStackTrace();
+            AlertUtil.showErrorAlert("Account Error", "Failed to create account. Try again.");
         }
     }
 
-    // Handles the Log in button action and switch to login scene
-    public void onButton_Login(ActionEvent event) throws IOException {
-        Util.displayScene(getClass().getResource("/edu/metrostate/booknow/LoginView.fxml"), event);
+
+    public void onLoginButton(ActionEvent event) throws IOException {
+        SwitchSceneUtil.switchScene(getClass().getResource(loginViewPath), event);
     }
 }

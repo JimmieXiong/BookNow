@@ -1,116 +1,108 @@
 package edu.metrostate.booknow.Controllers;
 
-import edu.metrostate.booknow.DBConnection;
 import edu.metrostate.booknow.Models.Restaurant;
-import edu.metrostate.booknow.Util;
+import edu.metrostate.booknow.Services.RestaurantServices;
+import edu.metrostate.booknow.Services.UserServices;
+import edu.metrostate.booknow.Utils.AlertUtil;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
+
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.IntStream;
 
+/**
+ * The BookNowController handles the UI interaction logic for the restaurant booking system.
+ * It interacts with various UI components such as labels, combo boxes, date pickers, and VBoxes.
+ */
+
 public class BookNowController {
 
     @FXML
-    Label lbl_welcome;
+    private Label lbl_welcome;
     @FXML
-    ComboBox<String> locationComboBox;
+    private ComboBox<String> locationComboBox;
     @FXML
-    ComboBox<String> cb_cuisineType;
+    private ComboBox<String> cb_cuisineType;
     @FXML
-    DatePicker checkInDate;
+    private DatePicker checkInDate;
     @FXML
-    private VBox restaurantListVBox;
+    private VBox restaurantVBox;
     @FXML
-    ComboBox<Integer> cb_adults;
+    private ComboBox<Integer> cb_adults;
     @FXML
-    ComboBox<Integer> cb_children;
+    private ComboBox<Integer> cb_children;
 
-    private String selectedCity;
-    private String selectedCuisineType;
-    private LocalDate selectedDate;
-
-    private DBConnection dbHandler;
+    private final RestaurantServices restaurantServices;
 
     public BookNowController() {
-        System.out.println("BookNowController constructor called");
-        dbHandler = new DBConnection();
+        this.restaurantServices = new RestaurantServices();
     }
 
     @FXML
     public void initialize() {
-        // Set the welcome label with the current user's name
-        lbl_welcome.setText("Welcome, " + Util.getCurrentUser());
+        // Set welcome message for logged-in user
+        lbl_welcome.setText("Welcome, " + UserServices.getCurrentUser().getUserName());
 
-        // Populate the location combo box with city names fetched from the database
-        List<String> cities = dbHandler.fetchCityNames();
-        locationComboBox.getItems().addAll(cities);
+        // Populate the location and cuisine type combo boxes
+        locationComboBox.getItems().addAll(restaurantServices.getCityNames());
+        cb_cuisineType.getItems().addAll(restaurantServices.getCuisineTypes());
 
-        List<String> cuisineTypes = dbHandler.fetchCuisineTypes();
-        cb_cuisineType.getItems().addAll(cuisineTypes);
-
-        // Populate adults combo box (1 to 99)
-        List<Integer> adults = IntStream.rangeClosed(1, 99).boxed().toList();
-        cb_adults.setItems(FXCollections.observableArrayList(adults));
-
-        // Populate children combo box (0 to 99)
-        List<Integer> children = IntStream.rangeClosed(0, 99).boxed().toList();
-        cb_children.setItems(FXCollections.observableArrayList(children));
+        // Populate the adults and children combo boxes
+        cb_adults.setItems(FXCollections.observableArrayList(IntStream.rangeClosed(1, 99).boxed().toList()));
+        cb_children.setItems(FXCollections.observableArrayList(IntStream.rangeClosed(0, 99).boxed().toList()));
     }
 
+    @FXML
     public void onSearchButtonClick(ActionEvent event) {
-        selectedCity = locationComboBox.getSelectionModel().getSelectedItem();
-        selectedCuisineType = cb_cuisineType.getSelectionModel().getSelectedItem();
-        selectedDate = checkInDate.getValue();
+        String selectedCity = locationComboBox.getSelectionModel().getSelectedItem();
+        String selectedCuisineType = cb_cuisineType.getSelectionModel().getSelectedItem();
+        LocalDate selectedDate = checkInDate.getValue();
 
-        // Validate inputs
-        if (selectedCity == null) {
-            Util.displayAlert("Location Selection", "Please select a location.");
-            return;
-        }
-        if (selectedCuisineType == null) {
-            Util.displayAlert("Cuisine Type Selection", "Please select a cuisine type.");
-            return;
-        }
-        if (selectedDate == null) {
-            Util.displayAlert("Date Selection", "Please select a date.");
-            return;
-        }
-        if (selectedDate.isBefore(LocalDate.now())) {
-            Util.displayAlert("Invalid Date", "Check-in date cannot be in the past.");
+        // validate, if invalid, an alert is shown and the method exits.
+        if (!restaurantServices.isSearchCriteriaValid(selectedCity, selectedCuisineType, selectedDate)) {
+            AlertUtil.showInfoAlert("Invalid Search Criteria", restaurantServices.getValidationMessage());
             return;
         }
 
-        // Fetch available restaurants based on search criteria
-        List<Restaurant> restaurants = dbHandler.getAvailableRestaurants(selectedCity, selectedCuisineType, selectedDate);
-        populateRestaurantListVBox(restaurants);
+        // If valid, available restaurants are queried and then displayed to the user.
+        List<Restaurant> restaurants = restaurantServices.findAvailableRestaurants(selectedCity, selectedCuisineType, selectedDate);
+        populateRestaurants(restaurants);
     }
 
-    /**
-     * Populates the VBox with a list of restaurants, creating separate VBox elements for each restaurant
-     * and adding them to the main restaurant list VBox.
-     *
-     * @param restaurants the list of restaurants to add to the VBox
-     */
-    private void populateRestaurantListVBox(List<Restaurant> restaurants) {
-        restaurantListVBox.getChildren().clear();
-        for (Restaurant restaurant : restaurants) {
-            VBox restaurantBox = new VBox();
-            restaurantBox.setStyle("-fx-spacing: 10; -fx-border-color: lightgray; -fx-padding: 10;");
+    // Populate restaurants in the VBox
+    private void populateRestaurants(List<Restaurant> restaurants) {
+        restaurantVBox.getChildren().clear(); // Clear previous results
 
-            Label nameLabel = new Label(restaurant.getName());
-            nameLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #003580;");
-            Label locationLabel = new Label(restaurant.getCity());
-            locationLabel.setStyle("-fx-text-fill: gray;");
-            Label descriptionLabel = new Label(restaurant.getDescription());
+        if (restaurants.isEmpty()) {
+            AlertUtil.showInfoAlert("No Availability", "No restaurants are available for the selected date and criteria. Please search again.");
+        } else {
+            for (Restaurant restaurant : restaurants) {
+                addRestaurantToVBox(restaurant);
+            }
+        }
+    }
 
-            restaurantBox.getChildren().addAll(nameLabel, locationLabel, descriptionLabel);
-            restaurantListVBox.getChildren().add(restaurantBox);
+    // Dynamically load restaurant data into VBox
+    private void addRestaurantToVBox(Restaurant restaurant) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/edu/metrostate/booknow/RestaurantBox.fxml"));
+            VBox restaurantBox = loader.load();
+
+            // Set restaurant data in the RestaurantBoxController
+            RestaurantBoxController controller = loader.getController();
+            controller.setRestaurantData(restaurant);
+
+            restaurantVBox.getChildren().add(restaurantBox);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

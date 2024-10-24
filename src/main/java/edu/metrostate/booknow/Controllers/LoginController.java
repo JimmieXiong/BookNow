@@ -1,59 +1,60 @@
 package edu.metrostate.booknow.Controllers;
 
-import edu.metrostate.booknow.DBConnection;
-import edu.metrostate.booknow.Util;
+import edu.metrostate.booknow.Services.UserServices;
+import edu.metrostate.booknow.Utils.AlertUtil;
+import edu.metrostate.booknow.Utils.SwitchSceneUtil;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+
 import java.io.IOException;
-import java.sql.SQLException;
+
+/**
+ * Controller class for handling login functionality in a JavaFX application.
+ */
 
 public class LoginController {
 
-    @FXML
-    private TextField tf_Username;
+    private static final String bookNowViewPath = "/edu/metrostate/booknow/BookNowView.fxml";
+    private static final String createAccountViewPath = "/edu/metrostate/booknow/CreateAccountView.fxml";
 
     @FXML
-    private PasswordField pf_Password;
+    private TextField usernameField;
+    @FXML
+    private PasswordField passwordField;
 
-    private DBConnection dbHandler;
+    private final UserServices userService;
 
     public LoginController() {
-        System.out.println("LoginController Constructor Called");
-        dbHandler = new DBConnection();
+        userService = new UserServices();
     }
 
-    // Handles login button action
     public void onLoginButtonAction(ActionEvent event) {
-        // Retrieve username and password from text fields
-        String username = tf_Username.getText();
-        String password = pf_Password.getText();
+        String username = usernameField.getText();
+        String password = passwordField.getText();
 
-        // Validates the input fields
-        if (username.isEmpty() || password.isEmpty()) {
-            Util.displayAlert("Validation Error", "Both fields are required!");
-            return;
-        }
-
-        try {
-            // Check login credentials using DBConnection
-            boolean loginSuccessful = dbHandler.login(username, password);
-            if (loginSuccessful) {
-                // Set the global user and switch scene
-                Util.setCurrentUser(username);
-                Util.displayScene(getClass().getResource("/edu/metrostate/booknow/BookNowView.fxml"), event);
+        // Move field validation to UserServices
+        if (userService.areLoginFieldsValid(username, password)) {
+            if (userService.login(username, password)) {
+                switchToBookNowScene(event);
             } else {
-                Util.displayAlert("Login Failed", "Invalid username or password.");
+                AlertUtil.showErrorAlert("Login Failed", "Invalid username or password.");
             }
-        } catch (SQLException | IOException e) {
-            Util.displayAlert("Error", "Error occurred: " + e.getMessage());
-            e.printStackTrace();
+        } else {
+            AlertUtil.showInfoAlert("Validation Error", "Both fields are required!");
         }
     }
 
-    // Handles the create account button action and switch to Create Account scene
     public void onCreateAccountButtonAction(ActionEvent event) throws IOException {
-        Util.displayScene(getClass().getResource("/edu/metrostate/booknow/CreateAccountView.fxml"), event);
+        SwitchSceneUtil.switchScene(getClass().getResource(createAccountViewPath), event);
+    }
+
+    private void switchToBookNowScene(ActionEvent event) {
+        try {
+            SwitchSceneUtil.switchScene(getClass().getResource(bookNowViewPath), event);
+        } catch (IOException e) {
+            AlertUtil.showErrorAlert("Error", e.getMessage());
+        }
     }
 }

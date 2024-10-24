@@ -33,14 +33,14 @@
                       style="-fx-background-color: white; -fx-padding: 30; -fx-spacing: 10;"
                       HBox.hgrow="ALWAYS">
                     <children>
-                        <TextField fx:id="tf_Username" promptText="Username"
+                        <TextField fx:id="usernameField" promptText="Username"
                                    style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);"
                                    VBox.vgrow="ALWAYS" maxWidth="Infinity">
                             <font>
                                 <Font size="14.0"/>
                             </font>
                         </TextField>
-                        <PasswordField fx:id="pf_Password" promptText="Password"
+                        <PasswordField fx:id="passwordField" promptText="Password"
                                        style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);"
                                        VBox.vgrow="ALWAYS" maxWidth="Infinity">
                             <font>
@@ -68,8 +68,6 @@
                                 </font>
                             </Button>
                         </HBox>
-                        <Text strokeType="OUTSIDE" text="Create a Page for a restaurant, brand, or business."/>
-
                     </children>
                 </VBox>
             </children>

@@ -9,6 +9,8 @@ implementing the actual logic. Adjustments, additions, or removals will be made 
 here is to establish the structural framework, while detailed implementation will evolve as the project progresses. If for any reason you were cross checking and happen to see that the code
 is different from what's on here that means a changed happened and have not been updated to architecture.md. 
 If Diagram doesn't show on github no idea. Tried trouble shooting can't fix. Working fine on intellij. Look in Diagrams folder for Diagrams.
+Also please note and understand that the current initial diagrams may not match the latest version of the code, as they haven’t been updated yet. It's complicated when you lack experience and have to redo things multiple just to get what you want.
+We're planning to update the diagrams once everything is finalized. We initially thought things were on track, but adjustments were necessary along the way.
 
 ## **Entities:**
 
@@ -20,22 +22,12 @@ and interact with the system.
     - `int userId`: The unique identifier for the user.
     - `String username`: The username chosen by the user.
     - `String password`: The password for user authentication.
-    - `String role`: The role of the user, either "customer" or "restaurant."
 
 - **Constructor:**
-    - `User(int userId, String username, String password, String role)`: Creates a new `User` object with the specified attributes.
+    - `User(int userId, String username, String password)`: Creates a new `User` object with the specified attributes.
 
 - **Methods:**
-    - `getUserId()`: Returns the unique identifier of the user.
-    - `setUserId(int userId)`: Sets the user ID.
     - `getUsername()`: Returns the username of the user.
-    - `setUsername(String username)`: Sets the username.
-    - `getPassword()`: Returns the password of the user.
-    - `setPassword(String password)`: Sets the password.
-    - `getRole()`: Returns the role of the user (either "customer" or "restaurant").
-    - `setRole(String role)`: Sets the role of the user, with validation to ensure it is either "customer" or "restaurant."
-    - `toString()`: Returns a string representation of the user object, including the user ID, username, and role.
-
 ---
 
 ### **2. Restaurant**
@@ -240,125 +232,213 @@ The **View** layer consists of the user interface (UI) for interacting with the 
 The **Controller** layer acts as the intermediary between the UI (view) and the backend logic (models).
 
 # **BookNowController**
-The `BookNowController` is responsible for handling user input, interacting with the database, and updating 
-the UI with the results of the restaurant search.
 
-## **Fields**:
+The `BookNowController` manages the user interface for the restaurant booking system. It handles user input, interacts with services to retrieve data, and updates the UI with restaurant search results.
 
-### **UI Elements**:
-- `Label lbl_welcome`: Displays a welcome message, greeting the user by their username.
-- `ComboBox<String> locationComboBox`: A dropdown menu for users to select a restaurant location (city).
-- `ComboBox<String> cb_cuisineType`: A dropdown menu for users to select the type of cuisine (e.g., Fast Food, BBQ).
-- `DatePicker checkInDate`: A date picker for users to select a reservation date.
-- `VBox restaurantListVBox`: A vertical box that will be populated with restaurant results based on the user's search.
-- `ComboBox<Integer> cb_adults`: A dropdown menu for user to selecting the number of adults for the reservation.
-- `ComboBox<Integer> cb_children`: A dropdown menu for selecting the number of children for the reservation.
+## **Fields**
 
-### **Database Handler**:
-- `DBConnection dbHandler`: An instance of the `DBConnection` class responsible for interacting with the database to fetch city names, cuisine types, and available restaurants.
+### **UI Elements**
+- `Label lbl_welcome`: Displays a welcome message to greet the logged-in user.
+- `ComboBox<String> locationComboBox`: A dropdown menu for users to select a city location for the restaurant search.
+- `ComboBox<String> cb_cuisineType`: A dropdown menu for users to select the type of cuisine.
+- `DatePicker checkInDate`: Allows users to pick a date for their restaurant reservation.
+- `VBox restaurantVBox`: A container that will display the list of restaurants based on the search results.
+- `ComboBox<Integer> cb_adults`: A dropdown menu for users to select the number of adults for the reservation.
+- `ComboBox<Integer> cb_children`: A dropdown menu for users to select the number of children for the reservation.
 
-### **Selected Fields**:
-- `String selectedCity`: Holds the value of the selected city from `locationComboBox`.
-- `String selectedCuisineType`: Holds the value of the selected cuisine type from `cb_cuisineType`.
-- `LocalDate selectedDate`: Holds the date selected by the user in `checkInDate`.
+### **Services**
+- `RestaurantServices restaurantServices`: A service class responsible for handling interactions related to restaurants, such as fetching available restaurants, cities, and cuisines.
+- `UserServices userServices`: Manages user-related operations, such as retrieving the current logged-in user.
 
-## **Constructor**:
+## **Constructor**
 - `public BookNowController()`:
-  - Initializes the `BookNowController` class.
-  - Creates an instance of `DBConnection` to handle interactions with the database.
+  - Initializes the `BookNowController` class and the `restaurantServices` for handling restaurant-related operations.
 
-## **Methods**:
+## **Methods**
 
-### **initialize()**:
-- **Purpose**: This method is called when the controller is initialized. It sets up the UI components by populating the city and cuisine type combo boxes.
+### **initialize()**
+- **Purpose**: Called when the controller is initialized. Sets up the UI components and populates the combo boxes with data.
 - **Key Steps**:
-  - Displays a welcome message for the current user.
-  - Fetches city names and cuisine types from the database and populates the relevant dropdowns.
-  - Populates the `locationComboBox`, `cb_cuisineType` , `cb_adults`, `cb_children` dropdowns with the fetched values.
+  - Displays a welcome message with the username of the currently logged-in user.
+  - Populates the `locationComboBox` with city names and the `cb_cuisineType` with cuisine types from the `RestaurantServices`.
+  - Populates the `cb_adults` and `cb_children` combo boxes with a range of selectable values for the number of adults and children.
 
-### **onSearchButtonClick(ActionEvent event)**:
-- **Purpose**: Handles the search button click event, triggering the search for restaurants based on the selected city, cuisine type, and date.
+### **onSearchButtonClick(ActionEvent event)**
+- **Purpose**: Handles the search button click event, triggering a search for available restaurants based on the selected city, cuisine type, and reservation date.
 - **Key Steps**:
-  - Retrieves the user selections for city, cuisine type, and date.
-  - Validates the inputs to ensure all required fields are filled and that the date is not in the past.
-  - Fetches the list of available restaurants from the database using the selected criteria.
-  - Populates the `restaurantListVBox` with the restaurant details.
+  - Retrieves the user's selected city, cuisine type, and reservation date from the UI components.
+  - Validates the search criteria. If invalid, displays an alert with a message and stops the search process.
+  - If valid, queries `RestaurantServices` for available restaurants based on the selected criteria.
+  - Calls `populateRestaurants()` to display the list of available restaurants in the `restaurantVBox`.
 
-### **populateRestaurantListVBox(List<Restaurant> restaurants)**:
-- **Purpose**: Populates the `VBox` with a list of restaurant details.
+### **populateRestaurants(List<Restaurant> restaurants)**
+- **Purpose**: Populates the `VBox` with the list of restaurants returned by the search query.
 - **Key Steps**:
-  - Clears existing entries in the `restaurantListVBox`.
-  - For each restaurant in the list, creates a new `VBox` containing the restaurant's name, city, and description.
-  - Adds each restaurant box to the `restaurantListVBox`.
+  - Clears any existing entries in the `restaurantVBox`.
+  - If no restaurants are available for the selected date and criteria, displays an alert to inform the user.
+  - If there are available restaurants, it loops through the list and dynamically adds each restaurant to the `VBox` by calling `addRestaurantToVBox()`.
+
+### **addRestaurantToVBox(Restaurant restaurant)**
+- **Purpose**: Dynamically adds a restaurant's details to the `VBox` for display.
+- **Key Steps**:
+  - Loads the `RestaurantBox.fxml` file, which contains the layout for displaying a restaurant's details.
+  - Passes the restaurant data to the `RestaurantBoxController` to update the UI elements with the restaurant's information.
+  - Adds the `VBox` representing the restaurant to the `restaurantVBox`.
+
 
 # **CreateNewAccountController**
 
-The **Controller** layer acts as the intermediary between the UI (view) and the backend logic (models). The `CreateNewAccountController` is responsible for handling user input during account creation, interacting with the database to create new users, and updating the view with feedback for the user.
+The `CreateNewAccountController` is responsible for handling user input during the account creation process. It validates the input, interacts with `UserServices` to create a new user in the database, and updates the UI with feedback (success or failure) based on the account creation outcome.
 
-## **Fields**:
+## **Fields**
 
-### **UI Elements**:
-- `TextField tf_Username`: Input field for the username the user wants to create.
-- `PasswordField pf_Password`: Input field for the user's password.
-- `PasswordField pf_ConfirmPassword`: Input field for confirming the user's password.
+### **UI Elements**
+- `TextField usernameField`: Input field where the user enters the desired username.
+- `PasswordField passwordField`: Input field where the user enters the password.
+- `PasswordField confirmPasswordField`: Input field where the user re-enters the password to confirm it.
 
-### **Database Handler**:
-- `DBConnection dbHandler`: An instance of the `DBConnection` class responsible for interacting with the database to check if a username already exists and to create a new user account.
+### **Services**
+- `UserServices userService`: Manages user-related operations, such as validating inputs and creating new user accounts.
 
-## **Constructor**:
-- `public CreateNewAccountController()`:
-  - Initializes the `CreateNewAccountController` class.
-  - Creates an instance of `DBConnection` to handle interactions with the database.
+### **Constants**
+- `String loginViewPath`: The path to the login view (`LoginView.fxml`), used to redirect users after account creation.
 
-## **Methods**:
+## **Constructor**
 
-### **onCreateAccountButtonAction(ActionEvent event)**:
-- **Purpose**: Handles the "Create Account" button click event, performing the logic for creating a new user account.
+### `public CreateNewAccountController()`
+- Initializes the `CreateNewAccountController` and the `UserServices` instance for handling user-related operations.
+
+## **Methods**
+
+### **onCreateAccountButton(ActionEvent event)**
+- **Purpose**: Handles the "Create Account" button click event. It performs the logic for creating a new user account.
 - **Key Steps**:
-  - Retrieves the user's input from the username, password, and confirm password fields.
-  - Validates that all fields are filled and that the password matches the confirmation password.
-  - Checks the database to ensure the username is not already taken.
-  - If the username is available, creates the new account and displays a success message, redirecting the user to the login page.
-  - If an error occurs (e.g., username already exists), displays an error message in an alert.
+  - Retrieves the input values for the username, password, and password confirmation from the UI fields.
+  - Calls `UserServices` to validate the input. If validation fails (e.g., username is empty, password doesn't match), it displays the specific error message using `AlertUtil`.
+  - If validation passes, attempts to create the account using `UserServices`. If successful, displays a success message using `AlertUtil` and switches to the login view using `SwitchSceneUtil`.
+  - If account creation fails due to an existing username or a database error, it displays an error message using `AlertUtil`.
 
-### **onButton_Login(ActionEvent event)**:
-- **Purpose**: Handles the "Log In" button click event, redirecting the user to the login page.
+### **onLoginButton(ActionEvent event)**
+- **Purpose**: Handles the "Log In" button click event, which redirects the user to the login page.
 - **Key Steps**:
-  - Calls the `Util.displayScene` method to load the `LoginView.fxml` page for the user to login.
+  - Uses `SwitchSceneUtil` to switch to the login view (`LoginView.fxml`).
+
+## **Error Handling**
+- **Validation Errors**: If any input is invalid (e.g., empty username or mismatched passwords), an appropriate error message is shown to the user using `AlertUtil`.
+- **Database Errors**: If a database error occurs during account creation (e.g., the username already exists or the account couldn't be created), an error message is shown, and the user is asked to try again.
+
+## **Scene Switching**
+- After a successful account creation, the controller uses `SwitchSceneUtil` to load and display the login page (`LoginView.fxml`).
 
 # **LoginController**
 
-The **LoginController** is responsible for handling user authentication. It manages user input during login, interacts with the database to verify credentials, and updates the view based on the login outcome. It also provides navigation to the account creation page.
+The `LoginController` is responsible for handling user authentication in the JavaFX application. It manages user input during login, validates credentials using `UserServices`, and updates the view based on the login outcome. It also provides navigation to the account creation page.
 
-## **Fields**:
+## **Fields**
 
-### **UI Elements**:
-- `TextField tf_Username`: Input field for the username entered by the user.
-- `PasswordField pf_Password`: Input field for the user's password.
+### **UI Elements**
+- `TextField usernameField`: Input field for the username entered by the user.
+- `PasswordField passwordField`: Input field for the user's password.
 
-### **Database Handler**:
-- `DBConnection dbHandler`: An instance of the `DBConnection` class responsible for interacting with the database to verify login credentials.
+### **Services**
+- `UserServices userService`: Manages user-related operations, such as validating login credentials and handling login logic.
 
-## **Constructor**:
-- `public LoginController()`:
-  - Initializes the `LoginController` class.
-  - Creates an instance of `DBConnection` to handle interactions with the database.
- 
-## **Methods**:
+### **Constants**
+- `String bookNowViewPath`: The path to the main application view (`BookNowView.fxml`), used after successful login.
+- `String createAccountViewPath`: The path to the account creation view (`CreateAccountView.fxml`), used to redirect users to the account creation page.
 
-### **onLoginButtonAction(ActionEvent event)**:
-- **Purpose**: Handles the "Login" button click event. This method validates user input, checks login credentials against the database, and redirects to the main application page on successful login.
+## **Constructor**
+
+### `public LoginController()`
+- Initializes the `LoginController` and the `UserServices` instance for handling login-related operations.
+
+## **Methods**
+
+### **onLoginButtonAction(ActionEvent event)**
+- **Purpose**: Handles the "Login" button click event. This method validates user input, checks login credentials, and redirects to the main application page on successful login.
 - **Key Steps**:
-  - Retrieves the username and password entered by the user.
-  - Validates that both fields are filled.
-  - Interacts with `DBConnection` to verify if the username and password are correct.
-  - If the credentials are valid, it sets the global user and redirects to the main application (`BookNowView`).
-  - If login fails, it displays an error message using an alert dialog..
+  - Retrieves the username and password entered by the user from the UI fields.
+  - Calls `UserServices` to validate the input. If validation fails (e.g., missing username or password), it displays an error message using `AlertUtil`.
+  - If the fields are valid, attempts to log in using `UserServices`. If login is successful, switches to the `BookNowView` scene using `SwitchSceneUtil`.
+  - If login fails, displays an error message using `AlertUtil` with a message indicating that the username or password is invalid.
 
-### **onCreateAccountButtonAction(ActionEvent event)**:
-- **Purpose**: Handles the "Create Account" button click event. This method redirects the user to the account creation page when the "Create Account" button is clicked.
+### **onCreateAccountButtonAction(ActionEvent event)**
+- **Purpose**: Handles the "Create Account" button click event. This method redirects the user to the account creation page.
 - **Key Steps**:
-  - Calls the `Util.displayScene` method to load the `CreateAccountView.fxml` page, which is the user interface for account creation.
+  - Uses `SwitchSceneUtil` to switch to the account creation view (`CreateAccountView.fxml`).
+
+### **switchToBookNowScene(ActionEvent event)**
+- **Purpose**: A helper method to switch the scene to the main application view (`BookNowView.fxml`) after a successful login.
+- **Key Steps**:
+  - Uses `SwitchSceneUtil` to switch to the `BookNowView` scene.
+  - If an `IOException` occurs during the scene switch, displays an error message using `AlertUtil`.
+
+## **Error Handling**
+- **Validation Errors**: If the username or password fields are empty, an appropriate error message is shown using `AlertUtil`.
+- **Login Errors**: If the login credentials are incorrect, an error message is shown indicating an invalid username or password.
+- **Scene Switching Errors**: If an error occurs during scene switching, an error alert is shown with the error details.
+
+# **RestaurantBoxController**
+
+The `RestaurantBoxController` is responsible for managing the UI components that display information about a restaurant. It interacts with `RestaurantServices` to set and display restaurant details such as the name, location, description, average rating, and restaurant image. It also includes logic placeholders for handling actions related to reviews, menu, and availability.
+
+## **Fields**
+
+### **UI Elements**
+- `Label restaurantNameLabel`: Displays the name of the restaurant.
+- `Label ratingLabel`: Displays the average rating of the restaurant.
+- `Label restaurantLocationLabel`: Displays the city where the restaurant is located.
+- `Label restaurantDescriptionLabel`: Displays a brief description of the restaurant.
+- `ImageView restaurantImageView`: Displays an image of the restaurant.
+
+### **Services**
+- `RestaurantServices restaurantServices`: Handles business logic related to restaurants, including fetching restaurant data and calculating ratings.
+
+## **Constructor**
+
+### `public RestaurantBoxController()`
+- Initializes the `RestaurantBoxController` and the `RestaurantServices` instance for handling restaurant-related operations.
+
+## **Methods**
+
+### **setRestaurantData(Restaurant restaurant)**
+- **Purpose**: Sets the restaurant's data into the UI elements of the restaurant box.
+- **Key Steps**:
+  - Calls `setLabels()` to set the name, location, and description of the restaurant in the UI.
+  - Uses `RestaurantServices` to fetch and display the average rating of the restaurant.
+  - Calls `displayRestaurantImage()` to load and display the restaurant's image in the `ImageView`.
+
+### **setLabels(Restaurant restaurant)**
+- **Purpose**: A helper method to set the text for the restaurant's name, location, and description labels.
+- **Key Steps**:
+  - Sets the `restaurantNameLabel`, `restaurantLocationLabel`, and `restaurantDescriptionLabel` with the appropriate restaurant details.
+
+### **displayRestaurantImage(String imagePath, ImageView imageView)**
+- **Purpose**: Loads and displays the restaurant's image in the provided `ImageView`.
+- **Key Steps**:
+  - Checks if the `imagePath` is valid (not null or empty).
+  - Tries to load the image using the provided path and sets it in the `ImageView`. If the image cannot be found, it logs an error message.
+
+### **reviewsButton()**
+- **Purpose**: Placeholder method for handling actions related to restaurant reviews.
+- **Key Steps**:
+  - Intended to handle logic for displaying or managing restaurant reviews.
+
+### **menuButton()**
+- **Purpose**: Placeholder method for handling actions related to the restaurant's menu.
+- **Key Steps**:
+  - Intended to handle logic for displaying or managing the restaurant's menu.
+
+### **availabilityButton()**
+- **Purpose**: Placeholder method for handling actions related to restaurant availability.
+- **Key Steps**:
+  - Intended to handle logic for checking or displaying the restaurant's availability.
+
+## **Error Handling**
+- **Image Loading Errors**: If the image path is invalid or the image file cannot be found, an error message is logged in the console.
+
+## **Scene Interaction**
+- This controller interacts with other parts of the UI by displaying restaurant information and includes placeholders for future functionality (reviews, menu, availability).
 
 ### Diagram:
 ![Diagram](Diagrams/ClassDiagram2.jpg)
@@ -369,25 +449,26 @@ The **LoginController** is responsible for handling user authentication. It mana
 
 ### Example: Interaction Flow
 
-## **1. User Login Interaction Flow**
+### **User Login Interaction Flow**
 
 1. **User Input:**
   - The user enters their **username** and **password** in the login form, which is handled by the `LoginController`.
 
 2. **Login Button Click:**
   - The user clicks the "Login" button, triggering the `onLoginButtonAction()` method in the `LoginController`.
-  - The method validates that both fields (username and password) are filled in.
+  - The method validates that both fields (username and password) are filled in using `UserServices.areLoginFieldsValid()`.
 
 3. **Database Check:**
-  - The `LoginController` calls `DBConnection.login(username, password)` to check the credentials against the database.
+  - The `LoginController` calls `UserServices.login(username, password)` to verify the credentials against the database.
+  - The `UserServices` class uses `UserDAO.login()` to check the credentials in the database.
 
 4. **Success Scenario:**
   - If the login is successful:
-    - The `LoginController` sets the global `Util.USER` variable to the logged-in username.
-    - It then calls the `Util.displayScene()` method to load the `BookNowView.fxml` scene, which contains the restaurant search interface.
+    - The `UserServices` class sets the static `currentUser` field to the logged-in user.
+    - The `LoginController` then calls `SwitchSceneUtil.switchScene()` to load the `BookNowView.fxml` scene, which contains the restaurant search interface.
 
 5. **Failure Scenario:**
-  - If the login fails, an error message is displayed to the user using the `Util.displayAlert()` method.
+  - If the login fails, an error message is displayed to the user using `AlertUtil.showErrorAlert()`.
 
 ---
 
@@ -398,91 +479,99 @@ The **LoginController** is responsible for handling user authentication. It mana
 
 2. **Search Button Click:**
   - The user clicks the "Search" button, triggering the `onSearchButtonClick()` method in the `BookNowController`.
-  - The method validates the user input to ensure that all fields are filled correctly (city, cuisine type, and date).
+  - The method validates the user input using `RestaurantServices.isSearchCriteriaValid()` to ensure that all fields are filled correctly (city, cuisine type, and date).
 
 3. **Database Query:**
-  - The `BookNowController` calls the `DBConnection.getAvailableRestaurants(selectedCity, selectedCuisineType, selectedDate)` method to fetch the list of restaurants that match the search criteria from the database.
+  - The `BookNowController` calls `RestaurantServices.findAvailableRestaurants(selectedCity, selectedCuisineType, selectedDate)` to fetch the list of restaurants that match the search criteria.
+  - The `RestaurantServices` class interacts with the `RestaurantDAO.getAvailableRestaurants()` method to retrieve the data from the database.
 
 4. **Display Results:**
-  - The database query results are passed back to the `BookNowController`.
-  - The `populateRestaurantListVBox()` method is called to dynamically create a list of restaurants using JavaFX components.
-  - Each restaurant is displayed in the interface within a `VBox`, which shows the restaurant's name, city, and description.
+  - The list of restaurants returned by `RestaurantServices` is passed back to the `BookNowController`.
+  - The `populateRestaurants()` method is called to dynamically create a list of restaurants using JavaFX components.
+  - Each restaurant is displayed in the interface within a `VBox` by loading the `RestaurantBox.fxml`, which shows the restaurant's name, city, description, and image.
 
 ---
 
 ## **3. Utility Interaction Flow**
 
 1. **Scene Switching:**
-  - When scenes need to be switched (e.g., after login or after account creation), the `Util.displayScene()` method is called by the appropriate controller (`LoginController` or `CreateNewAccountController`).
+  - When scenes need to be switched (e.g., after login or after account creation), the `SwitchSceneUtil.switchScene()` method is called by the appropriate controller (`LoginController` or `CreateNewAccountController`).
   - This method loads the new FXML view and ensures that the current window size and maximization state are preserved.
+  - The scene switching logic ensures smooth transitions between different views while keeping the user experience consistent.
 
 2. **Alerts and Messages:**
-  - If any validation errors occur (e.g., during login, account creation, or restaurant search), the `Util.displayAlert()` method is used to display an alert with the appropriate message to the user.
+  - If any validation errors occur (e.g., during login, account creation, or restaurant search), the `AlertUtil.showInfoAlert()` or `AlertUtil.showErrorAlert()` method is used to display an alert with the appropriate message to the user.
+  - These methods provide clear and user-friendly feedback on validation issues, login errors, and other system messages.
+
+3. **Database Connections:**
+  - The `DB_Connection_Util.getConnection()` method is responsible for establishing and managing the database connection for the application.
+  - This utility ensures that the connection to the MySQL database is properly set up and provides easy access to perform database queries in various DAO classes (e.g., `UserDAO`, `RestaurantDAO`).
+  - The connection handling also includes error management in case the database connection fails.
 
 # **Adherence to MVC Principles**
 
-The BookNow application follows the **Model-View-Controller (MVC)** architecture pattern to maintain separation of concerns. This design ensures a modular and maintainable code structure by dividing the application into three interconnected layers: **Models**, **Views**, and **Controllers**. Below is an analysis of how the application adheres to the MVC principles based on the provided code.
+The **BookNow** application follows the **Model-View-Controller (MVC)** architecture pattern to ensure separation of concerns. This design promotes modularity and maintainability by dividing the application into three layers: **Models**, **Views**, and **Controllers**. Below is an analysis of how the application adheres to the MVC principles based on the current code.
 
 ---
 
 ## **1. Models:**
-The **Model** layer represents the core entities and data of the application, along with the logic required to interact with the data.
+The **Model** layer represents the core entities and data logic of the application, encapsulating business rules and data interaction.
 
 ### **Entities:**
-- `User`: Represents a user of the system (either a customer or a restaurant owner), with fields for user ID, username, password, and role.
-- `Restaurant`: Represents a restaurant with attributes such as name, city, cuisine type, description, maxGuests, and more.
-- `Reservation`: Represents a reservation at a restaurant with fields for reservation ID, restaurant ID, date, time slot, and table number.
+- `User`: Represents a user of the system (a customer), with fields for user ID, username, and password.
+- `Restaurant`: Represents a restaurant with attributes such as name, city, cuisine type, description, maxGuests, menu, and image path.
+- `Reservation`: Represents a reservation at a restaurant, including reservation ID, restaurant ID, date, time slot, and table number.
 - `Review`: Represents a review given by a user for a restaurant, including fields for review ID, rating, feedback, and date of experience.
-- `Table`: Represents a table at a restaurant with fields for table ID, restaurant ID, number of seats, and availability.
-- `TimeSlot`: Represents available time slots for a reservation.
+- `Table`: Represents a table at a restaurant with fields for table ID, number of seats, booking fee, and availability.
+- `TimeSlot`: Represents available time slots for restaurant reservations.
 
 ### **Data Logic:**
-- The `DBConnection` class is responsible for handling all interactions with the database, such as verifying user login credentials, creating new accounts, and fetching restaurant data based on search criteria.
-- This ensures that the data layer is independent of the UI, and the controller interacts with the model through `DBConnection`.
+- The `UserDAO`, `RestaurantDAO`, and other DAO classes handle all interactions with the database. These classes manage operations such as logging in, account creation, and fetching restaurant data based on search criteria.
+- The `DB_Connection_Util` class is responsible for establishing and managing connections to the database.
 
 ### **Strengths in the Model Layer:**
-- **Low Coupling**: The model is decoupled from the view and controller. Data is handled in the `DBConnection` class, ensuring that the logic to interact with the database is separated from the user interface and control flow.
+- **Low Coupling**: The model layer is decoupled from the view and controller layers. The data logic is handled in the DAO classes, ensuring that the business logic and database operations are separated from the user interface and control flow.
 
 ---
 
 ## **2. Views:**
-The **View** layer is responsible for displaying the UI to the user and is defined using **JavaFX** FXML files.
+The **View** layer is responsible for displaying the user interface, defined using **JavaFX** FXML files.
 
 ### **Key Views:**
 - **LoginView.fxml**: Displays the login interface where the user enters their credentials.
-- **BookNowView.fxml**: Provides the restaurant search interface with options to select location, cuisine type, and date.
+- **BookNowView.fxml**: Provides the restaurant search interface with options to select a location, cuisine type, and date.
 - **CreateAccountView.fxml**: Provides the interface for users to create a new account.
-- **Other Views**: Additional FXML files exist to handle other functionalities such as viewing reservations and reviews.
+- **RestaurantBox.fxml**: Displays individual restaurant details such as the name, location, description, rating, and image.
 
 ### **Strengths in the View Layer:**
-- **Cohesion**: The view layer is solely responsible for rendering the user interface and capturing user input. No business logic is embedded within the view files.
-- **Modular UI**: Each screen (login, account creation, restaurant search) is separated into different FXML files, promoting high cohesion within the view layer and making the UI easier to maintain.
+- **Cohesion**: The view layer focuses solely on rendering the user interface and capturing user input. Business logic is kept out of the view files.
+- **Modular UI**: Each view (login, account creation, restaurant search) is modular, making the UI easier to maintain and extend.
 
 ---
 
 ## **3. Controllers:**
-The **Controller** layer acts as the intermediary between the models and views. Each controller listens to events in the user interface, interacts with the model, and updates the view accordingly.
+The **Controller** layer acts as the intermediary between the models and views. Each controller listens to user events, processes the input through the service layer, and updates the view accordingly.
 
 ### **Controllers in the Application:**
 - **LoginController**:
-  - Handles user login functionality.
-  - Uses the `DBConnection.login()` method to check user credentials.
-  - Switches to the `BookNowView.fxml` screen if the login is successful, or displays an error using the `Util.displayAlert()` method if login fails.
+  - Manages user login functionality.
+  - Uses `UserServices.login()` to check user credentials.
+  - On successful login, it switches to `BookNowView.fxml` using `SwitchSceneUtil.switchScene()`. If login fails, it displays an error using `AlertUtil.showErrorAlert()`.
 
 - **BookNowController**:
-  - Manages the restaurant search functionality.
-  - Validates user input (city, cuisine type, and date) and interacts with the model (`DBConnection.getAvailableRestaurants()`) to retrieve relevant data.
-  - Populates the restaurant list in the UI using the `populateRestaurantListVBox()` method.
+  - Handles the restaurant search functionality.
+  - Validates user input (city, cuisine type, and date) using `RestaurantServices.isSearchCriteriaValid()` and interacts with `RestaurantServices.findAvailableRestaurants()` to retrieve the relevant data.
+  - Populates the restaurant list in the UI using the `populateRestaurants()` method.
 
 - **CreateNewAccountController**:
-  - Handles the creation of new user accounts.
-  - Uses the `DBConnection.createAccount()` method to insert a new user into the database.
-  - Displays alerts for success or failure and redirects the user to the login screen upon successful account creation.
+  - Manages the creation of new user accounts.
+  - Uses `UserServices.createAccount()` to insert a new user into the database.
+  - Displays alerts for success or failure and switches to the login screen upon successful account creation.
 
 ### **Strengths in the Controller Layer:**
-- **Controller Interactions with Models**: Controllers interact with the `DBConnection` class to retrieve and modify data, adhering to MVC principles by separating the data logic from the controller.
-- **Validation Logic**: Controllers handle user input validation before sending data to the model, ensuring that invalid data is not passed to the database.
-- **Scene Management**: Controllers handle scene transitions using `Util.displayScene()` to switch between views, maintaining separation between the UI and control logic.
+- **Controller Interactions with Models**: Controllers interact with the `UserServices` and `RestaurantServices` classes, which handle data manipulation and business logic. The controllers don’t interact with the DAOs directly, ensuring separation of concerns.
+- **Validation Logic**: Controllers handle user input validation before interacting with the model layer to ensure valid data is passed to the database.
+- **Scene Management**: Controllers use `SwitchSceneUtil` for transitioning between views, which ensures separation of UI rendering and logic flow.
 
 ---
 
@@ -492,23 +581,23 @@ The **Controller** layer acts as the intermediary between the models and views. 
   - User interactions such as button clicks (e.g., login or search) trigger event handlers defined in the controller classes. For example, the `onLoginButtonAction()` method in `LoginController` is triggered when the login button is clicked.
 
 - **From Controller to Model**:
-  - Controllers interact with the model by calling methods in the `DBConnection` class to fetch or modify data. For example, `DBConnection.login()` is called from the `LoginController` to check user credentials.
+  - Controllers interact with the model layer via `UserServices` and `RestaurantServices`. For example, `UserServices.login()` is called from `LoginController` to verify user credentials, and `RestaurantServices.findAvailableRestaurants()` is called from `BookNowController` to fetch available restaurants based on user input.
 
 - **From Controller to View**:
-  - Once the controller receives data from the model, it updates the view accordingly. For instance, the `BookNowController` populates the restaurant list in the view after fetching the search results.
+  - Once the controller receives data from the model, it updates the view accordingly. For instance, the `BookNowController` populates the restaurant list in the view after fetching the search results from `RestaurantServices`.
 
 ---
 
 ## **Key Principles Followed:**
 
 1. **High Cohesion**:
-  - Each class and layer has a well-defined responsibility. Views handle UI rendering, controllers manage logic and interaction between layers, and models handle data.
+  - Each layer has a well-defined responsibility. The views handle UI rendering, controllers manage interaction between layers, and models handle data and business logic.
 
 2. **Low Coupling**:
-  - The layers are kept separate, allowing for independent development and maintenance. For instance, the controller only knows about the `DBConnection` class, not the underlying database schema, while the views are unaware of the data source.
+  - The layers are kept separate, allowing for independent development and maintenance. Controllers only interact with the service layer (`UserServices`, `RestaurantServices`), while the view layer remains unaware of the data source and business logic.
 
 3. **Layered Communication**:
-  - Data flows from the user (via the view), through the controller, to the model, and then back to the view. This clear communication flow ensures that data and presentation logic are decoupled.
+  - Data flows from the user (via the view), through the controller, to the model, and then back to the view. This clear communication flow ensures that the data, presentation, and control logic are decoupled.
 
 ---
 # Sequence Diagram for Customer Login and Restaurant Search
@@ -519,7 +608,7 @@ This sequence diagram illustrates the interaction between the **View**, **Contro
 1. **Customer Login**: A customer logs into the application.
 2. **Restaurant Search**: After logging in, the customer searches for available restaurants based on location, cuisine type, and date.
 
-The diagram follows the **Model-View-Controller (MVC)** pattern and demonstrates how user inputs from the view are passed to the controller, processed in the model, and how the resulting data is returned to the view.
+The diagram follows the **Model-View-Controller (MVC)** pattern and demonstrates how user inputs from the view are passed to the controller, processed in the model (via `UserServices` and `RestaurantServices`), and how the resulting data is returned to the view.
 
 ---
 
@@ -532,48 +621,32 @@ The diagram follows the **Model-View-Controller (MVC)** pattern and demonstrates
   - **LoginController**: Handles user login events.
   - **BookNowController**: Handles restaurant search events.
 - **Model Layer**:
-  - **DBConnection**: Interacts with the database to verify login credentials and fetch restaurant details.
+  - **UserServices**: Interacts with the **UserDAO** to verify login credentials.
+  - **RestaurantServices**: Interacts with the **RestaurantDAO** to fetch restaurant details.
 
 ---
 
 ## **Login Use Case Sequence:**
 1. **Customer enters username and password** in the `LoginView`.
-2. The **LoginController** calls the `login()` method from the **DBConnection** class to check the database for matching credentials.
-3. The **DBConnection** class executes a SQL query to verify the login credentials.
-4. The result (success or failure) is returned to the **LoginController**.
+2. The **LoginController** calls the `login()` method from the **UserServices** class to verify the login credentials.
+3. The **UserServices** class calls `UserDAO.login()` to execute a SQL query and check the database for matching credentials.
+4. The result (success or failure) is returned to the **LoginController** via the `UserServices` class.
 5. If successful:
-  - The **LoginController** updates the current user by calling `Util.setCurrentUser(username)`.
-  - The **LoginController** calls `Util.displayScene()` to transition the view to the **BookNowView** (restaurant search interface).
-6. If login fails, an error message is displayed to the customer via `Util.displayAlert()`.
+  - The **UserServices** class sets the static `currentUser` variable to the logged-in user.
+  - The **LoginController** calls `SwitchSceneUtil.switchScene()` to transition the view to the **BookNowView** (restaurant search interface).
+6. If login fails, an error message is displayed to the customer via `AlertUtil.showErrorAlert()`.
 
 ---
 
 ## **Restaurant Search Use Case Sequence:**
 1. **Customer selects location, cuisine type, and date** from the dropdowns and date picker in the `BookNowView`.
-2. The **BookNowController** validates the input to ensure all fields are properly filled out. If any validation fails, it calls `Util.displayAlert()` to inform the user.
-3. If validation passes, the **BookNowController** calls the `getAvailableRestaurants()` method from the **DBConnection** class to fetch matching restaurants.
-4. The **DBConnection** class executes a SQL query to retrieve the restaurants based on the selected city, cuisine type, and date.
-5. The list of available restaurants is returned to the **BookNowController**.
-6. The **BookNowController** populates the `VBox` in the **BookNowView** with restaurant details such as name, city, and description using the `populateRestaurantListVBox()` method.
+2. The **BookNowController** validates the input using `RestaurantServices.isSearchCriteriaValid()` to ensure all fields are properly filled out. If validation fails, it calls `AlertUtil.showInfoAlert()` to inform the user.
+3. If validation passes, the **BookNowController** calls the `findAvailableRestaurants()` method from the **RestaurantServices** class to fetch matching restaurants.
+4. The **RestaurantServices** class interacts with `RestaurantDAO.getAvailableRestaurants()` to execute a SQL query and retrieve restaurants based on the selected city, cuisine type, and date.
+5. The list of available restaurants is returned to the **BookNowController** via the `RestaurantServices` class.
+6. The **BookNowController** populates the `VBox` in the **BookNowView** with restaurant details such as name, city, and description using the `populateRestaurants()` method.
 
----
 
 ## **Sequence Diagram:**
 ![Sequence Diagram](Diagrams/SequenceDiagram.jpg)
 
-
-## **Final Diagram:**
-![Diagram](Diagrams\FinalDiagram.jpg)
-
-This class diagram illustrates the **MVC architecture** of the BookNow system, with a clear separation between models, views, and controllers. It highlights the following key aspects:
-
-- **Controllers**: The controllers manage the flow of data between the views (the user interface) and the models (the core business entities). They handle user interactions, process inputs, and retrieve data from the models to update the views.
-
-- **Models**: The models represent the core entities of the system, such as `User`, `Restaurant`, `Reservation`, `Table`, `TimeSlot`, and `Review`. These entities are central to the system's functionality, but in this diagram, their attributes and methods are intentionally left out for simplicity.
-
-- **Views**: The views represent the user interface components where users interact with the system, such as `LoginPage`, `BookNowPage`, and `ReservationsPage`. These views communicate with the controllers to update and display the relevant data.
-
-- **DBConnection**: All interactions with the database are centralized in the `DBConnection` class. This design ensures that the controllers focus on managing the application's logic, while the database handler takes care of all database-related operations, such as querying, updating, and fetching data.
-
-### **Note**:
-- The diagram does not include fields, methods, or detailed attributes because, when building a large application, changes are often required. Keeping this high-level structure blank allows for flexibility in development and avoids locking down implementation details too early as you know.
