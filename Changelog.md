@@ -1,5 +1,13 @@
 # ChangeLog
 
+[1.1.4] - 10/25/24 - Jimmie Xiong
+- Implemented a utility class named UIUtils to encapsulate common UI-related operations, improving code organization and reuse.
+- Controller Refactoring: Moved relevant logic from LoginController, CreateNewAccountController, and RestaurantBoxController to UIUtils for common tasks, enhancing maintainability and readability.
+- Merged AlertUtil class functionality into UIUtils, as well as SwitchSceneUtil
+- Documented some methods
+- Refactored Services, and DAO classes
+- Code looks wayyy cleaner now.
+
 
 ## [1.1.3] - 10/24/24 - Jimmie Xiong
 - Updated implementation.md, features.md, requriements.md, Architecture.md

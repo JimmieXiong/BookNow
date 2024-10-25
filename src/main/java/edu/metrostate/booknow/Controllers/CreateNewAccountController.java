@@ -1,19 +1,13 @@
 package edu.metrostate.booknow.Controllers;
 
 import edu.metrostate.booknow.Services.UserServices;
-import edu.metrostate.booknow.Utils.AlertUtil;
-import edu.metrostate.booknow.Utils.SwitchSceneUtil;
+import edu.metrostate.booknow.Utils.UIUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
-import java.io.IOException;
 import java.sql.SQLException;
-
-/**
- * Controller class for handling the creation of new user accounts.
- */
 
 public class CreateNewAccountController {
     @FXML
@@ -23,41 +17,58 @@ public class CreateNewAccountController {
     @FXML
     private PasswordField confirmPasswordField;
 
-    private final UserServices userService;
-    private static final String loginViewPath = "/edu/metrostate/booknow/LoginView.fxml";
+    private final UserServices userServices = new UserServices();
+    private static final String pathToLoginViewFXML = "/edu/metrostate/booknow/LoginView.fxml";
 
-    public CreateNewAccountController() {
-        this.userService = new UserServices();
-    }
-
-    public void onCreateAccountButton(ActionEvent event) {
+    /**
+     * Handles the action event triggered when the "Create Account" button is pressed.
+     * The method performs input validation, shows validation error messages if any exist,
+     * and proceeds with the account creation process when the input is valid.
+     *
+     * @param event the ActionEvent that triggered the account creation process
+     */
+    @FXML
+    public void onCreateAccountButton (ActionEvent event) {
         String username = usernameField.getText();
         String password = passwordField.getText();
         String confirmPassword = confirmPasswordField.getText();
 
-        // Validate inputs and get the error message if any
-        String validationMessage = userService.validateInput(username, password, confirmPassword);
-
+        String validationMessage = userServices.validateInput(username, password, confirmPassword);
         if (validationMessage != null) {
-            // Show the specific validation error message(s)
-            AlertUtil.showInfoAlert("Validation Error", validationMessage);
+            UIUtils.showErrorAlert("Validation Error", validationMessage);
             return;
         }
+        performAccountCreation(username, password, event);
+    }
 
+    /**
+     * Handles the account creation process, including validation and feedback to the user.
+     *
+     * @param username the desired username for the new account
+     * @param password the desired password for the new account
+     * @param event the ActionEvent that triggered the account creation process
+     */
+    private void performAccountCreation(String username, String password, ActionEvent event) {
         try {
-            if (userService.createAccount(username, password)) {
-                AlertUtil.showInfoAlert("Success", "Account created successfully!");
-                SwitchSceneUtil.switchScene(getClass().getResource(loginViewPath), event);
+            if (userServices.createAccount(username, password)) {
+                UIUtils.showSuccessAlert("Success", "Account created successfully!");
+                UIUtils.switchScene(getClass().getResource(pathToLoginViewFXML), event);
             } else {
-                AlertUtil.showErrorAlert("Username Error", "Username already exists!");
+                UIUtils.showErrorAlert("Username Error", "Username already exists!");
             }
-        } catch (SQLException | IOException e) {
-            AlertUtil.showErrorAlert("Account Error", "Failed to create account. Try again.");
+        } catch (SQLException e) {
+            UIUtils.showSQLException(e, "Failed to create account. Try again.");
         }
     }
 
-
-    public void onLoginButton(ActionEvent event) throws IOException {
-        SwitchSceneUtil.switchScene(getClass().getResource(loginViewPath), event);
+    /**
+     * Handles the action event triggered when the "Login" button is pressed.
+     * This method switches the current scene to the login view.
+     *
+     * @param event the ActionEvent that triggered the login process
+     */
+    @FXML
+    public void onLoginButton(ActionEvent event) {
+        UIUtils.switchScene(getClass().getResource(pathToLoginViewFXML), event);
     }
 }

@@ -9,18 +9,18 @@ import java.sql.SQLException;
  * Provides a method to establish a connection to a predefined MySQL database.
  */
 
-public class DB_Connection_Util {
+public class DBConnectionUtil {
 
     private static final String url = "jdbc:mysql://localhost:3306/booknow";
     private static final String user = "root";
     private static final String password = "root";
 
-    // Utility method to establish database connection
+    // Establish database connection
     public static Connection getConnection() throws SQLException {
         try {
             return DriverManager.getConnection(url, user, password);
         } catch (SQLException e) {
-            System.err.println("Failed to connect to the database: " + e.getMessage());
+            UIUtils.showSQLException(e, "Failed to connect to the database.");
         }
         return null;
     }

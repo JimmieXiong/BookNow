@@ -1,6 +1,6 @@
 package edu.metrostate.booknow.Services;
 
-import edu.metrostate.booknow.DAO.UserDAO;
+import edu.metrostate.booknow.DAO.UserDao;
 import edu.metrostate.booknow.Models.User;
 
 import java.sql.SQLException;
@@ -11,18 +11,25 @@ import java.sql.SQLException;
 
 public class UserServices {
 
-    private final UserDAO userDAO;
+    private final UserDao userDAO;
     private static User currentUser;
 
+    private static final String MSG_EMPTY_USERNAME = "Username cannot be empty!\n";
+    private static final String MSG_SHORT_USERNAME = "Username must be at least 8 characters long!\n";
+    private static final String MSG_EMPTY_PASSWORD = "Password cannot be empty!\n";
+    private static final String MSG_SHORT_PASSWORD = "Password must be at least 8 characters long!\n";
+    private static final String MSG_EMPTY_CONFIRM_PASSWORD = "Confirm password field cannot be empty!\n";
+    private static final String MSG_PASSWORD_MISMATCH = "Password and confirm password do not match!\n";
+
     public UserServices() {
-        this.userDAO = new UserDAO();
+        this.userDAO = new UserDao();
     }
 
     // Uses UserDAO.login() method to handle login logic
     public boolean login(String username, String password) {
         try {
             if (userDAO.login(username, password)) {
-                currentUser = userDAO.getUserByUsername(username);
+                setCurrentUser(username);
                 return true; // Login successful
             } else {
                 return false; // Login failed
@@ -31,6 +38,10 @@ public class UserServices {
             System.err.println(e.getMessage());
             return false; // Return false on failure
         }
+    }
+
+    private void setCurrentUser(String username) throws SQLException {
+        currentUser = userDAO.getUserByUsername(username);
     }
 
     // Method to validate login fields
@@ -55,40 +66,40 @@ public class UserServices {
 
     // Logs out the current user
     public void logout() {
-        // not implemented yet
+        // will implement soon.
         currentUser = null;
     }
 
     // Validates user input for account creation and provides specific error messages for multiple conditions
     public String validateInput(String username, String password, String confirmPassword) {
         StringBuilder errorMessage = new StringBuilder();
-
-        // Check if username and confirm password are not empty but password is empty
-        if (!username.isEmpty() && password.isEmpty() && !confirmPassword.isEmpty()) {
-            errorMessage.append("Password cannot be empty!\n");
-        } else {
-            // Check if username is empty
-            if (username.isEmpty()) {
-                errorMessage.append("Username cannot be empty!\n");
-            } else if (username.length() < 8) {
-                errorMessage.append("Username must be at least 8 characters long!\n");
-            }
-
-            // Check if password is empty or too short
-            if (password.isEmpty()) {
-                errorMessage.append("Password cannot be empty!\n");
-            } else if (password.length() < 8) {
-                errorMessage.append("Password must be at least 8 characters long!\n");
-            }
-
-            // Check if confirm password is empty or doesn't match
-            if (confirmPassword.isEmpty()) {
-                errorMessage.append("Confirm password field cannot be empty!\n");
-            } else if (!password.equals(confirmPassword)) {
-                errorMessage.append("Password and confirm password do not match!\n");
-            }
-        }
-        // If no errors, return null, otherwise return all errors
+        validateUsername(username, errorMessage);
+        validatePassword(password, errorMessage);
+        validateConfirmPassword(password, confirmPassword, errorMessage);
         return errorMessage.isEmpty() ? null : errorMessage.toString();
+    }
+
+    private void validateUsername(String username, StringBuilder errorMessage) {
+        if (username.isEmpty()) {
+            errorMessage.append(MSG_EMPTY_USERNAME);
+        } else if (username.length() < 8) {
+            errorMessage.append(MSG_SHORT_USERNAME);
+        }
+    }
+
+    private void validatePassword(String password, StringBuilder errorMessage) {
+        if (password.isEmpty()) {
+            errorMessage.append(MSG_EMPTY_PASSWORD);
+        } else if (password.length() < 8) {
+            errorMessage.append(MSG_SHORT_PASSWORD);
+        }
+    }
+
+    private void validateConfirmPassword(String password, String confirmPassword, StringBuilder errorMessage) {
+        if (confirmPassword.isEmpty()) {
+            errorMessage.append(MSG_EMPTY_CONFIRM_PASSWORD);
+        } else if (!password.equals(confirmPassword)) {
+            errorMessage.append(MSG_PASSWORD_MISMATCH);
+        }
     }
 }
