@@ -75,6 +75,9 @@ This feature allows users to create new accounts and log in to the system using 
 ### Search Restaurants
 
 This feature allows users to search for restaurants based on location, cuisine type, date, and number of guests.
+Make sure that you're selecting dates that match those in the DBScript, such as (1, '2024-11-01') or (2, '2024-11-02'). If you choose dates outside of those in the script, no restaurants will appear.
+
+Reason: This ensures that the booking system aligns with the actual data in the database, providing users with a realistic and accurate view of restaurant availability based on the specific reservation dates stored in the system. Since there isn't a dedicated restaurant view, all restaurant-related data and functionality must be handled directly in the database.
 
 #### Implementation:
 - The `BookNowController` handles restaurant search functionality.
@@ -95,5 +98,5 @@ This feature allows users to search for restaurants based on location, cuisine t
 #### Note:
 - Advanced filtering based on the number of guests (e.g., checking table availability for a specific number of guests) is not yet implemented.
 - This feature will be added in the upcoming implementation of the **Restaurant Detail Page** and **Reservation** system, where the total number of guests will be cross-checked against the restaurant's available capacity.
-- Aside from this, the search functionality is fully operational.
+- Aside from this, the search functionality, login, and create account is fully operational.
 ---
