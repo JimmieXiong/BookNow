@@ -1,25 +1,19 @@
 package edu.metrostate.booknow.Controllers;
 
 import edu.metrostate.booknow.Models.Restaurant;
-import edu.metrostate.booknow.Services.RestaurantService;
-import edu.metrostate.booknow.Services.UserServices;
-import edu.metrostate.booknow.Utils.UIUtils;
+import edu.metrostate.booknow.Models.Review;
+import edu.metrostate.booknow.Models.Table;
+import edu.metrostate.booknow.Services.BookNowServiceManager;
+import edu.metrostate.booknow.Utils.DBConnection;
+import edu.metrostate.booknow.Utils.UIUtil;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.IntStream;
-
-/**
- * The BookNowController class is responsible for managing the user interface interactions
- * related to booking restaurants. It includes methods to initialize the interface, handle
- * search actions, and populate the results based on user selections.
- */
 
 public class BookNowController {
 
@@ -30,96 +24,127 @@ public class BookNowController {
     @FXML
     private ComboBox<String> cb_cuisineType;
     @FXML
-    private DatePicker checkInDate;
-    @FXML
-    private VBox restaurantVBox;
-    @FXML
     private ComboBox<Integer> cb_adults;
     @FXML
     private ComboBox<Integer> cb_children;
+    @FXML
+    private DatePicker checkInDate;
+    @FXML
+    private VBox restaurantListVBox;
+    @FXML
+    private VBox reviewsOverlay;
+    @FXML
+    private VBox availabilityVBox;
 
-    private final RestaurantService restaurantService;
+    private String selectedCity;
+    private String selectedCuisineType;
+    private LocalDate selectedDate;
+    private int totalGuests;
+    private String selectedTimeSlot;
+
+    private final BookNowServiceManager serviceManager;
 
     public BookNowController() {
-        this.restaurantService = new RestaurantService();
+        this.serviceManager = new BookNowServiceManager(new DBConnection());
     }
 
-    /**
-     * Initializes the BookNowController by setting up the welcome message and populating
-     * various ComboBox elements with appropriate data.
-     *
-     * This method performs the following actions:
-     * - Sets the welcome message for the currently logged-in user.
-     * - Populates the locationComboBox with city names fetched from the restaurant service.
-     * - Populates the cb_cuisineType ComboBox with cuisine types fetched from the restaurant service.
-     * - Populates the cb_adults ComboBox with a range of numbers from 1 to 99.
-     * - Populates the cb_children ComboBox with a range of numbers from 0 to 99.
-     */
     @FXML
     public void initialize() {
-        // Set welcome message for logged-in user
-        setWelcomeMessage();
-        // Populate the combo boxes
-        UIUtils.populateComboBox(locationComboBox, restaurantService.fetchCityNames());
-        UIUtils.populateComboBox(cb_cuisineType, restaurantService.fetchCuisineTypes());
-        UIUtils.populateComboBox(cb_adults, IntStream.rangeClosed(1, 99).boxed().toList());
-        UIUtils.populateComboBox(cb_children, IntStream.rangeClosed(0, 99).boxed().toList());
+        lbl_welcome.setText("Welcome, " + UIUtil.USER);
+        UIUtil.populateComboBox(locationComboBox, serviceManager.getCityNames());
+        UIUtil.populateComboBox(cb_cuisineType, serviceManager.getCuisineTypes());
+        UIUtil.populateComboBox(cb_adults, IntStream.rangeClosed(1, 99).boxed().toList());
+        UIUtil.populateComboBox(cb_children, IntStream.rangeClosed(0, 99).boxed().toList());
     }
 
-    /**
-     * Sets the welcome message for the currently logged-in user.
-     * The welcome message is displayed via the 'lbl_welcome' label and includes the current user's name.
-     */
-    private void setWelcomeMessage() {
-        lbl_welcome.setText("Welcome, " + UserServices.getCurrentUser().getUserName());
-    }
-
-    /**
-     * Handles the search button click event. This method retrieves the selected city,
-     * cuisine type, and check-in date from the UI components and validates the search criteria.
-     * If the criteria are valid, it queries for available restaurants and displays the results.
-     * Otherwise, it shows an error alert.
-     *
-     * @param event the ActionEvent that triggered this method
-     */
-    @FXML
     public void onSearchButtonClick(ActionEvent event) {
-        String selectedCity = locationComboBox.getSelectionModel().getSelectedItem();
-        String selectedCuisineType = cb_cuisineType.getSelectionModel().getSelectedItem();
-        LocalDate selectedDate = checkInDate.getValue();
+        handleBackToRestaurants();
 
-        // Validate, if invalid, an alert is shown and the method exits.
-        if (!restaurantService.validateSearchCriteria(selectedCity, selectedCuisineType, selectedDate)) {
-            UIUtils.showErrorAlert("Invalid Search Criteria", restaurantService.getValidationMessage());
-            return;
+        selectedCity = locationComboBox.getSelectionModel().getSelectedItem();
+        selectedCuisineType = cb_cuisineType.getSelectionModel().getSelectedItem();
+        Integer selectedAdults = cb_adults.getSelectionModel().getSelectedItem();
+        Integer selectedChildren = cb_children.getSelectionModel().getSelectedItem();
+        selectedDate = checkInDate.getValue();
+
+        if (serviceManager.validateSearchInputs(selectedCity, selectedCuisineType, selectedAdults, selectedChildren, selectedDate)) {
+            totalGuests = selectedAdults + selectedChildren;
+
+            List<Restaurant> restaurants = serviceManager.getAvailableRestaurants(selectedCity, selectedCuisineType, totalGuests, selectedDate);
+            serviceManager.getRestaurantUIManager().populateRestaurantListVBox(
+                    restaurantListVBox, restaurants, this::handleReadReviews, this::handleViewMenu, this::handleShowAvailability
+            );
         }
-
-        // If valid, available restaurants are queried and then displayed to the user.
-        List<Restaurant> restaurants = restaurantService.findAvailableRestaurants(selectedCity, selectedCuisineType, selectedDate);
-        populateRestaurants(restaurants);
     }
 
-    /**
-     * Populates the provided list of restaurants into the VBox. Clears any existing
-     * children in the VBox before adding the new restaurant entries. If the list of
-     * restaurants is empty, an informational alert is shown to the user.
-     *
-     * @param restaurants A list of Restaurant objects to be displayed.
-     */
-    // Populate restaurants in the VBox
-    private void populateRestaurants(List<Restaurant> restaurants) {
-        restaurantVBox.getChildren().clear(); // Clear previous results
-        if (restaurants.isEmpty()) {
-            UIUtils.showInfoAlert("No Availability", "No restaurants are available for the selected date and criteria. Please search again.");
-        } else {
-            for (Restaurant restaurant : restaurants) {
-                VBox restaurantBox = UIUtils.createRestaurantBox(restaurant);
-                if (restaurantBox != null) {
-                    restaurantVBox.getChildren().add(restaurantBox);
-                } else {
-                    UIUtils.showInfoAlert("Error", "Failed to load restaurant details.");
-                }
-            }
-        }
+    private void handleShowAvailability(Restaurant restaurant) {
+        showAvailabilityView();
+        availabilityVBox.getChildren().clear();
+
+        Button backButton = new Button("Back");
+        backButton.setOnAction(event -> showRestaurantListView());
+        availabilityVBox.getChildren().add(backButton);
+
+        Label availabilityLabel = new Label("Available Tables for " + restaurant.getName());
+        availabilityLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #003580; -fx-font-weight: bold;");
+        availabilityVBox.getChildren().add(availabilityLabel);
+
+        selectedDate = checkInDate.getValue();
+        totalGuests = cb_adults.getSelectionModel().getSelectedItem() + cb_children.getSelectionModel().getSelectedItem();
+
+        TableView<Table> tableView = serviceManager.getRestaurantUIManager().createTableView(
+                restaurant, selectedDate, totalGuests, table -> handleReserveTable(restaurant, table),
+                selectedTimeSlot -> this.selectedTimeSlot = selectedTimeSlot
+        );
+
+        availabilityVBox.getChildren().add(tableView);
+        reviewsOverlay.setVisible(false);
+        reviewsOverlay.setManaged(false);
+    }
+
+    private void showAvailabilityView() {
+        restaurantListVBox.setVisible(false);
+        restaurantListVBox.setManaged(false);
+        reviewsOverlay.setVisible(false);
+        reviewsOverlay.setManaged(false);
+        availabilityVBox.setVisible(true);
+        availabilityVBox.setManaged(true);
+    }
+
+    private void showRestaurantListView() {
+        availabilityVBox.setVisible(false);
+        availabilityVBox.setManaged(false);
+        reviewsOverlay.setVisible(false);
+        reviewsOverlay.setManaged(false);
+        restaurantListVBox.setVisible(true);
+        restaurantListVBox.setManaged(true);
+    }
+
+    private void handleReserveTable(Restaurant restaurant, Table table) {
+        boolean success = serviceManager.reserveTable(UIUtil.USER, restaurant.getRestaurantId(), selectedDate, selectedTimeSlot, table.getTableNumber());
+        UIUtil.displayAlert(success ? "Reservation Confirmed" : "Reservation Failed",
+                success ? "Your reservation is confirmed." : "Failed to reserve the table. Please try again.");
+    }
+
+    private void handleViewMenu(Restaurant restaurant) {
+        serviceManager.getRestaurantUIManager().viewMenu(restaurant);
+    }
+
+    private void handleReadReviews(Restaurant restaurant) {
+        List<Review> reviews = serviceManager.getReviewsByRestaurantId(restaurant.getRestaurantId());
+        reviewsOverlay.setVisible(true);
+        reviewsOverlay.setManaged(true);
+        serviceManager.getRestaurantUIManager().displayReviews(reviewsOverlay, reviews);
+    }
+
+    public void handleBackToRestaurants() {
+        showRestaurantListView();
+    }
+
+    public void onViewMyReservationsClick(ActionEvent event) {
+        UIUtil.displayScene(getClass().getResource("/edu/metrostate/booknow/ReservationsView.fxml"), event);
+    }
+
+    public void onViewMyReviewsClick(ActionEvent event) {
+        UIUtil.displayScene(getClass().getResource("/edu/metrostate/booknow/ReviewView.fxml"), event);
     }
 }

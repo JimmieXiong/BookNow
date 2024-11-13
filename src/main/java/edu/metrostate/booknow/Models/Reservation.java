@@ -3,10 +3,15 @@ package edu.metrostate.booknow.Models;
 import javafx.scene.control.Button;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 public class Reservation {
 
     private int reservationId;
+
     private int restaurantId;
     private String restaurantName;
     private LocalDate reservationDate;
@@ -15,8 +20,11 @@ public class Reservation {
     private Button actionButton;
 
     private User user;
+
     private Restaurant restaurant;
+
     private TimeSlot timeSlotReserved;
+
     private Table table;
 
     public Reservation(int reservationId, int restaurantId, String restaurantName, LocalDate reservationDate, String timeSlot, String tableNumber) {
@@ -26,6 +34,7 @@ public class Reservation {
         this.reservationDate = reservationDate;
         this.timeSlot = timeSlot;
         this.tableNumber = tableNumber;
+
     }
 
     public int getReservationId() {
@@ -115,4 +124,24 @@ public class Reservation {
     public void setActionButton(Button actionButton) {
         this.actionButton = actionButton;
     }
+
+    public boolean checkReservationDateTimePassed() {
+
+        String[] timeRange = timeSlot.split(" - ");
+        String startTime = timeRange[0];  // e.sg., '9:00 AM'
+
+
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("h:mm a", Locale.ENGLISH);
+        LocalTime reservationStartTime = LocalTime.parse(startTime, timeFormatter);
+
+
+        LocalDateTime reservationDateTime = LocalDateTime.of(reservationDate, reservationStartTime);
+
+
+        LocalDateTime currentDateTime = LocalDateTime.now();
+
+
+        return reservationDateTime.isBefore(currentDateTime);
+    }
+
 }

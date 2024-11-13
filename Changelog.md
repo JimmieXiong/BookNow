@@ -1,13 +1,61 @@
 # ChangeLog
 
-[1.1.4] - 10/25/24 - Jimmie Xiong
-- Implemented a utility class named UIUtils to encapsulate common UI-related operations, improving code organization and reuse.
-- Controller Refactoring: Moved relevant logic from LoginController, CreateNewAccountController, and RestaurantBoxController to UIUtils for common tasks, enhancing maintainability and readability.
-- Merged AlertUtil class functionality into UIUtils, as well as SwitchSceneUtil
-- Documented some methods
-- Refactored Services, and DAO classes
-- Code looks wayyy cleaner now.
+## [1.2.1] - 2025-11-13
+- Refactored code and fixed various errors.
+- Suppressed warnings in `createViewTable`.
+- Refactored `BookNowView`, `ReservationView`,  `ReviewView` and `CreateReviewView.fxml` to dynamically fill the screen when maximized.
+- Reverted to multiple DB instances due to unresolved error with single DB instance approach.
+- Moved business logic out of controllers, isolating it within `UIManager` and `ServiceManager` classes; additional cleanup is still in progress.
 
+## [1.1.9] - 11/10/25 - Hao
+- Will update `implementation.md`, `architecture.md`, to reflect code.
+
+## [1.1.9] - 11/10/25 - Jimmie Xiong
+- Refactored code, fixed errors on review, and show availability.
+
+## [1.1.8] - 11/09/25 - Jimmie Xiong & Hao
+- Implemented `dbscript` to work with code.
+
+## [1.1.7] - 11/08/25 - Hao
+- Coded `ReservationService`, added new code to `UserService` & `RestaurantService`.
+
+## [1.1.6] - 11/06/25 - Jimmie Xiong
+- Implemented `TableDAO` class.
+
+## [1.1.5] - 11/05/25 - Jimmie Xiong
+- Refactored code.
+
+## [1.1.4] - 11/02/24 - Hao
+- Created `RestaurantDAO`, `ReviewDAO`.
+
+## [1.1.3] - 11/02/24 - Jimmie Xiong
+- Implemented `reservationsview.fxml`.
+
+## [1.1.2] - 10/30/24 - Hao
+- Implemented `CreateReviewController` and `CreateReviewView`.
+
+## [1.1.1] - 10/29/24 - Jimmie Xiong
+- Implemented `ReviewView.fxml`, `ReviewController`.
+- Refactored code.
+
+## [1.1.0] - 10/28/24 - Jimmie Xiong
+- Deleted `RestaurantBoxController` & FXML.
+- Refactored code.
+
+## [1.0.9] - 10/27/24 - Jimmie Xiong
+- Renamed `DBConnectionUtil` to `DBConnection`.
+- Refactored code.
+
+## [1.0.8] - 10/26/24 - Jimmie Xiong
+- Refactored code.
+
+## [1.0.7] - 10/25/24 - Jimmie Xiong
+- Implemented a utility class named `UIUtils` to encapsulate common UI-related operations, improving code organization and reuse.
+- **Controller Refactoring**: Moved relevant logic from `LoginController`, `CreateNewAccountController`, and `RestaurantBoxController` to `UIUtils` for common tasks, enhancing maintainability and readability.
+- Merged `AlertUtil` class functionality into `UIUtils`, as well as `SwitchSceneUtil`.
+- Documented some methods.
+- Refactored Services, and DAO classes.
+- Code looks way cleaner now.
 
 ## [1.1.3] - 10/24/24 - Jimmie Xiong
 - Updated implementation.md, features.md, requriements.md, Architecture.md
@@ -41,8 +89,8 @@ Refactoring and Architecture Improvements:
 - Mismatched password and confirm password fields.
 - validation system covers all possible field combinations and ensures appropriate feedback to the user.
   Fixed issues with the database script:
-    - Corrected restaurant reservation data for all cities (Minneapolis, Saint Paul, Maple Grove, and others).
-    - Added accurate reservation dates to ensure restaurants are properly available in all cities when searched by date.
+  - Corrected restaurant reservation data for all cities (Minneapolis, Saint Paul, Maple Grove, and others).
+  - Added accurate reservation dates to ensure restaurants are properly available in all cities when searched by date.
 
 
 ## [1.1.1] - 10/22/24 - Jimmie Xiong
@@ -69,7 +117,7 @@ Renamed populateRestaurantListVBox method to populateRestaurant for clarity.
 - Replaced **Portability** non-functional requirement with **Maintainability**.
 - The project relies on a locally hosted database, which makes it non-portable between different environments without manual configuration. This
   dependency rendered the portability requirement irrelevant.
-- 
+-
 ## [1.0.5] - 10/15/24 - Jimmie Xiong
 - Fixed an issue in module-info.java where the .booknow module was incorrectly pointing to edu.metrostate.booknow.booknow instead of edu.metrostate.booknow
 - Added notes about implementation errors in implementation.md

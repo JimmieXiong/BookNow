@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.control.cell.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Line?>
+
+<AnchorPane minHeight="800.0" minWidth="1400.0" xmlns="http://javafx.com/javafx/21.0.5" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.metrostate.booknow.Controllers.ReservationsController">
+    <children>
+        <!-- Top blue background -->
+        <AnchorPane prefHeight="200" style="-fx-background-color: #003580;"
+                    AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+                <!-- Welcome label -->
+                <Label fx:id="lbl_welcome" prefHeight="25.0" maxWidth="Infinity"
+                       style="-fx-font-size: 16px; -fx-text-fill: white;" text="Welcome, User"
+                       AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0"/>
+
+                <Button AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="50.0" onAction="#onSearchRestaurantsClick"
+                        style="-fx-background-color: #ff9900; -fx-text-fill: white;" text="Search Restaurants"/>
+
+                <Label layoutX="34.0" layoutY="97.0"
+                       style="-fx-font-size: 36px; -fx-font-weight: bold; -fx-text-fill: white;"
+                       text="Your reservations"/>
+            </children>
+        </AnchorPane>
+
+        <!-- Dividing line -->
+        <Line endX="0.0" endY="1.0" startX="0.0" startY="1.0" stroke="black"
+              AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+              AnchorPane.topAnchor="200.0" />
+
+        <!-- ScrollPane with centered content -->
+        <ScrollPane style="-fx-background-color: white;" fitToWidth="true" fitToHeight="true"
+                    AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                    AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="201.0">
+            <content>
+                <VBox spacing="10.0" fillWidth="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                      AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <!-- TableView for displaying reservations -->
+                    <TableView fx:id="reservationsTable" prefHeight="400" prefWidth="1000" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="restaurantNameColumn" text="Restaurant Name" prefWidth="200">
+                                <cellValueFactory>
+                                    <PropertyValueFactory property="restaurantName"/>
+                                </cellValueFactory>
+                            </TableColumn>
+                            <TableColumn fx:id="reservationDateColumn" text="Reservation Date" prefWidth="150">
+                                <cellValueFactory>
+                                    <PropertyValueFactory property="reservationDate"/>
+                                </cellValueFactory>
+                            </TableColumn>
+                            <TableColumn fx:id="timeSlotColumn" text="Time Slot" prefWidth="150">
+                                <cellValueFactory>
+                                    <PropertyValueFactory property="timeSlot"/>
+                                </cellValueFactory>
+                            </TableColumn>
+                            <TableColumn fx:id="tableNumberColumn" text="Table Number" prefWidth="150">
+                                <cellValueFactory>
+                                    <PropertyValueFactory property="tableNumber"/>
+                                </cellValueFactory>
+                            </TableColumn>
+                            <TableColumn fx:id="actionColumn" text="Action" prefWidth="200">
+                                <cellValueFactory>
+                                    <PropertyValueFactory property="actionButton"/>
+                                </cellValueFactory>
+                            </TableColumn>
+                        </columns>
+                    </TableView>
+                </VBox>
+            </content>
+        </ScrollPane>
+
+    </children>
+</AnchorPane>

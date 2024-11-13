@@ -5,9 +5,9 @@
 <?import javafx.scene.text.*?>
 
 <AnchorPane prefHeight="600.0" prefWidth="1200.0" style="-fx-background-color: #f0f2f5;"
-            xmlns="http://javafx.com/javafx/21"
+            xmlns="http://javafx.com/javafx/21.0.5"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="edu.metrostate.booknow.Controllers.CreateNewAccountController">
+            fx:controller="edu.metrostate.booknow.Controllers.CreateNewAcccountController">
     <children>
         <HBox fillHeight="true" spacing="20" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
               AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -63,7 +63,7 @@
 
                         <!-- Wrap the Create Account Button inside an HBox to allow stretching -->
                         <HBox>
-                            <Button onAction="#onCreateAccountButton" prefHeight="35.0"
+                            <Button onAction="#onCreateAccountButtonAction" prefHeight="35.0"
                                     style="-fx-background-color: #42b72a; -fx-text-fill: white; -fx-background-radius: 20; -fx-border-radius: 20;"
                                     text="Create Account" maxWidth="Infinity" HBox.hgrow="ALWAYS">
                                 <font>
