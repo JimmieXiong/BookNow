@@ -27,8 +27,10 @@ public class ReservationService {
      * @param reservationId The ID of the reservation to cancel.
      */
     public void cancelReservation(int reservationId) {
+        System.out.println("ReservationService: Canceling reservation with ID: " + reservationId);
         reservationDAO.cancelReservation(reservationId);
     }
+
 
     /**
      * Retrieves a reservation by its ID.

@@ -7,7 +7,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
-import java.io.IOException;
 import java.sql.SQLException;
 
 public class CreateNewAcccountController {
@@ -34,37 +33,21 @@ public class CreateNewAcccountController {
         String password = passwordField.getText();
         String confirmPassword = confirmPasswordField.getText();
 
-        if (username.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
-            UIUtil.displayAlert("Error", "All fields must be filled!");
-            return;
-        }
-
-        if (!password.equals(confirmPassword)) {
-            UIUtil.displayAlert("Error", "Password and confirm password do not match");
-            return;
-        }
-
         try {
-            boolean userExists = userService.login(username, password);
-            if (userExists) {
-                UIUtil.displayAlert("Error", "Username already exists!");
-                return;
-            }
-
-            boolean accountCreated = userService.createAccount(username, password);
-            if (accountCreated) {
+            String resultMessage = userService.validateAndCreateAccount(username, password, confirmPassword);
+            if (resultMessage.equals("Success")) {
                 UIUtil.USER = username;
                 UIUtil.displayAlert("Success", "Account created successfully");
                 UIUtil.displayScene(getClass().getResource("/edu/metrostate/booknow/BookNowView.fxml"), event);
             } else {
-                UIUtil.displayAlert("Error", "Error creating account");
+                UIUtil.displayAlert("Error", resultMessage);
             }
         } catch (SQLException e) {
             UIUtil.displayAlert("Error", e.getMessage());
         }
     }
 
-    public void onLoginButton(ActionEvent event) throws IOException {
+    public void onLoginButton(ActionEvent event) {
         UIUtil.displayScene(getClass().getResource("/edu/metrostate/booknow/LoginView.fxml"), event);
     }
 }

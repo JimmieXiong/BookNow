@@ -53,7 +53,7 @@ public class CreateReviewController {
         if (reservation != null) {
             lbl_restaurantName.setText(reservation.getRestaurantName());
             lbl_dateOfExperience.setText(reservation.getReservationDate().toString());
-        }else{
+        } else {
             UIUtil.displayAlert("Error", "Reservation not found.");
         }
     }
@@ -62,17 +62,16 @@ public class CreateReviewController {
         Integer rating = combo_rating.getValue();
         String feedback = txt_reviewComment.getText();
 
-        if (rating == null) {
-            UIUtil.displayAlert("Rating Selection", "Please select a rating.");
-            return;
+        try {
+            String resultMessage = reviewService.validateAndSubmitReview(UIUtil.USER, reservation.getRestaurantId(), reservation.getReservationId(), rating, feedback, reservation.getReservationDate());
+            if (resultMessage.equals("Success")) {
+                UIUtil.displayAlert("Success", "Review successfully submitted!");
+            } else {
+                UIUtil.displayAlert("Error", resultMessage);
+            }
+        } catch (Exception e) {
+            UIUtil.displayAlert("Error", e.getMessage());
         }
-        if (feedback == null || feedback.isBlank()) {
-            UIUtil.displayAlert("Empty Review", "Please review");
-            return;
-        }
-
-        reviewService.submitReview(UIUtil.USER, reservation.getRestaurantId(), reservation.getReservationId(), rating, feedback, reservation.getReservationDate());
-        UIUtil.displayAlert("Success", "Review successfully submitted!");
     }
 
     public void onSearchRestaurantsClick(ActionEvent event) {

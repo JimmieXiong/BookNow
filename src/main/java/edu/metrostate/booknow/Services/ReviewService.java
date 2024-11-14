@@ -29,4 +29,17 @@ public class ReviewService {
         reviewDAO.submitReview(username, restaurantId, reservationId, rating, feedback, dateOfExperience);
     }
 
+    // New method to handle validation and submission
+    public String validateAndSubmitReview(String username, int restaurantId, int reservationId, Integer rating, String feedback, LocalDate dateOfExperience) {
+        if (rating == null) {
+            return "Please select a rating.";
+        }
+
+        if (feedback == null || feedback.isBlank()) {
+            return "Please provide a review.";
+        }
+
+        submitReview(username, restaurantId, reservationId, rating, feedback, dateOfExperience);
+        return "Success";
+    }
 }

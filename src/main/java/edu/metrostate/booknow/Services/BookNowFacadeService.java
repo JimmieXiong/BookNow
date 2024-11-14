@@ -1,16 +1,29 @@
 package edu.metrostate.booknow.Services;
 
+import edu.metrostate.booknow.Controllers.BookNowController;
 import edu.metrostate.booknow.DAO.*;
 import edu.metrostate.booknow.Models.Restaurant;
 import edu.metrostate.booknow.Models.Review;
+import edu.metrostate.booknow.Models.Table;
 import edu.metrostate.booknow.Utils.DBConnection;
 import edu.metrostate.booknow.Utils.RestaurantUIManager;
 import edu.metrostate.booknow.Utils.UIUtil;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableView;
+import javafx.scene.layout.VBox;
 
 import java.time.LocalDate;
 import java.util.List;
 
-public class BookNowServiceManager {
+
+/*
+ This class acts as a facade, encapsulating interactions with multiple services (RestaurantService,
+ ReviewService, TableService, etc.) and providing simplified methods for higher-level operations like
+ searching restaurants and showing availability.
+ */
+
+public class BookNowFacadeService {
 
     private final RestaurantService restaurantService;
     private final ReviewService reviewService;
@@ -19,7 +32,7 @@ public class BookNowServiceManager {
     private final ReservationService reservationService;
     private final RestaurantUIManager restaurantUIManager;
 
-    public BookNowServiceManager(DBConnection dbHandler) {
+    public BookNowFacadeService(DBConnection dbHandler) {
         this.userService = new UserService(new UserDAO(dbHandler));
         this.restaurantService = new RestaurantService(new RestaurantDAO(dbHandler));
         this.reviewService = new ReviewService(new ReviewDAO(dbHandler));
@@ -75,5 +88,37 @@ public class BookNowServiceManager {
 
     public RestaurantUIManager getRestaurantUIManager() {
         return restaurantUIManager;
+    }
+
+    public void searchRestaurants(String city, String cuisineType, Integer adults, Integer children, LocalDate date, VBox restaurantListVBox, BookNowController controller) {
+        if (validateSearchInputs(city, cuisineType, adults, children, date)) {
+            int totalGuests = adults + children;
+
+            List<Restaurant> restaurants = getAvailableRestaurants(city, cuisineType, totalGuests, date);
+            restaurantUIManager.populateRestaurantListVBox(
+                    restaurantListVBox, restaurants, controller::handleReadReviews,
+                    controller::handleViewMenu, controller::handleShowAvailability
+            );
+        }
+    }
+
+    public void showAvailability(Restaurant restaurant, LocalDate selectedDate, int totalGuests, VBox availabilityVBox, VBox restaurantListVBox, VBox reviewsOverlay, BookNowController controller) {
+        // Delegate UI-specific actions to the controller
+        controller.showAvailabilityView();
+        availabilityVBox.getChildren().clear();
+
+        Button backButton = new Button("Back");
+        backButton.setOnAction(event -> controller.showRestaurantListView());
+        availabilityVBox.getChildren().add(backButton);
+
+        Label availabilityLabel = new Label("Available Tables for " + restaurant.getName());
+        availabilityLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #003580; -fx-font-weight: bold;");
+        availabilityVBox.getChildren().add(availabilityLabel);
+
+        TableView<Table> tableView = restaurantUIManager.createTableView(restaurant, selectedDate, totalGuests, table -> controller.handleReserveTable(restaurant, table), selectedTimeSlot -> controller.setSelectedTimeSlot(selectedTimeSlot));
+
+        availabilityVBox.getChildren().add(tableView);
+        reviewsOverlay.setVisible(false);
+        reviewsOverlay.setManaged(false);
     }
 }

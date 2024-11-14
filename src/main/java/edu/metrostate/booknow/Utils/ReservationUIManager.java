@@ -4,7 +4,6 @@ import edu.metrostate.booknow.Controllers.CreateReviewController;
 import edu.metrostate.booknow.DAO.ReservationDAO;
 import edu.metrostate.booknow.Models.Reservation;
 import edu.metrostate.booknow.Services.ReservationService;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
@@ -28,19 +27,22 @@ public class ReservationUIManager {
         actionColumn.setCellValueFactory(new PropertyValueFactory<>("actionButton"));
     }
 
-    public ObservableList<Reservation> loadReservations(String username) {
-        ObservableList<Reservation> reservationList = FXCollections.observableArrayList(reservationService.getUserReservations(username));
-        for (Reservation reservation : reservationList) {
-            reservation.setActionButton(createActionButton(reservation));
+    public void loadReservations(String username, ObservableList<Reservation> reservationsList) {
+        reservationsList.clear();
+        reservationsList.addAll(reservationService.getUserReservations(username));
+        for (Reservation reservation : reservationsList) {
+            reservation.setActionButton(createActionButton(reservation, reservationsList));
         }
-        return reservationList;
     }
 
-    private Button createActionButton(Reservation reservation) {
+    private Button createActionButton(Reservation reservation, ObservableList<Reservation> reservationsList) {
         Button actionButton;
         if (!reservation.checkReservationDateTimePassed()) {
             actionButton = new Button("Cancel Reservation");
-            actionButton.setOnAction(e -> cancelReservation(reservation.getReservationId()));
+            actionButton.setOnAction(e -> {
+                System.out.println("Cancel Reservation button clicked for reservation ID: " + reservation.getReservationId());
+                cancelReservation(reservation.getReservationId(), reservationsList);
+            });
         } else if (reservationService.checkReservationHasReview(reservation.getReservationId())) {
             actionButton = new Button("View Your Review");
             actionButton.setOnAction(e -> UIUtil.displayScene(getClass().getResource("/edu/metrostate/booknow/ReviewView.fxml"), e));
@@ -52,8 +54,12 @@ public class ReservationUIManager {
         return actionButton;
     }
 
-    private void cancelReservation(int reservationId) {
+    public void cancelReservation(int reservationId, ObservableList<Reservation> reservationsList) {
+        System.out.println("ReservationUIManager: Canceling reservation with ID: " + reservationId);
         reservationService.cancelReservation(reservationId);
+
+        // Remove the canceled reservation from the list
+        reservationsList.removeIf(reservation -> reservation.getReservationId() == reservationId);
     }
 
     private void handleLeaveReviewAction(ActionEvent event, int reservationId) {

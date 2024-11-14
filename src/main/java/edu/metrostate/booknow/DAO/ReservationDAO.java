@@ -61,17 +61,20 @@ public class ReservationDAO {
      * @param reservationId The ID of the reservation to cancel.
      */
     public void cancelReservation(int reservationId) {
+        System.out.println("ReservationDAO: Attempting to cancel reservation with ID: " + reservationId);
         String deleteQuery = "DELETE FROM reservations WHERE reservation_id = ?";
 
         try (Connection connection = dbConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(deleteQuery)) {
             preparedStatement.setInt(1, reservationId);
-            preparedStatement.executeUpdate();
-
+            int rowsAffected = preparedStatement.executeUpdate();
+            System.out.println("ReservationDAO: Rows affected: " + rowsAffected); // Check if a row was actually deleted
         } catch (SQLException e) {
+            System.err.println("Error canceling reservation: " + e.getMessage());
             e.printStackTrace();
         }
     }
+
 
     /**
      * Retrieves a reservation by its ID.

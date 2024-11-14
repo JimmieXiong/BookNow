@@ -1,6 +1,67 @@
 # ChangeLog
 
-## [1.2.1] - 2025-11-13
+
+## [1.2.2] - 11/13/24 # Jimmie Xiong and Hao Tran
+## Fixed
+- **Reservation Cancellation UI**: Now updates immediately without requiring navigation.
+- **Account Creation and Validation**: Moved business logic from the controller to the service layer for better separation of concerns.
+- **Review Validation**: Moved business logic for review validation from the controller to the service layer for better separation of concerns.
+
+## Updated
+- **ReservationUIManager**: Now directly modifies the `ObservableList` bound to `TableView`.
+- **UserService**:
+  - Added the `validateAndCreateAccount` method to handle:
+    - Validation of input parameters (empty fields, password confirmation).
+    - Checking if the username already exists.
+    - Creating a new account if validations pass.
+    - Returning a message indicating success or failure.
+- **ReviewService**:
+  - Added the `validateAndSubmitReview` method to handle:
+    - Validation of input parameters (rating selection and feedback).
+    - Submitting the review if validations pass.
+    - Returning a message indicating success or failure.
+
+## Improved
+- **Action Buttons**: Now remove canceled reservations from the list, ensuring instant feedback in the UI.
+- **CreateNewAcccountController**:
+  - Refactored the `onCreateAccountButtonAction` method to:
+    - Call `userService.validateAndCreateAccount` for account creation logic.
+    - Manage UI updates based on the result from `validateAndCreateAccount`.
+- **CreateReviewController**:
+  - Refactored the `onSubmitReviewClick` method to:
+    - Call `reviewService.validateAndSubmitReview` for validation and submission.
+    - Manage UI updates based on the result from `validateAndSubmitReview`.
+
+## Added
+### `BookNowServiceManager`
+- **searchRestaurants**: Validates input, calculates guests, fetches restaurants, and populates the UI.
+- **showAvailability**: Updates availability UI, including back button, labels, and `TableView`.
+
+### `BookNowController`
+- **onSearchButtonClick**: Extracts UI values and uses `searchRestaurants` method.
+- **handleShowAvailability**: Extracts date and guests, delegates to `showAvailability`.
+- **setSelectedTimeSlot**: Sets the selected time slot.
+
+### `validateAndCreateAccount` Method
+- **Class**: `UserService`
+- **Description**: Created a new method to handle account creation and validation in the service layer.
+- **Functionality**:
+  - Validates input parameters.
+  - Checks if the username already exists.
+  - Creates a new account.
+  - Returns a message indicating success or failure.
+
+### `validateAndSubmitReview` Method
+- **Class**: `ReviewService`
+- **Description**: Created a new method to handle review validation and submission in the service layer.
+- **Functionality**:
+  - Validates input parameters.
+  - Submits the review if validations pass.
+  - Returns a message indicating success or failure.
+
+- The `BookNowController, all other controllers` is now clean and organized!
+
+## [1.2.1] - 11/13/24
 - Refactored code and fixed various errors.
 - Suppressed warnings in `createViewTable`.
 - Refactored `BookNowView`, `ReservationView`,  `ReviewView` and `CreateReviewView.fxml` to dynamically fill the screen when maximized.

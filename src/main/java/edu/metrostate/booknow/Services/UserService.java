@@ -26,4 +26,25 @@ public class UserService {
         return userDAO.createAccount(username, password);
     }
 
+    public String validateAndCreateAccount(String username, String password, String confirmPassword) throws SQLException {
+        if (username.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
+            return "All fields must be filled!";
+        }
+
+        if (!password.equals(confirmPassword)) {
+            return "Password and confirm password do not match";
+        }
+
+        boolean userExists = userDAO.login(username, password);
+        if (userExists) {
+            return "Username already exists!";
+        }
+
+        boolean accountCreated = userDAO.createAccount(username, password);
+        if (accountCreated) {
+            return "Success";
+        } else {
+            return "Error creating account";
+        }
+    }
 }

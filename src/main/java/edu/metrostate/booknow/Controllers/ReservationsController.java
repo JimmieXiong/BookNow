@@ -3,7 +3,6 @@ package edu.metrostate.booknow.Controllers;
 import edu.metrostate.booknow.Models.Reservation;
 import edu.metrostate.booknow.Utils.ReservationUIManager;
 import edu.metrostate.booknow.Utils.UIUtil;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -41,8 +40,8 @@ public class ReservationsController {
     }
 
     private void loadReservations() {
-        ObservableList<Reservation> reservationList = reservationUIManager.loadReservations(UIUtil.USER);
-        reservationsTable.setItems(reservationList);
+        // Pass the ObservableList directly from the TableView
+        reservationUIManager.loadReservations(UIUtil.USER, reservationsTable.getItems());
     }
 
     public void onSearchRestaurantsClick(ActionEvent event) {

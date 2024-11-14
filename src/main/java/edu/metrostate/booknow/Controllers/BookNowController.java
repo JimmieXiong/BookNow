@@ -3,7 +3,7 @@ package edu.metrostate.booknow.Controllers;
 import edu.metrostate.booknow.Models.Restaurant;
 import edu.metrostate.booknow.Models.Review;
 import edu.metrostate.booknow.Models.Table;
-import edu.metrostate.booknow.Services.BookNowServiceManager;
+import edu.metrostate.booknow.Services.BookNowFacadeService;
 import edu.metrostate.booknow.Utils.DBConnection;
 import edu.metrostate.booknow.Utils.UIUtil;
 import javafx.event.ActionEvent;
@@ -42,10 +42,10 @@ public class BookNowController {
     private int totalGuests;
     private String selectedTimeSlot;
 
-    private final BookNowServiceManager serviceManager;
+    private final BookNowFacadeService serviceManager;
 
     public BookNowController() {
-        this.serviceManager = new BookNowServiceManager(new DBConnection());
+        this.serviceManager = new BookNowFacadeService(new DBConnection());
     }
 
     @FXML
@@ -59,77 +59,50 @@ public class BookNowController {
 
     public void onSearchButtonClick(ActionEvent event) {
         handleBackToRestaurants();
-
         selectedCity = locationComboBox.getSelectionModel().getSelectedItem();
         selectedCuisineType = cb_cuisineType.getSelectionModel().getSelectedItem();
         Integer selectedAdults = cb_adults.getSelectionModel().getSelectedItem();
         Integer selectedChildren = cb_children.getSelectionModel().getSelectedItem();
         selectedDate = checkInDate.getValue();
-
-        if (serviceManager.validateSearchInputs(selectedCity, selectedCuisineType, selectedAdults, selectedChildren, selectedDate)) {
-            totalGuests = selectedAdults + selectedChildren;
-
-            List<Restaurant> restaurants = serviceManager.getAvailableRestaurants(selectedCity, selectedCuisineType, totalGuests, selectedDate);
-            serviceManager.getRestaurantUIManager().populateRestaurantListVBox(
-                    restaurantListVBox, restaurants, this::handleReadReviews, this::handleViewMenu, this::handleShowAvailability
-            );
-        }
+        serviceManager.searchRestaurants(selectedCity, selectedCuisineType, selectedAdults, selectedChildren, selectedDate, restaurantListVBox, this);
     }
 
-    private void handleShowAvailability(Restaurant restaurant) {
-        showAvailabilityView();
-        availabilityVBox.getChildren().clear();
-
-        Button backButton = new Button("Back");
-        backButton.setOnAction(event -> showRestaurantListView());
-        availabilityVBox.getChildren().add(backButton);
-
-        Label availabilityLabel = new Label("Available Tables for " + restaurant.getName());
-        availabilityLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #003580; -fx-font-weight: bold;");
-        availabilityVBox.getChildren().add(availabilityLabel);
-
-        selectedDate = checkInDate.getValue();
+    public void handleShowAvailability(Restaurant restaurant) {selectedDate = checkInDate.getValue();
         totalGuests = cb_adults.getSelectionModel().getSelectedItem() + cb_children.getSelectionModel().getSelectedItem();
-
-        TableView<Table> tableView = serviceManager.getRestaurantUIManager().createTableView(
-                restaurant, selectedDate, totalGuests, table -> handleReserveTable(restaurant, table),
-                selectedTimeSlot -> this.selectedTimeSlot = selectedTimeSlot
-        );
-
-        availabilityVBox.getChildren().add(tableView);
-        reviewsOverlay.setVisible(false);
-        reviewsOverlay.setManaged(false);
+        serviceManager.showAvailability(restaurant, selectedDate, totalGuests, availabilityVBox, restaurantListVBox, reviewsOverlay, this);
     }
 
-    private void showAvailabilityView() {
+    // Ran into errors where views were showing, not showing, showing in the background, etc
+    // fix by setting. Show the availability view and hide other views
+    public void showAvailabilityView() {
+        // Hide the restaurant list view
         restaurantListVBox.setVisible(false);
-        restaurantListVBox.setManaged(false);
-        reviewsOverlay.setVisible(false);
-        reviewsOverlay.setManaged(false);
+        // Show the availability view without will not show
         availabilityVBox.setVisible(true);
         availabilityVBox.setManaged(true);
     }
 
-    private void showRestaurantListView() {
+    public void showRestaurantListView() {
+        // Hide the availability view without when hitting back button error in background for some reason not clearing
         availabilityVBox.setVisible(false);
-        availabilityVBox.setManaged(false);
+        // Hide the reviews overlay when searching new restaurants
         reviewsOverlay.setVisible(false);
-        reviewsOverlay.setManaged(false);
+        // Show the restaurant list view without will not show
         restaurantListVBox.setVisible(true);
         restaurantListVBox.setManaged(true);
     }
 
-    private void handleReserveTable(Restaurant restaurant, Table table) {
+    public void handleReserveTable(Restaurant restaurant, Table table) {
         boolean success = serviceManager.reserveTable(UIUtil.USER, restaurant.getRestaurantId(), selectedDate, selectedTimeSlot, table.getTableNumber());
         UIUtil.displayAlert(success ? "Reservation Confirmed" : "Reservation Failed",
                 success ? "Your reservation is confirmed." : "Failed to reserve the table. Please try again.");
     }
 
-    private void handleViewMenu(Restaurant restaurant) {
+    public void handleViewMenu(Restaurant restaurant) {
         serviceManager.getRestaurantUIManager().viewMenu(restaurant);
     }
 
-    private void handleReadReviews(Restaurant restaurant) {
+    public void handleReadReviews(Restaurant restaurant) {
         List<Review> reviews = serviceManager.getReviewsByRestaurantId(restaurant.getRestaurantId());
         reviewsOverlay.setVisible(true);
         reviewsOverlay.setManaged(true);
@@ -142,6 +115,9 @@ public class BookNowController {
 
     public void onViewMyReservationsClick(ActionEvent event) {
         UIUtil.displayScene(getClass().getResource("/edu/metrostate/booknow/ReservationsView.fxml"), event);
+    }
+    public void setSelectedTimeSlot(String selectedTimeSlot) {
+        this.selectedTimeSlot = selectedTimeSlot;
     }
 
     public void onViewMyReviewsClick(ActionEvent event) {
