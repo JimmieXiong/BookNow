@@ -72,6 +72,31 @@ public class BookNowController {
         serviceManager.showAvailability(restaurant, selectedDate, totalGuests, availabilityVBox, restaurantListVBox, reviewsOverlay, this);
     }
 
+    public void handleReserveTable(Restaurant restaurant, Table table) {
+        boolean success = serviceManager.reserveTable(UIUtil.USER, restaurant.getRestaurantId(), selectedDate, selectedTimeSlot, table.getTableNumber());
+        UIUtil.displayAlert(success ? "Reservation Confirmed" : "Reservation Failed",
+                success ? "Your reservation is confirmed." : "Failed to reserve the table. Please try again.");
+    }
+
+    public void handleReadReviews(Restaurant restaurant) {
+        List<Review> reviews = serviceManager.getReviewsByRestaurantId(restaurant.getRestaurantId());
+        reviewsOverlay.setVisible(true);
+        reviewsOverlay.setManaged(true);
+        serviceManager.getRestaurantUIManager().displayReviews(reviewsOverlay, reviews);
+    }
+
+    public void handleViewMenu(Restaurant restaurant) {
+        serviceManager.getRestaurantUIManager().viewMenu(restaurant);
+    }
+
+    public void handleBackToRestaurants() {
+        showRestaurantListView();
+    }
+
+    public void setSelectedTimeSlot(String selectedTimeSlot) {
+        this.selectedTimeSlot = selectedTimeSlot;
+    }
+
     // Ran into errors where views were showing, not showing, showing in the background, etc
     // fix by setting. Show the availability view and hide other views
     public void showAvailabilityView() {
@@ -92,32 +117,8 @@ public class BookNowController {
         restaurantListVBox.setManaged(true);
     }
 
-    public void handleReserveTable(Restaurant restaurant, Table table) {
-        boolean success = serviceManager.reserveTable(UIUtil.USER, restaurant.getRestaurantId(), selectedDate, selectedTimeSlot, table.getTableNumber());
-        UIUtil.displayAlert(success ? "Reservation Confirmed" : "Reservation Failed",
-                success ? "Your reservation is confirmed." : "Failed to reserve the table. Please try again.");
-    }
-
-    public void handleViewMenu(Restaurant restaurant) {
-        serviceManager.getRestaurantUIManager().viewMenu(restaurant);
-    }
-
-    public void handleReadReviews(Restaurant restaurant) {
-        List<Review> reviews = serviceManager.getReviewsByRestaurantId(restaurant.getRestaurantId());
-        reviewsOverlay.setVisible(true);
-        reviewsOverlay.setManaged(true);
-        serviceManager.getRestaurantUIManager().displayReviews(reviewsOverlay, reviews);
-    }
-
-    public void handleBackToRestaurants() {
-        showRestaurantListView();
-    }
-
     public void onViewMyReservationsClick(ActionEvent event) {
         UIUtil.displayScene(getClass().getResource("/edu/metrostate/booknow/ReservationsView.fxml"), event);
-    }
-    public void setSelectedTimeSlot(String selectedTimeSlot) {
-        this.selectedTimeSlot = selectedTimeSlot;
     }
 
     public void onViewMyReviewsClick(ActionEvent event) {

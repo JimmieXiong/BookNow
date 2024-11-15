@@ -9,7 +9,7 @@ import javafx.scene.control.TextField;
 
 import java.sql.SQLException;
 
-public class CreateNewAcccountController {
+public class CreateNewAccountController {
 
     @FXML
     private TextField usernameField;
@@ -20,7 +20,7 @@ public class CreateNewAcccountController {
 
     private final UserService userService;
 
-    public CreateNewAcccountController() {
+    public CreateNewAccountController() {
         this.userService = new UserService();
     }
 
@@ -47,7 +47,7 @@ public class CreateNewAcccountController {
         }
     }
 
-    public void onLoginButton(ActionEvent event) {
+    public void onLoginButtonAction(ActionEvent event) {
         UIUtil.displayScene(getClass().getResource("/edu/metrostate/booknow/LoginView.fxml"), event);
     }
 }

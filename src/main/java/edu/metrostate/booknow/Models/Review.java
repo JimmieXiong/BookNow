@@ -3,7 +3,6 @@ package edu.metrostate.booknow.Models;
 import java.time.LocalDate;
 
 public class Review {
-    private int reviewId;
     private String username;
     private String restaurantName;
     private int rating;
@@ -12,11 +11,8 @@ public class Review {
 
     private User user;
     private Restaurant restaurant;
-    private TimeSlot timeSlotReserved;
-    private Reservation reservation;
 
-    public Review(int reviewId, String username, String restaurantName, int rating, String feedback, LocalDate dateOfExperience) {
-        this.reviewId = reviewId;
+    public Review(String username, String restaurantName, int rating, String feedback, LocalDate dateOfExperience) {
         this.username = username;
         this.restaurantName = restaurantName;
         this.rating = rating;
@@ -24,14 +20,26 @@ public class Review {
         this.dateOfExperience = dateOfExperience;
     }
 
-    public int getReviewId() {
-        return reviewId;
-    }
-
     public String getUsername() {
         return username;
     }
-
+    /*
+     * Stack Trace Analysis:
+     *
+     * Method calls and their origins:
+     *
+     * - getRestaurantName:36, Review (edu.metrostate.booknow.Models)
+     *   119 hidden frames
+     * - setScene:27, UIUtil (edu.metrostate.booknow.Utils)
+     * - displayScene:42, UIUtil (edu.metrostate.booknow.Utils)
+     * - onViewMyReviewsClick:125, BookNowController (edu.metrostate.booknow.Controllers)
+     *   68 hidden frames
+     *
+     * Overview of the chain:
+     * The chain of method calls starts in onViewMyReviewsClick in BookNowController.
+     * onViewMyReviewsClick calls displayScene in UIUtil, which then calls setScene.
+     * setScene eventually leads to a situation where getRestaurantName() is called on a Review instance.
+     */
     public String getRestaurantName() {
         return restaurantName;
     }
@@ -48,28 +56,8 @@ public class Review {
         return dateOfExperience;
     }
 
-    public void setReviewId(int reviewId) {
-        this.reviewId = reviewId;
-    }
-
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public void setRestaurantName(String restaurantName) {
-        this.restaurantName = restaurantName;
-    }
-
-    public void setRating(int rating) {
-        this.rating = rating;
-    }
-
-    public void setFeedback(String feedback) {
-        this.feedback = feedback;
-    }
-
-    public void setDateOfExperience(LocalDate dateOfExperience) {
-        this.dateOfExperience = dateOfExperience;
     }
 
     public User getUser() {
@@ -88,19 +76,4 @@ public class Review {
         this.restaurant = restaurant;
     }
 
-    public TimeSlot getTimeSlotReserved() {
-        return timeSlotReserved;
-    }
-
-    public void setTimeSlotReserved(TimeSlot timeSlotReserved) {
-        this.timeSlotReserved = timeSlotReserved;
-    }
-
-    public Reservation getReservation() {
-        return reservation;
-    }
-
-    public void setReservation(Reservation reservation) {
-        this.reservation = reservation;
-    }
 }

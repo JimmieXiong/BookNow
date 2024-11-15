@@ -6,32 +6,11 @@ public class Table {
     private String tableNumber;
     private int numberOfSeats;
     private double bookingFee;
-    private boolean isAvailable;
 
     private Restaurant restaurant;
 
-    public Table() {
-    }
-
-    public Table(int tableId, int restaurantId, String tableNumber, int numberOfSeats, double bookingFee, boolean isAvailable) {
-        this.tableId = tableId;
-        this.restaurantId = restaurantId;
-        this.tableNumber = tableNumber;
-        this.numberOfSeats = numberOfSeats;
-        this.bookingFee = bookingFee;
-        this.isAvailable = isAvailable;
-    }
-
-    public int getTableId() {
-        return tableId;
-    }
-
     public void setTableId(int tableId) {
         this.tableId = tableId;
-    }
-
-    public int getRestaurantId() {
-        return restaurantId;
     }
 
     public void setRestaurantId(int restaurantId) {
@@ -53,21 +32,26 @@ public class Table {
     public void setNumberOfSeats(int numberOfSeats) {
         this.numberOfSeats = numberOfSeats;
     }
-
+    /*
+     * Stack Trace Analysis:
+     *
+     * Method calls and their origins:
+     *
+     * - getBookingFee:58, Table (edu.metrostate.booknow.Models)
+     *   78 hidden frames
+     *   - Async stack trace
+     *     5 hidden frames
+     *
+     * Overview of the chain:
+     * The chain of method calls indicates that somewhere in an asynchronous context, getBookingFee() is called on a Table instance.
+     * The presence of hidden frames suggests that there are several internal method calls or framework-related calls that are not immediately relevant.
+     */
     public double getBookingFee() {
         return bookingFee;
     }
 
     public void setBookingFee(double bookingFee) {
         this.bookingFee = bookingFee;
-    }
-
-    public boolean isAvailable() {
-        return isAvailable;
-    }
-
-    public void setAvailable(boolean available) {
-        isAvailable = available;
     }
 
     public Restaurant getRestaurant() {

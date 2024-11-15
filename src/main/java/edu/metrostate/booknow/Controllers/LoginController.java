@@ -12,20 +12,15 @@ import java.sql.SQLException;
 
 public class LoginController {
     @FXML
-    private TextField usernameField; // Changed to match FXML
+    private TextField usernameField;
     @FXML
-    private PasswordField passwordField; // Changed to match FXML
+    private PasswordField passwordField;
 
     private final UserService userService;
 
     public LoginController() {
         userService = new UserService();
     }
-
-    @FXML
-    public void initialize() {
-    }
-
 
     public void onLoginButtonAction(ActionEvent event) {
         String username = usernameField.getText();
@@ -50,7 +45,7 @@ public class LoginController {
         }
     }
 
-    public void onCreateAccountButtonAction(ActionEvent event) throws IOException {
+    public void onCreateAccountButtonAction(ActionEvent event) {
         UIUtil.displayScene(getClass().getResource("/edu/metrostate/booknow/CreateAccountView.fxml"), event);
     }
 }

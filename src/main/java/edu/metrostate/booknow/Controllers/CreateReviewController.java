@@ -58,7 +58,7 @@ public class CreateReviewController {
         }
     }
 
-    public void onSubmitReviewClick(ActionEvent event) {
+    public void onSubmitReviewClickAction(ActionEvent event) {
         Integer rating = combo_rating.getValue();
         String feedback = txt_reviewComment.getText();
 
@@ -74,7 +74,7 @@ public class CreateReviewController {
         }
     }
 
-    public void onSearchRestaurantsClick(ActionEvent event) {
+    public void onSearchRestaurantsClickAction(ActionEvent event) {
         UIUtil.displayScene(getClass().getResource("/edu/metrostate/booknow/BookNowView.fxml"), event);
     }
 }

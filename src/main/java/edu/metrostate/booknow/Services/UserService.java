@@ -22,13 +22,17 @@ public class UserService {
         return userDAO.login(username, password);
     }
 
-    public boolean createAccount(String username, String password) throws SQLException {
-        return userDAO.createAccount(username, password);
-    }
-
     public String validateAndCreateAccount(String username, String password, String confirmPassword) throws SQLException {
         if (username.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
             return "All fields must be filled!";
+        }
+
+        if (username.length() <= 8) {
+            return "Username has to be 8 characters or longer";
+        }
+
+        if (password.length() <= 8) {
+            return "Password has to be be 8 characters or longer";
         }
 
         if (!password.equals(confirmPassword)) {

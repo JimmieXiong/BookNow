@@ -23,10 +23,6 @@ public class Reservation {
 
     private Restaurant restaurant;
 
-    private TimeSlot timeSlotReserved;
-
-    private Table table;
-
     public Reservation(int reservationId, int restaurantId, String restaurantName, LocalDate reservationDate, String timeSlot, String tableNumber) {
         this.reservationId = reservationId;
         this.restaurantId = restaurantId;
@@ -49,52 +45,52 @@ public class Reservation {
         return reservationDate;
     }
 
+    /*
+    hidden frames
+     * The chain of method calls started in onViewMyReservationsClick in BookNowController.
+     * onViewMyReservationsClick calls displayScene in UIUtil, which then calls setScene.
+     * setScene eventually leads to a situation where getTimeSlot() is called on a Reservation instance.
+     * ex: timeSlot: "9:00 AM - 11:00 AM"
+     */
     public String getTimeSlot() {
         return timeSlot;
     }
-
+    /*
+     * Stack Trace Analysis:
+     * Overview of the chain:
+     * The chain of method calls starts in onViewMyReservationsClick in BookNowController.
+     * onViewMyReservationsClick calls displayScene in UIUtil, which then calls setScene.
+     * setScene eventually leads to a situation where getTableNumber() is called on a Reservation instance.
+     * ex: tableNumber = "T1"
+     */
     public String getTableNumber() {
         return tableNumber;
     }
 
-    public Table getTable() {
-        return table;
-    }
-
-    public void setTable(Table table) {
-        this.table = table;
-    }
-
+    /*
+     * Stack Trace Analysis:
+     *
+     * Method calls and their origins:
+     *
+     * - getActionButton:83, Reservation (edu.metrostate.booknow.Models)
+     *   119 hidden frames
+     * - setScene:27, UIUtil (edu.metrostate.booknow.Utils)
+     * - displayScene:42, UIUtil (edu.metrostate.booknow.Utils)
+     * - onViewMyReservationsClick:121, BookNowController (edu.metrostate.booknow.Controllers)
+     *   68 hidden frames
+     *
+     * Overview of the chain:
+     * The chain of method calls starts in onViewMyReservationsClick in BookNowController.
+     * onViewMyReservationsClick calls displayScene in UIUtil, which then calls setScene.
+     * setScene eventually leads to a situation where getActionButton() is called on a Reservation instance.
+     */
+    //Button@52dadd04[styleClass=button]'View Your Review'
     public Button getActionButton() {
         return actionButton;
     }
 
     public int getRestaurantId() {
         return restaurantId;
-    }
-
-    public void setReservationId(int reservationId) {
-        this.reservationId = reservationId;
-    }
-
-    public void setRestaurantId(int restaurantId) {
-        this.restaurantId = restaurantId;
-    }
-
-    public void setRestaurantName(String restaurantName) {
-        this.restaurantName = restaurantName;
-    }
-
-    public void setReservationDate(LocalDate reservationDate) {
-        this.reservationDate = reservationDate;
-    }
-
-    public void setTimeSlot(String timeSlot) {
-        this.timeSlot = timeSlot;
-    }
-
-    public void setTableNumber(String tableNumber) {
-        this.tableNumber = tableNumber;
     }
 
     public User getUser() {
@@ -113,35 +109,22 @@ public class Reservation {
         this.restaurant = restaurant;
     }
 
-    public TimeSlot getTimeSlotReserved() {
-        return timeSlotReserved;
-    }
-
-    public void setTimeSlotReserved(TimeSlot timeSlotReserved) {
-        this.timeSlotReserved = timeSlotReserved;
-    }
-
     public void setActionButton(Button actionButton) {
         this.actionButton = actionButton;
     }
 
+
     public boolean checkReservationDateTimePassed() {
-
-        String[] timeRange = timeSlot.split(" - ");
-        String startTime = timeRange[0];  // e.sg., '9:00 AM'
-
-
-        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("h:mm a", Locale.ENGLISH);
-        LocalTime reservationStartTime = LocalTime.parse(startTime, timeFormatter);
-
-
+        LocalTime reservationStartTime = parseStartTime();
         LocalDateTime reservationDateTime = LocalDateTime.of(reservationDate, reservationStartTime);
-
-
         LocalDateTime currentDateTime = LocalDateTime.now();
-
-
         return reservationDateTime.isBefore(currentDateTime);
+    }
+
+    private LocalTime parseStartTime() {
+        String[] timeRange = timeSlot.split(" - ");
+        String startTime = timeRange[0];
+        return LocalTime.parse(startTime, DateTimeFormatter.ofPattern("h:mm a", Locale.ENGLISH));
     }
 
 }

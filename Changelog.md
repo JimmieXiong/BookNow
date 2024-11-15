@@ -1,5 +1,12 @@
 # ChangeLog
 
+## [1.2.4] - 2024-11-14 - Jimmie Xiong
+- Refactored `ReservationDAO`, `ReservationService`, `RestaurantDAO`, `ReviewDAO`, `UserDAO`.
+- Refactored/debugged models `User`, `Reservation`, `Review`, `Table`. Removed unused fields/methods/constructors.
+- Code looks cleaner now.
+
+## [1.2.3] - 2024-11-14 - Hao Tran
+- Implemented validation: password must be 8 characters or longer, username must be 8 characters or longer.
 
 ## [1.2.2] - 11/13/24 # Jimmie Xiong and Hao Tran
 ## Fixed
