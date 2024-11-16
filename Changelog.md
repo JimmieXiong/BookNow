@@ -1,5 +1,8 @@
 # ChangeLog
 
+## [1.2.5] - 2024-11-15 - Jimmie Xiong
+- Updated features.md, requriements.md, entities.md to reflect current code.
+- 
 ## [1.2.4] - 2024-11-14 - Jimmie Xiong
 - Refactored `ReservationDAO`, `ReservationService`, `RestaurantDAO`, `ReviewDAO`, `UserDAO`.
 - Refactored/debugged models `User`, `Reservation`, `Review`, `Table`. Removed unused fields/methods/constructors.
