@@ -66,9 +66,15 @@ public class TableDAO {
         return availableTables;
     }
 
-    public boolean reserveTable(String username, int restaurantId, LocalDate reservationDate, String selectedTimeSlot, String tableNumber) {
+    public int reserveTable(String username, int restaurantId, LocalDate reservationDate, String selectedTimeSlot, String tableNumber) {
         int timeSlotId = getTimeSlotIdByTimeSlot(selectedTimeSlot);
         int userId = getUserIdByUserName(username);
+
+        // Check if a reservation already exists
+        if (isReservationAlreadyExists(userId, restaurantId, reservationDate, timeSlotId)) {
+            System.out.println("Reservation already exists.");
+            return -1;  // Indicate that the reservation already exists
+        }
 
         try (Connection connection = dbConnection.getConnection();
              PreparedStatement insertStmt = connection.prepareStatement(INSERT_RESERVATION_QUERY)) {
@@ -77,11 +83,30 @@ public class TableDAO {
             insertStmt.setDate(3, java.sql.Date.valueOf(reservationDate));
             insertStmt.setInt(4, timeSlotId);
             insertStmt.setString(5, tableNumber);
-            return insertStmt.executeUpdate() > 0;
+            return insertStmt.executeUpdate();  // Return 1 if successful
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
+            return 0;  // Indicate failure
         }
+    }
+
+    private boolean isReservationAlreadyExists(int userId, int restaurantId, LocalDate reservationDate, int timeSlotId) {
+        String checkReservationQuery = "SELECT COUNT(*) FROM reservations " +
+                "WHERE user_id = ? AND restaurant_id = ? AND reservation_date = ? AND time_slot_id = ?";
+        try (Connection connection = dbConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(checkReservationQuery)) {
+            preparedStatement.setInt(1, userId);
+            preparedStatement.setInt(2, restaurantId);
+            preparedStatement.setDate(3, java.sql.Date.valueOf(reservationDate));
+            preparedStatement.setInt(4, timeSlotId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt(1) > 0;  // If count > 0, reservation already exists
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     private int getTimeSlotIdByTimeSlot(String selectedTimeSlot) {

@@ -53,8 +53,17 @@ public class BookNowController {
         lbl_welcome.setText("Welcome, " + UIUtil.USER);
         UIUtil.populateComboBox(locationComboBox, serviceManager.getCityNames());
         UIUtil.populateComboBox(cb_cuisineType, serviceManager.getCuisineTypes());
+
+        // Populate adults and children ComboBoxes
         UIUtil.populateComboBox(cb_adults, IntStream.rangeClosed(1, 99).boxed().toList());
         UIUtil.populateComboBox(cb_children, IntStream.rangeClosed(0, 99).boxed().toList());
+
+        // Ensure prompt text is displayed without selecting any item initially
+        cb_adults.getSelectionModel().clearSelection();
+        cb_adults.setPromptText("Adults");
+
+        cb_children.getSelectionModel().clearSelection();
+        cb_children.setPromptText("Children");
     }
 
     public void onSearchButtonClick(ActionEvent event) {
@@ -73,10 +82,28 @@ public class BookNowController {
     }
 
     public void handleReserveTable(Restaurant restaurant, Table table) {
-        boolean success = serviceManager.reserveTable(UIUtil.USER, restaurant.getRestaurantId(), selectedDate, selectedTimeSlot, table.getTableNumber());
-        UIUtil.displayAlert(success ? "Reservation Confirmed" : "Reservation Failed",
-                success ? "Your reservation is confirmed." : "Failed to reserve the table. Please try again.");
+        // Attempt to reserve the table and capture the result
+        int result = serviceManager.reserveTable(UIUtil.USER, restaurant.getRestaurantId(), selectedDate, selectedTimeSlot, table.getTableNumber());
+
+        // Determine message based on reservation result
+        String title, message;
+        if (result == -1) {
+            title = "Reservation Failed";
+            message = "Reservation already exists for the selected time slot.";
+        } else if (result > 0) {
+            title = "Reservation Confirmed";
+            message = "Your reservation is confirmed.";
+        } else {
+            title = "Reservation Failed";
+            message = "An error occurred while trying to reserve the table.";
+        }
+
+        // Display the result message to the user
+        UIUtil.displayAlert(title, message);
     }
+
+
+
 
     public void handleReadReviews(Restaurant restaurant) {
         List<Review> reviews = serviceManager.getReviewsByRestaurantId(restaurant.getRestaurantId());

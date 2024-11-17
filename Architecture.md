@@ -1,220 +1,122 @@
 ## **Description:**
 
-This class diagram provides an overview of the primary entities involved in the **BookNow** application, including `User`, `Restaurant`, `Reservation`, `Table`, `TimeSlot`, and `Review`. Each 
-entity represents a critical component of the system, with key attributes, constructors, and methods designed to facilitate interaction within the system.
+This class diagram provides an overview of the primary entities in the BookNow application: `User`, `Restaurant`, `Reservation`, `Table`, and `Review`. Each entity represents a core component of the system, with essential attributes, constructors, and methods that enable interactions within the application.
 
 ### **PLEASE NOTE:**
 This is a high-level overview of the attributes, constructors, and methods for each entity. These serve as an initial blueprint and are subject to modification when 
 implementing the actual logic. Adjustments, additions, or removals will be made during development, depending on real-world use cases and business logic. The goal 
 here is to establish the structural framework, while detailed implementation will evolve as the project progresses. If for any reason you were cross checking and happen to see that the code
-is different from what's on here that means a changed happened and have not been updated to architecture.md. 
+is different from what's on here that means a changed happened and have not been updated. 
 If Diagram doesn't show on github no idea. Tried trouble shooting can't fix. Working fine on intellij. Look in Diagrams folder for Diagrams.
 Also please note and understand that the current initial diagrams may not match the latest version of the code, as they haven’t been updated yet. It's complicated when you lack experience and have to redo things multiple just to get what you want.
 We're planning to update the diagrams once everything is finalized. We initially thought things were on track, but adjustments were necessary along the way.
 
-## **Entities:**
+# Entities Class Diagram
+![Class Diagram](Diagrams/ClassDiagram1.jpeg)
 
-### **1. User**
-**Description:** Represents a user of the system, either a customer or a restaurant owner. Users can log in, create reservations, 
-and interact with the system.
+# Entities
 
-- **Attributes:**
-    - `int userId`: The unique identifier for the user.
-    - `String username`: The username chosen by the user.
-    - `String password`: The password for user authentication.
+## 1. User
 
-- **Constructor:**
-    - `User(int userId, String username, String password)`: Creates a new `User` object with the specified attributes.
+### Description
+Represents a user of the system, who can log in and create reservations.
 
-- **Methods:**
-    - `getUsername()`: Returns the username of the user.
----
+### Attributes
 
-### **2. Restaurant**
-**Description:** Represents a restaurant in the system with relevant information such as location, cuisine, and menu.
+- `String username`: The username chosen by the user.
 
-- **Attributes:**
-    - `int restaurantId`: The unique identifier for the restaurant.
-    - `String name`: The name of the restaurant.
-    - `String city`: The city where the restaurant is located.
-    - `String cuisineType`: The type of cuisine the restaurant serves.
-    - `String description`: A brief description of the restaurant.
-    - `String menuPdf`: The file path to the restaurant's menu in PDF format.
-    - `String imagePath`: The file path to the restaurant's image.
-    - `int maxGuests`: The maximum number of guests the restaurant can accommodate.
+### Constructor
 
-- **Constructor:**
-    - `Restaurant(int restaurantId, String name, String city, String cuisineType, String description, String menuPdf, String imagePath, 
-int maxGuests)`: Creates a new `Restaurant` object with the specified attributes.
+- `User(String username)`: Creates a new User object with the specified username.
 
-- **Methods:**
-    - `getRestaurantId()`: Returns the unique identifier of the restaurant.
-    - `setRestaurantId(int restaurantId)`: Sets the restaurant ID.
-    - `getName()`: Returns the name of the restaurant.
-    - `setName(String name)`: Sets the name of the restaurant.
-    - `getCity()`: Returns the city where the restaurant is located.
-    - `setCity(String city)`: Sets the city of the restaurant.
-    - `getCuisineType()`: Returns the type of cuisine the restaurant serves.
-    - `setCuisineType(String cuisineType)`: Sets the type of cuisine.
-    - `getDescription()`: Returns the description of the restaurant.
-    - `setDescription(String description)`: Sets the description of the restaurant.
-    - `getMenuPdf()`: Returns the file path to the restaurant's menu in PDF format.
-    - `setMenuPdf(String menuPdf)`: Sets the file path for the menu.
-    - `getImagePath()`: Returns the file path to the restaurant's image.
-    - `setImagePath(String imagePath)`: Sets the file path for the restaurant's image.
-    - `getMaxGuests()`: Returns the maximum number of guests the restaurant can accommodate.
-    - `setMaxGuests(int maxGuests)`: Sets the maximum number of guests.
+## 2. Restaurant
 
+### Description
+Represents a restaurant in the system with relevant information, such as location, cuisine, and menu.
 
----
+### Attributes
 
-### **3. Reservation**
-**Description:** Represents a restaurant reservation made by a user for a specific time and table.
+- `int restaurantId`: The unique identifier for the restaurant.
+- `String name`: The name of the restaurant.
+- `String city`: The city where the restaurant is located.
+- `String cuisineType`: The type of cuisine the restaurant serves.
+- `String description`: A brief description of the restaurant.
+- `String menuPdf`: The file path to the restaurant's menu in PDF format.
+- `String imagePath`: The file path to the restaurant's image.
+- `int maxGuests`: The maximum number of guests the restaurant can accommodate.
 
-- **Attributes:**
-    - `int reservationId`: The unique identifier for the reservation.
-    - `int restaurantId`: The identifier for the restaurant.
-    - `String restaurantName`: The name of the restaurant where the reservation is made.
-    - `LocalDate reservationDate`: The date for the reservation.
-    - `String timeSlot`: The time slot for the reservation.
-    - `String tableNumber`: The table number assigned for the reservation.
-    - `Button actionButton`: The action button for managing the reservation (e.g., cancel, view).
-    - `User user`: The user who made the reservation.
-    - `Restaurant restaurant`: The restaurant associated with the reservation.
-    - `TimeSlot timeSlotReserved`: The time slot reserved for the reservation.
-    - `Table table`: The table reserved for the booking.
+### Constructor
 
-- **Constructor:**
-    - `Reservation(int reservationId, int restaurantId, String restaurantName, LocalDate reservationDate, String timeSlot, String tableNumber)`: 
-Creates a new `Reservation` object with the specified attributes.
+- `Restaurant(int restaurantId, String name, String city, String cuisineType, String description, String menuPdf, String imagePath, int maxGuests)`: Creates a new Restaurant object with the specified attributes.
 
-- **Methods:**
-    - `getReservationId()`: Returns the unique identifier of the reservation.
-    - `setReservationId(int reservationId)`: Sets the reservation ID.
-    - `getRestaurantName()`: Returns the name of the restaurant for the reservation.
-    - `setRestaurantName(String restaurantName)`: Sets the restaurant name.
-    - `getReservationDate()`: Returns the reservation date.
-    - `setReservationDate(LocalDate reservationDate)`: Sets the reservation date.
-    - `getTimeSlot()`: Returns the time slot for the reservation.
-    - `setTimeSlot(String timeSlot)`: Sets the time slot.
-    - `getTableNumber()`: Returns the table number.
-    - `setTableNumber(String tableNumber)`: Sets the table number.
-    - `getTable()`: Returns the reserved table.
-    - `setTable(Table table)`: Sets the reserved table.
-    - `getActionButton()`: Returns the action button for managing the reservation.
-    - `setActionButton(Button actionButton)`: Sets the action button.
-    - `getRestaurantId()`: Returns the restaurant ID.
-    - `setRestaurantId(int restaurantId)`: Sets the restaurant ID.
-    - `getUser()`: Returns the user associated with the reservation.
-    - `setUser(User user)`: Sets the user for the reservation.
-    - `getRestaurant()`: Returns the restaurant associated with the reservation.
-    - `setRestaurant(Restaurant restaurant)`: Sets the restaurant for the reservation.
-    - `getTimeSlotReserved()`: Returns the time slot reserved for the reservation.
-    - `setTimeSlotReserved(TimeSlot timeSlotReserved)`: Sets the reserved time slot.
+## 3. Reservation
+
+### Description
+Represents a restaurant reservation made by a user for a specific time and table.
+
+### Attributes
+
+- `int reservationId`: The unique identifier for the reservation.
+- `int restaurantId`: The identifier for the restaurant.
+- `String restaurantName`: The name of the restaurant where the reservation is made.
+- `LocalDate reservationDate`: The date for the reservation.
+- `String timeSlot`: The time slot for the reservation.
+- `String tableNumber`: The table number assigned for the reservation.
+- `Button actionButton`: The action button for managing the reservation (e.g., cancel, view).
+- `User user`: The user who made the reservation.
+- `Restaurant restaurant`: The restaurant associated with the reservation.
+
+### Constructor
+
+- `Reservation(int reservationId, int restaurantId, String restaurantName, LocalDate reservationDate, String timeSlot, String tableNumber)`: Creates a new Reservation object with the specified attributes.
+
+## 4. Table
+
+### Description
+Represents a table available for reservation at a restaurant.
+
+### Attributes
+
+- `int tableId`: The unique identifier for the table.
+- `int restaurantId`: The identifier for the restaurant where the table is located.
+- `String tableNumber`: The table number within the restaurant.
+- `int numberOfSeats`: The number of seats available at the table.
+- `double bookingFee`: The fee required to reserve the table.
+- `Restaurant restaurant`: The restaurant associated with the table.
+
+### Constructor
+
+- `Table()`: Creates a new Table object without any parameters.
+
+## 5. Review
+
+### Description
+Represents a review left by a user for a restaurant.
+
+### Attributes
+
+- `String username`: The username of the user leaving the review.
+- `String restaurantName`: The name of the restaurant being reviewed.
+- `int rating`: The rating given to the restaurant.
+- `String feedback`: The review comments.
+- `LocalDate dateOfExperience`: The date when the user experienced the restaurant.
+- `User user`: The user who left the review.
+- `Restaurant restaurant`: The restaurant being reviewed.
+
+### Constructor
+
+- `Review(String username, String restaurantName, int rating, String feedback, LocalDate dateOfExperience)`: Creates a new Review object with the specified attributes.
 
 ---
 
-### **4. Table**
-**Description:** Represents a table available for reservation at a restaurant.
+# BookNow System Architecture
 
-- **Attributes:**
-    - `int tableId`: The unique identifier for the table.
-    - `int restaurantId`: The identifier for the restaurant where the table is located.
-    - `String tableNumber`: The table number within the restaurant.
-    - `int numberOfSeats`: The number of seats available at the table.
-    - `double bookingFee`: The fee required to reserve the table.
-    - `boolean isAvailable`: Indicates whether the table is available for reservation.
-    - `Restaurant restaurant`: The restaurant associated with the table.
-
-- **Constructor:**
-    - `Table()`: Creates a new `Table` object without any parameters.
-    - `Table(int tableId, int restaurantId, String tableNumber, int numberOfSeats, double bookingFee, boolean isAvailable)`:
-Creates a new `Table` object with the specified attributes.
-
-- **Methods:**
-    - `getTableId()`: Returns the unique identifier of the table.
-    - `setTableId(int tableId)`: Sets the unique identifier of the table.
-    - `getRestaurantId()`: Returns the restaurant ID where the table is located.
-    - `setRestaurantId(int restaurantId)`: Sets the restaurant ID for the table.
-    - `getTableNumber()`: Returns the table number.
-    - `setTableNumber(String tableNumber)`: Sets the table number.
-    - `getNumberOfSeats()`: Returns the number of seats at the table.
-    - `setNumberOfSeats(int numberOfSeats)`: Sets the number of seats at the table.
-    - `getBookingFee()`: Returns the booking fee.
-    - `setBookingFee(double bookingFee)`: Sets the booking fee for the table.
-    - `isAvailable()`: Returns whether the table is available for reservation.
-    - `setAvailable(boolean available)`: Sets the availability of the table.
-    - `getRestaurant()`: Returns the restaurant associated with the table.
-    - `setRestaurant(Restaurant restaurant)`: Sets the restaurant associated with the table.
+The BookNow system follows the `Model-View-Controller` (MVC) architecture, with additional `DAO`, `Service` and `Utils` layers for better modularity, encapsulation, and code maintainability.
+Each layer serves a specific role in the application, facilitating interactions between the user interface, business logic, and data access.
 
 
----
-
-### **5. TimeSlot**
-**Description:** Represents a time slot available for restaurant reservations.
-
-- **Attributes:**
-    - `int slotId`: The unique identifier for the time slot.
-    - `String slotLabel`: The label describing the time slot (e.g., "9:00 AM - 10:00 AM").
-
-- **Constructor:**
-    - `TimeSlot()`: Creates a new `TimeSlot` object without any parameters.
-    - `TimeSlot(int slotId, String slotLabel)`: Creates a new `TimeSlot` object with the specified `slotId` and `slotLabel`.
-
-- **Methods:**
-    - `getSlotId()`: Returns the unique identifier of the time slot.
-    - `setSlotId(int slotId)`: Sets the unique identifier of the time slot.
-    - `getSlotLabel()`: Returns the label of the time slot.
-    - `setSlotLabel(String slotLabel)`: Sets the label for the time slot.
-    - `toString()`: Returns a string representation of the `TimeSlot`, showing the `slotId` and `slotLabel`.
-
----
-
-### **6. Review**
-**Description:** Represents a review left by a customer for a restaurant.
-- **Attributes:**
-    - `int reviewId`: The unique identifier for the review.
-    - `String username`: The username of the user leaving the review.
-    - `String restaurantName`: The name of the restaurant being reviewed.
-    - `int rating`: The rating given to the restaurant.
-    - `String feedback`: The review comments.
-    - `LocalDate dateOfExperience`: The date when the customer experienced the restaurant.
-    - `User user`: The user who left the review.
-    - `Restaurant restaurant`: The restaurant being reviewed.
-    - `TimeSlot timeSlotReserved`: The time slot during which the review is associated.
-    - `Reservation reservation`: The reservation associated with the review.
-
-- **Constructor:**
-    - `Review(int reviewId, String username, String restaurantName, int rating, String feedback, LocalDate dateOfExperience)`: 
-Creates a new `Review` object with the given attributes.
-
-- **Methods:**
-    - `getReviewId()`: Returns the unique identifier of the review.
-    - `setReviewId(int reviewId)`: Sets the review ID.
-    - `getUsername()`: Returns the username of the reviewer.
-    - `setUsername(String username)`: Sets the username.
-    - `getRestaurantName()`: Returns the name of the restaurant being reviewed.
-    - `setRestaurantName(String restaurantName)`: Sets the restaurant name.
-    - `getRating()`: Returns the rating of the restaurant.
-    - `setRating(int rating)`: Sets the rating.
-    - `getFeedback()`: Returns the review comments.
-    - `setFeedback(String feedback)`: Sets the review comments.
-    - `getDateOfExperience()`: Returns the date of the experience.
-    - `setDateOfExperience(LocalDate dateOfExperience)`: Sets the experience date.
-    - `getUser()`: Returns the user who left the review.
-    - `setUser(User user)`: Sets the user who left the review.
-    - `getRestaurant()`: Returns the restaurant being reviewed.
-    - `setRestaurant(Restaurant restaurant)`: Sets the restaurant being reviewed.
-    - `getTimeSlotReserved()`: Returns the time slot reserved.
-    - `setTimeSlotReserved(TimeSlot timeSlotReserved)`: Sets the time slot reserved.
-    - `getReservation()`: Returns the reservation associated with the review.
-    - `setReservation(Reservation reservation)`: Sets the reservation associated with the review.
-  
-![Class Diagram](Diagrams/ClassDiagram1.jpg)
-
-# Class Diagram 2: Reservation System (MVC Architecture)
-
-**Model-View-Controller (MVC)** architecture. The system is structured with three primary layers: **Models**, **Views**, and **Controllers**.
+**Model-View-Controller (MVC)** architecture. 
+- The system is structured with three primary layers: **Models**, **Views**, and **Controllers**.
 
 ### **Models**:
 The **Model** layer represents the core entities of the system. 
@@ -222,226 +124,327 @@ The **Model** layer represents the core entities of the system.
 
 ### **Views**:
 The **View** layer consists of the user interface (UI) for interacting with the system. These are defined using JavaFX and FXML files:
-- **LoginView**: The UI for users to log in.
-- **CreateAccountView**: The UI for new users to create an account.
-- **BookNowView**: The main UI where users search for restaurants and create reservations.
-- **ReservationView**: The UI where users can view their reservation's. (Will Implement Soon)
-- **ReviewView** The UI where users can view their reviews made. (Will Implement Soon)
+- **LoginView**: UI for users to log in.
+- **CreateAccountView**: UI for new users to create an account.
+- **BookNowView**: Main UI for searching restaurants and creating reservations.
+- **ReservationView**: UI where users can view and manage their reservations.
+- **CreateReviewView**: UI where user create their review.
+- **ReviewView**: UI where users can view and manage their reviews.
 
 ### **Controllers:**
-The **Controller** layer acts as the intermediary between the UI (view) and the backend logic (models).
-
-# **BookNowController**
-
-The `BookNowController` manages the user interface for the restaurant booking system. It handles user input, interacts with services to retrieve data, and updates the UI with restaurant search results.
-
-## **Fields**
-
-### **UI Elements**
-- `Label lbl_welcome`: Displays a welcome message to greet the logged-in user.
-- `ComboBox<String> locationComboBox`: A dropdown menu for users to select a city location for the restaurant search.
-- `ComboBox<String> cb_cuisineType`: A dropdown menu for users to select the type of cuisine.
-- `DatePicker checkInDate`: Allows users to pick a date for their restaurant reservation.
-- `VBox restaurantVBox`: A container that will display the list of restaurants based on the search results.
-- `ComboBox<Integer> cb_adults`: A dropdown menu for users to select the number of adults for the reservation.
-- `ComboBox<Integer> cb_children`: A dropdown menu for users to select the number of children for the reservation.
-
-### **Services**
-- `RestaurantServices restaurantServices`: A service class responsible for handling interactions related to restaurants, such as fetching available restaurants, cities, and cuisines.
-- `UserServices userServices`: Manages user-related operations, such as retrieving the current logged-in user.
-
-## **Constructor**
-- `public BookNowController()`:
-  - Initializes the `BookNowController` class and the `restaurantServices` for handling restaurant-related operations.
-
-## **Methods**
-
-### **initialize()**
-- **Purpose**: Called when the controller is initialized. Sets up the UI components and populates the combo boxes with data.
-- **Key Steps**:
-  - Displays a welcome message with the username of the currently logged-in user.
-  - Populates the `locationComboBox` with city names and the `cb_cuisineType` with cuisine types from the `RestaurantServices`.
-  - Populates the `cb_adults` and `cb_children` combo boxes with a range of selectable values for the number of adults and children.
-
-### **onSearchButtonClick(ActionEvent event)**
-- **Purpose**: Handles the search button click event, triggering a search for available restaurants based on the selected city, cuisine type, and reservation date.
-- **Key Steps**:
-  - Retrieves the user's selected city, cuisine type, and reservation date from the UI components.
-  - Validates the search criteria. If invalid, displays an alert with a message and stops the search process.
-  - If valid, queries `RestaurantServices` for available restaurants based on the selected criteria.
-  - Calls `populateRestaurants()` to display the list of available restaurants in the `restaurantVBox`.
-
-### **populateRestaurants(List<Restaurant> restaurants)**
-- **Purpose**: Populates the `VBox` with the list of restaurants returned by the search query.
-- **Key Steps**:
-  - Clears any existing entries in the `restaurantVBox`.
-  - If no restaurants are available for the selected date and criteria, displays an alert to inform the user.
-  - If there are available restaurants, it loops through the list and dynamically adds each restaurant to the `VBox` by calling `addRestaurantToVBox()`.
-
-### **addRestaurantToVBox(Restaurant restaurant)**
-- **Purpose**: Dynamically adds a restaurant's details to the `VBox` for display.
-- **Key Steps**:
-  - Loads the `RestaurantBox.fxml` file, which contains the layout for displaying a restaurant's details.
-  - Passes the restaurant data to the `RestaurantBoxController` to update the UI elements with the restaurant's information.
-  - Adds the `VBox` representing the restaurant to the `restaurantVBox`.
+The Controller layer acts as the intermediary between the UI (view) and the backend logic, handling user inputs, managing interactions with services, and updating the UI accordingly. Each controller in the BookNow system serves a distinct role within the application, managing specific tasks and features.
 
 
-# **CreateNewAccountController**
+# BookNowController
 
-The `CreateNewAccountController` is responsible for handling user input during the account creation process. It validates the input, interacts with `UserServices` to create a new user in the database, and updates the UI with feedback (success or failure) based on the account creation outcome.
+The `BookNowController` manages the user interface of the restaurant booking feature, handling user inputs, updating the UI state, and coordinating with backend services to perform necessary operations such as searching for restaurants, checking availability, making reservations, and managing reviews
 
-## **Fields**
+## Fields
 
-### **UI Elements**
-- `TextField usernameField`: Input field where the user enters the desired username.
-- `PasswordField passwordField`: Input field where the user enters the password.
-- `PasswordField confirmPasswordField`: Input field where the user re-enters the password to confirm it.
+### UI Elements
 
-### **Services**
-- `UserServices userService`: Manages user-related operations, such as validating inputs and creating new user accounts.
+- **`Label lbl_welcome`**: Displays a personalized welcome message.
+- **`ComboBox<String> locationComboBox`**: Allows users to select a city location for searching restaurants.
+- **`ComboBox<String> cb_cuisineType`**: Enables selection of the cuisine type.
+- **`ComboBox<Integer> cb_adults`**: Allows the selection of the number of adults for the reservation.
+- **`ComboBox<Integer> cb_children`**: Allows the selection of the number of children for the reservation.
+- **`DatePicker checkInDate`**: Lets users select a reservation date.
+- **`VBox restaurantListVBox`**: Displays the list of search results for restaurants.
+- **`VBox reviewsOverlay`**: Shows the reviews for a selected restaurant.
+- **`VBox availabilityVBox`**: Displays the available time slots and tables for reservations.
 
-### **Constants**
-- `String loginViewPath`: The path to the login view (`LoginView.fxml`), used to redirect users after account creation.
+### Properties
 
-## **Constructor**
+- **`private String selectedCity`**: The city selected by the user for searching restaurants.
+- **`private String selectedCuisineType`**: The cuisine type selected by the user.
+- **`private LocalDate selectedDate`**: The reservation date selected by the user.
+- **`private int totalGuests`**: The total number of guests for the reservation.
+- **`private String selectedTimeSlot`**: The selected time slot for the reservation.
 
-### `public CreateNewAccountController()`
-- Initializes the `CreateNewAccountController` and the `UserServices` instance for handling user-related operations.
+### Services
 
-## **Methods**
+- **`private final BookNowFacadeService serviceManager`**: A facade service that simplifies complex operations by coordinating multiple services.
 
-### **onCreateAccountButton(ActionEvent event)**
-- **Purpose**: Handles the "Create Account" button click event. It performs the logic for creating a new user account.
-- **Key Steps**:
-  - Retrieves the input values for the username, password, and password confirmation from the UI fields.
-  - Calls `UserServices` to validate the input. If validation fails (e.g., username is empty, password doesn't match), it displays the specific error message using `AlertUtil`.
-  - If validation passes, attempts to create the account using `UserServices`. If successful, displays a success message using `AlertUtil` and switches to the login view using `SwitchSceneUtil`.
-  - If account creation fails due to an existing username or a database error, it displays an error message using `AlertUtil`.
+## Constructor
 
-### **onLoginButton(ActionEvent event)**
-- **Purpose**: Handles the "Log In" button click event, which redirects the user to the login page.
-- **Key Steps**:
-  - Uses `SwitchSceneUtil` to switch to the login view (`LoginView.fxml`).
+- **`public BookNowController()`**: Initializes the `BookNowController` and sets up the `serviceManager` with a new `DBConnection`.
 
-## **Error Handling**
-- **Validation Errors**: If any input is invalid (e.g., empty username or mismatched passwords), an appropriate error message is shown to the user using `AlertUtil`.
-- **Database Errors**: If a database error occurs during account creation (e.g., the username already exists or the account couldn't be created), an error message is shown, and the user is asked to try again.
+## Methods
 
-## **Scene Switching**
-- After a successful account creation, the controller uses `SwitchSceneUtil` to load and display the login page (`LoginView.fxml`).
+- **`@FXML public void initialize()`**: Initializes the UI components, populating dropdowns with data from `BookNowFacadeService`.
+  - Sets a personalized welcome message.
+  - Populates location, cuisine type, and guest number dropdowns.
 
-# **LoginController**
+- **`public void onSearchButtonClick(ActionEvent event)`**: Handles restaurant search requests based on user input.
+  - Retrieves user-selected search criteria.
+  - Triggers a search for restaurants through `serviceManager`.
 
-The `LoginController` is responsible for handling user authentication in the JavaFX application. It manages user input during login, validates credentials using `UserServices`, and updates the view based on the login outcome. It also provides navigation to the account creation page.
+- **`public void handleShowAvailability(Restaurant restaurant)`**: Displays available tables and time slots for the selected restaurant.
+  - Sets `selectedDate` and `totalGuests`.
+  - Calls `serviceManager` to show availability information.
 
-## **Fields**
+- **`public void handleReserveTable(Restaurant restaurant, Table table)`**: Confirms a reservation for a specified restaurant and table.
+  - Calls `serviceManager` to reserve a table.
+  - Displays confirmation or failure alert.
 
-### **UI Elements**
-- `TextField usernameField`: Input field for the username entered by the user.
-- `PasswordField passwordField`: Input field for the user's password.
+- **`public void handleReadReviews(Restaurant restaurant)`**: Displays reviews for the selected restaurant.
+  - Fetches reviews from `serviceManager`.
+  - Displays reviews in `reviewsOverlay`.
 
-### **Services**
-- `UserServices userService`: Manages user-related operations, such as validating login credentials and handling login logic.
+- **`public void handleViewMenu(Restaurant restaurant)`**: Opens the restaurant's menu in a PDF viewer.
+  - Delegates the task to `serviceManager`.
 
-### **Constants**
-- `String bookNowViewPath`: The path to the main application view (`BookNowView.fxml`), used after successful login.
-- `String createAccountViewPath`: The path to the account creation view (`CreateAccountView.fxml`), used to redirect users to the account creation page.
+- **`public void handleBackToRestaurants()`**: Navigates back to the restaurant list view.
+  - Calls `showRestaurantListView()` to manage view visibility.
 
-## **Constructor**
+- **`public void setSelectedTimeSlot(String selectedTimeSlot)`**: Sets the selected time slot for reservation.
 
-### `public LoginController()`
-- Initializes the `LoginController` and the `UserServices` instance for handling login-related operations.
+- **`public void showAvailabilityView()`**: Shows the availability view and hides other views.
+  - Manages visibility of `restaurantListVBox` and `availabilityVBox`.
 
-## **Methods**
+- **`public void showRestaurantListView()`**: Shows the restaurant list view and hides other views.
+  - Manages visibility of `availabilityVBox` and `reviewsOverlay`.
 
-### **onLoginButtonAction(ActionEvent event)**
-- **Purpose**: Handles the "Login" button click event. This method validates user input, checks login credentials, and redirects to the main application page on successful login.
-- **Key Steps**:
-  - Retrieves the username and password entered by the user from the UI fields.
-  - Calls `UserServices` to validate the input. If validation fails (e.g., missing username or password), it displays an error message using `AlertUtil`.
-  - If the fields are valid, attempts to log in using `UserServices`. If login is successful, switches to the `BookNowView` scene using `SwitchSceneUtil`.
-  - If login fails, displays an error message using `AlertUtil` with a message indicating that the username or password is invalid.
+- **`public void onViewMyReservationsClick(ActionEvent event)`**: Navigates to the reservations view.
+  - Uses `UIUtil` to display the Reservations view scene.
 
-### **onCreateAccountButtonAction(ActionEvent event)**
-- **Purpose**: Handles the "Create Account" button click event. This method redirects the user to the account creation page.
-- **Key Steps**:
-  - Uses `SwitchSceneUtil` to switch to the account creation view (`CreateAccountView.fxml`).
+- **`public void onViewMyReviewsClick(ActionEvent event)`**: Navigates to the reviews view.
+  - Uses `UIUtil` to display the Reviews view scene.
 
-### **switchToBookNowScene(ActionEvent event)**
-- **Purpose**: A helper method to switch the scene to the main application view (`BookNowView.fxml`) after a successful login.
-- **Key Steps**:
-  - Uses `SwitchSceneUtil` to switch to the `BookNowView` scene.
-  - If an `IOException` occurs during the scene switch, displays an error message using `AlertUtil`.
 
-## **Error Handling**
-- **Validation Errors**: If the username or password fields are empty, an appropriate error message is shown using `AlertUtil`.
-- **Login Errors**: If the login credentials are incorrect, an error message is shown indicating an invalid username or password.
-- **Scene Switching Errors**: If an error occurs during scene switching, an error alert is shown with the error details.
+# CreateNewAccountController
 
-# **RestaurantBoxController**
+The `CreateNewAccountController` manages the user interface and business logic for creating new user accounts. It handles user input validation and account creation by interacting with the `UserService`.
 
-The `RestaurantBoxController` is responsible for managing the UI components that display information about a restaurant. It interacts with `RestaurantServices` to set and display restaurant details such as the name, location, description, average rating, and restaurant image. It also includes logic placeholders for handling actions related to reviews, menu, and availability.
+## Fields
 
-## **Fields**
+### UI Elements
 
-### **UI Elements**
-- `Label restaurantNameLabel`: Displays the name of the restaurant.
-- `Label ratingLabel`: Displays the average rating of the restaurant.
-- `Label restaurantLocationLabel`: Displays the city where the restaurant is located.
-- `Label restaurantDescriptionLabel`: Displays a brief description of the restaurant.
-- `ImageView restaurantImageView`: Displays an image of the restaurant.
+- **`TextField usernameField`**: Field for users to input their desired username.
+- **`PasswordField passwordField`**: Field for users to input their desired password.
+- **`PasswordField confirmPasswordField`**: Field for users to confirm their desired password.
 
-### **Services**
-- `RestaurantServices restaurantServices`: Handles business logic related to restaurants, including fetching restaurant data and calculating ratings.
+### Services
 
-## **Constructor**
+- **`private final UserService userService`**: Manages user account-related operations such as validation and creation.
 
-### `public RestaurantBoxController()`
-- Initializes the `RestaurantBoxController` and the `RestaurantServices` instance for handling restaurant-related operations.
+## Constructor
 
-## **Methods**
+- **`public CreateNewAccountController()`**: Initializes the `CreateNewAccountController` and sets up the `userService`.
 
-### **setRestaurantData(Restaurant restaurant)**
-- **Purpose**: Sets the restaurant's data into the UI elements of the restaurant box.
-- **Key Steps**:
-  - Calls `setLabels()` to set the name, location, and description of the restaurant in the UI.
-  - Uses `RestaurantServices` to fetch and display the average rating of the restaurant.
-  - Calls `displayRestaurantImage()` to load and display the restaurant's image in the `ImageView`.
+## Methods
 
-### **setLabels(Restaurant restaurant)**
-- **Purpose**: A helper method to set the text for the restaurant's name, location, and description labels.
-- **Key Steps**:
-  - Sets the `restaurantNameLabel`, `restaurantLocationLabel`, and `restaurantDescriptionLabel` with the appropriate restaurant details.
+- **`public void onCreateAccountButtonAction(ActionEvent event)`**: Handles the action when the "Create Account" button is clicked.
+  - Retrieves the text input from `usernameField`, `passwordField`, and `confirmPasswordField`.
+  - Validates the inputs and tries to create a new account using `userService`.
+  - Displays a success alert and navigates to the `BookNowView` if the account creation is successful.
+  - Displays an error alert if there's an issue during account creation, such as validation failure or an SQL exception.
 
-### **displayRestaurantImage(String imagePath, ImageView imageView)**
-- **Purpose**: Loads and displays the restaurant's image in the provided `ImageView`.
-- **Key Steps**:
-  - Checks if the `imagePath` is valid (not null or empty).
-  - Tries to load the image using the provided path and sets it in the `ImageView`. If the image cannot be found, it logs an error message.
+- **`public void onLoginButtonAction(ActionEvent event)`**: Handles the action when the "Login" button is clicked.
+  - Navigates to the Login view (`LoginView.fxml`).
 
-### **reviewsButton()**
-- **Purpose**: Placeholder method for handling actions related to restaurant reviews.
-- **Key Steps**:
-  - Intended to handle logic for displaying or managing restaurant reviews.
+# CreateReviewController
 
-### **menuButton()**
-- **Purpose**: Placeholder method for handling actions related to the restaurant's menu.
-- **Key Steps**:
-  - Intended to handle logic for displaying or managing the restaurant's menu.
+The `CreateReviewController` handles the user interface and business logic for creating a new review for a reservation. It manages user input, validates and submits the review, and provides a form for users to input their feedback.
 
-### **availabilityButton()**
-- **Purpose**: Placeholder method for handling actions related to restaurant availability.
-- **Key Steps**:
-  - Intended to handle logic for checking or displaying the restaurant's availability.
+## Fields
 
-## **Error Handling**
-- **Image Loading Errors**: If the image path is invalid or the image file cannot be found, an error message is logged in the console.
+### UI Elements
 
-## **Scene Interaction**
-- This controller interacts with other parts of the UI by displaying restaurant information and includes placeholders for future functionality (reviews, menu, availability).
+- **`Label lbl_welcome`**: Displays a personalized welcome message.
+- **`Label lbl_restaurantName`**: Displays the name of the restaurant for the review.
+- **`Label lbl_dateOfExperience`**: Displays the date of the reservation experience.
+- **`ComboBox<Integer> combo_rating`**: Allows users to select a rating for the review.
+- **`TextArea txt_reviewComment`**: Field for users to input their review comments.
 
-### Diagram:
-![Diagram](Diagrams/ClassDiagram2.jpg)
+### Properties
+
+- **`private int reservationId`**: The ID of the reservation being reviewed.
+- **`private Reservation reservation`**: The reservation details associated with the review.
+
+### Services
+
+- **`private final DBConnection dbHandler`**: Manages database connections.
+- **`private final ReservationService reservationService`**: Manages reservation-related operations.
+- **`private final ReviewService reviewService`**: Manages review-related operations.
+
+## Constructor
+
+- **`public CreateReviewController()`**: Initializes the `CreateReviewController` and sets up the `dbHandler`, `reservationService`, and `reviewService`.
+
+## Methods
+
+- **`@FXML public void initialize()`**: Initializes the UI components. Sets a personalized welcome message.
+
+- **`public void setReservationId(int reservationId)`**: Sets the `reservationId` and initializes the review form.
+  - Calls `initializeReviewForm(reservationId)` to fetch reservation details and populate the UI.
+
+- **`private void initializeReviewForm(int reservationId)`**: Fetches reservation details and populates the UI components.
+  - Sets the restaurant name and date of experience labels.
+  - Displays an alert if the reservation is not found.
+
+- **`public void onSubmitReviewClickAction(ActionEvent event)`**: Handles the action when the "Submit Review" button is clicked.
+  - Retrieves the rating and feedback from user inputs.
+  - Validates and submits the review using `reviewService`.
+  - Displays an alert indicating the success or failure of the review submission.
+
+- **`public void onSearchRestaurantsClickAction(ActionEvent event)`**: Handles the action when the "Search Restaurants" button is clicked.
+  - Navigates to the main application view (`BookNowView.fxml`).
+
+# LoginController
+
+The `LoginController` manages the user interface and business logic for user login. It handles user input validation and authentication.
+
+## Fields
+
+### UI Elements
+
+- **`TextField usernameField`**: Field for users to input their username.
+- **`PasswordField passwordField`**: Field for users to input their password.
+
+### Services
+
+- **`private final UserService userService`**: Manages user account-related operations such as login and authentication.
+
+## Constructor
+
+- **`public LoginController()`**: Initializes the `LoginController` and sets up the `userService`.
+
+## Key Methods
+
+- **`public void onLoginButtonAction(ActionEvent event)`**: Handles the action when the "Login" button is clicked.
+  - Retrieves the text input from `usernameField` and `passwordField`.
+  - Validates that both fields are not empty.
+  - Attempts to authenticate the user using `userService`.
+  - Displays a success alert and navigates to the main application view (`BookNowView.fxml`) if login is successful.
+  - Displays an error alert if the login fails due to incorrect username or password, or if an SQL exception occurs.
+
+- **`public void onCreateAccountButtonAction(ActionEvent event)`**: Handles the action when the "Create Account" button is clicked.
+  - Navigates to the Create Account view (`CreateAccountView.fxml`).
+
+# ReservationsController
+
+The `ReservationsController` manages the user interface and functionality related to displaying and managing user reservations. It provides mechanisms to view reservation details, welcome the user, and navigate to the search restaurants view.
+
+## Fields
+
+### UI Elements
+
+- **`Label lbl_welcome`**: Displays a personalized welcome message.
+- **`TableView<Reservation> reservationsTable`**: A table view to display the list of reservations.
+- **`TableColumn<Reservation, String> restaurantNameColumn`**: Table column to display the restaurant name.
+- **`TableColumn<Reservation, String> reservationDateColumn`**: Table column to display the reservation date.
+- **`TableColumn<Reservation, String> timeSlotColumn`**: Table column to display the time slot of the reservation.
+- **`TableColumn<Reservation, String> tableNumberColumn`**: Table column to display the table number.
+- **`TableColumn<Reservation, Button> actionColumn`**: Table column to display the action buttons (e.g., cancel reservation).
+
+### Services
+
+- **`private final ReservationUIManager reservationUIManager`**: Manages the user interface elements and interactions related to reservations.
+
+## Constructor
+
+- **`public ReservationsController()`**: Initializes the `ReservationsController` and sets up the `reservationUIManager`.
+
+## Methods
+
+**` `@FXML public void initialize()`
+- Initializes the UI components.
+- Sets the welcome message with the username.
+- Calls `reservationUIManager.setUpTableColumns()` to configure the table columns.
+- Calls `loadReservations()` to populate the reservations table.
+
+**` `private void loadReservations()`
+- Loads the reservations for the current user.
+- Calls `reservationUIManager.loadReservations()` and passes the current user's reservations list.
+
+- **`public void onSearchRestaurantsClick(ActionEvent event)`**:
+- Handles the action when the "Search Restaurants" button is clicked.
+- Navigates to the main application view (`BookNowView.fxml`).
+
+
+# ReviewController
+
+The `ReviewController` manages the user interface and functionality related to displaying and managing user reviews. It provides mechanisms to view review details, welcome the user, and navigate to the search restaurants view.
+
+## Fields
+
+### UI Elements
+
+- **`Label lbl_welcome`**: Displays a personalized welcome message.
+- **`TableView<Review> reviewsTable`**: A table view to display the list of reviews.
+- **`TableColumn<Review, String> restaurantNameColumn`**: Table column to display the restaurant name.
+- **`TableColumn<Review, String> dateOfExperienceColumn`**: Table column to display the date of the user's dining experience.
+- **`TableColumn<Review, String> ratingColumn`**: Table column to display the rating given by the user.
+- **`TableColumn<Review, String> feedbackColumn`**: Table column to display feedback comments.
+
+### Services
+
+- **`private final ReviewService reviewService`**: Manages interactions with the review data source.
+- **`private final ReviewUIManager reviewUIManager`**: Manages the user interface elements and interactions related to reviews.
+
+## Constructor
+
+- **`public ReviewController()`**: Initializes the `ReviewController` and sets up the `reviewService` and `reviewUIManager`.
+
+## Methods
+
+### `@FXML public void initialize()`
+- Initializes the UI components.
+- Sets the welcome message with the username.
+- Calls `reviewUIManager.setUpTableColumns()` to configure the table columns.
+- Calls `loadReviews()` to populate the reviews table.
+
+### `private void loadReviews()`
+- Loads the reviews for the current user.
+- Calls `reviewUIManager.loadReviews()` and passes the current user's review list.
+- Sets the items in the `reviewsTable` with the loaded reviews.
+
+### `public void onSearchRestaurantsClick(ActionEvent event)`
+- Handles the action when the "Search Restaurants" button is clicked.
+- Navigates to the main application view (`BookNowView.fxml`)
+
+## Additional Layers
+
+## DAO (Data Access Object)
+
+The DAO layer abstracts and encapsulates all interactions with the database, providing a way for services to perform CRUD operations. Each DAO class manages data retrieval and storage for a specific entity.
+
+### Core DAO Classes
+
+- **UserDAO**: Manages database operations related to users, such as login and account creation.
+- **RestaurantDAO**: Handles retrieval and storage of restaurant information.
+- **ReservationDAO**: Manages reservation records, including creation, retrieval, and cancellation.
+- **TableDAO**: Handles database operations related to tables, like checking availability.
+- **ReviewDAO**: Manages CRUD operations for reviews, including retrieving and submitting reviews.
+
+## Service Layer
+
+The Service layer contains business logic that intermediates between Controllers and DAOs. Services manage application logic, enforce rules, and perform data transformations where needed. This layer allows Controllers to request higher-level operations without handling complex database interactions directly.
+
+### Core Service Classes
+
+- **UserService**: Manages user-related operations, such as authentication and account management.
+- **RestaurantService**: Handles business logic related to restaurants, like fetching available restaurants and cuisines.
+- **ReservationService**: Manages reservation-related logic, including availability checks, reservation creation, and cancellation.
+- **TableService**: Handles table-related operations, including seat capacity checks and table reservations.
+- **ReviewService**: Manages review-related functionality, such as fetching and submitting user reviews.
+- **BookNowFacadeService**: A facade service that coordinates interactions across multiple services to simplify complex tasks for controllers.
+
+## Utility Classes
+
+The Utils package provides helper classes to support common tasks, such as database connections, UI alerts, and scene transitions.
+
+### Core Utility Classes
+
+- **DBConnection**: Manages database connection settings and establishes connections for DAOs.
+- **UIUtil**: Contains utility methods for displaying alerts, managing scene transitions, and populating UI components.
+- **RestaurantUIManager**: Manages restaurant-specific UI tasks, such as displaying restaurant lists and availability views.
+- **ReservationUIManager**: Manages the UI for displaying and managing reservations.
+- **ReviewUIManager**: Manages the UI for displaying and managing reviews.
+
+---
+
 
 # Interaction Flow
 

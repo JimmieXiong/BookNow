@@ -24,9 +24,6 @@ public class CreateNewAccountController {
         this.userService = new UserService();
     }
 
-    @FXML
-    public void initialize() {
-    }
 
     public void onCreateAccountButtonAction(ActionEvent event) {
         String username = usernameField.getText();

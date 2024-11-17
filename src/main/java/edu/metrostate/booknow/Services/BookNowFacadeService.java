@@ -58,9 +58,10 @@ public class BookNowFacadeService {
         return reviewService.getReviewsByRestaurantId(restaurantId);
     }
 
-    public boolean reserveTable(String username, int restaurantId, LocalDate date, String timeSlot, String tableNumber) {
+    public int reserveTable(String username, int restaurantId, LocalDate date, String timeSlot, String tableNumber) {
         return tableService.reserveTable(username, restaurantId, date, timeSlot, tableNumber);
     }
+
 
     public boolean validateSearchInputs(String city, String cuisineType, Integer adults, Integer children, LocalDate date) {
         if (city == null) {

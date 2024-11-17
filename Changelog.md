@@ -1,5 +1,22 @@
 # ChangeLog
 
+## [1.2.6] - 2024-11-16 - Jimmie Xiong
+
+### Updated Architecture.md
+- Improved ComboBox Initialization: Updated `BookNowController` to correctly display "Adults" and "Children" as prompt text for `cb_adults` and `cb_children` ComboBoxes, ensuring prompt text visibility without pre-selected values.
+
+### Resolved Type Mismatch in Reservation Flow
+- Updated `reserveTable` methods across `TableService`, `TableDAO`, and `BookNowFacadeService` to use `int` consistently as the return type, allowing for detailed reservation status feedback:
+  - **-1** for duplicate reservations
+  - **1** for successful reservations
+  - **0** for failures
+- Adjusted `BookNowController` logic to display user-friendly alerts based on `reserveTable` outcomes.
+
+### Improvements
+- **Enhanced Reservation Handling**: Ensured users receive specific messages when a table is already reserved, confirmed, or if an error occurs, improving user experience and debugging clarity.
+
+Removed User Roles: Dropped unnecessary role column from users table, simplifying user management.
+
 ## [1.2.5] - 2024-11-15 - Jimmie Xiong
 - Updated features.md, requriements.md, entities.md to reflect current code.
 - 
