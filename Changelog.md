@@ -1,4 +1,6 @@
 # ChangeLog
+## [1.2.7] - 2024-11-18 - Jimmie Xiong
+- Updated architecure.md, and requirements.md
 
 ## [1.2.6] - 2024-11-16 - Jimmie Xiong
 
