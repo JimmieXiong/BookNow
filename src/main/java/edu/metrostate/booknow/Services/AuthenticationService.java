@@ -2,19 +2,23 @@ package edu.metrostate.booknow.Services;
 
 import edu.metrostate.booknow.DAO.UserDAO;
 import edu.metrostate.booknow.Utils.DBConnection;
-
 import java.sql.SQLException;
 
-public class UserService {
+/**
+ * The AuthenticationService class provides functionalities for user authentication
+ * and account creation. It utilizes the UserDAO class for database interactions.
+ */
+
+public class AuthenticationService {
     private final UserDAO userDAO;
 
-    // Default constructor initializes UserDAO with a DBConnection
-    public UserService() {
+    // initializes UserDAO with a DBConnection
+    public AuthenticationService() {
         this.userDAO = new UserDAO(new DBConnection());
     }
 
-    // Constructor for dependency injection
-    public UserService(UserDAO userDAO) {
+    // Constructor for dependency injection BookNowFacadeService
+    public AuthenticationService(UserDAO userDAO) {
         this.userDAO = userDAO;
     }
 

@@ -27,17 +27,17 @@ public class BookNowFacadeService {
 
     private final RestaurantService restaurantService;
     private final ReviewService reviewService;
-    private final UserService userService;
+    private final AuthenticationService userService;
     private final TableService tableService;
     private final ReservationService reservationService;
     private final RestaurantUIManager restaurantUIManager;
 
-    public BookNowFacadeService(DBConnection dbHandler) {
-        this.userService = new UserService(new UserDAO(dbHandler));
-        this.restaurantService = new RestaurantService(new RestaurantDAO(dbHandler));
-        this.reviewService = new ReviewService(new ReviewDAO(dbHandler));
-        this.tableService = new TableService(new TableDAO(dbHandler));
-        this.reservationService = new ReservationService(new ReservationDAO(dbHandler));
+    public BookNowFacadeService(DBConnection DBConnection) {
+        this.userService = new AuthenticationService(new UserDAO(DBConnection));
+        this.restaurantService = new RestaurantService(new RestaurantDAO(DBConnection));
+        this.reviewService = new ReviewService(new ReviewDAO(DBConnection));
+        this.tableService = new TableService(new TableDAO(DBConnection));
+        this.reservationService = new ReservationService(new ReservationDAO(DBConnection));
 
         this.restaurantUIManager = new RestaurantUIManager(reviewService, tableService);
     }

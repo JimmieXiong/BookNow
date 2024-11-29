@@ -1,6 +1,6 @@
 package edu.metrostate.booknow.Controllers;
 
-import edu.metrostate.booknow.Services.UserService;
+import edu.metrostate.booknow.Services.AuthenticationService;
 import edu.metrostate.booknow.Utils.UIUtil;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -18,10 +18,10 @@ public class CreateNewAccountController {
     @FXML
     private PasswordField confirmPasswordField;
 
-    private final UserService userService;
+    private final AuthenticationService userService;
 
     public CreateNewAccountController() {
-        this.userService = new UserService();
+        this.userService = new AuthenticationService();
     }
 
 

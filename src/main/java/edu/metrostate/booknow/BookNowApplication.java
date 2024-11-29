@@ -9,11 +9,12 @@ import java.io.IOException;
 
 public class BookNowApplication extends Application {
     @Override
-    public void start(Stage stage) throws IOException {
+    public void start(Stage primaryStage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(BookNowApplication.class.getResource("LoginView.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1400, 800);
-        stage.setScene(scene);
-        stage.show();
+        primaryStage.setScene(scene);
+        primaryStage.setTitle("BookNow");
+        primaryStage.show();
     }
 
     public static void main(String[] args) {

@@ -1,13 +1,11 @@
 package edu.metrostate.booknow.Controllers;
 
-import edu.metrostate.booknow.Services.UserService;
+import edu.metrostate.booknow.Services.AuthenticationService;
 import edu.metrostate.booknow.Utils.UIUtil;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-
-import java.io.IOException;
 import java.sql.SQLException;
 
 public class LoginController {
@@ -16,10 +14,10 @@ public class LoginController {
     @FXML
     private PasswordField passwordField;
 
-    private final UserService userService;
+    private final AuthenticationService authenticationService;
 
     public LoginController() {
-        userService = new UserService();
+        this.authenticationService = new AuthenticationService();
     }
 
     public void onLoginButtonAction(ActionEvent event) {
@@ -32,7 +30,7 @@ public class LoginController {
         }
 
         try {
-            boolean loginSuccessful = userService.login(username, password);
+            boolean loginSuccessful = authenticationService.login(username, password);
             if (loginSuccessful) {
                 UIUtil.USER = username;
                 UIUtil.displayScene(getClass().getResource("/edu/metrostate/booknow/BookNowView.fxml"), event);

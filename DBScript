@@ -41,7 +41,7 @@ VALUES
 -- Saint Paul
 INSERT INTO restaurants (name, city, cuisine_type, description, menu_pdf, image_path, max_guests)
 VALUES
-    ('Burger Haven', 'Saint Paul', 'Fast Food', 'Juicy burgers with a range of toppings, served with crispy fries and classic milkshakes.', 'fastfood_menu.pdf', 'images/fastfood1.png', 10),
+    ('Burger Haven', 'Saint Paul', 'Fast Food', 'Juicy burgers with a range of toppings, served with crispy fries and classic milkshakes.', 'fastfood_menu.pdf', 'images/BurgerGod.png', 10),
     ('Snack Shack', 'Saint Paul', 'Fast Food', 'A variety of fast, mouthwatering snacks and meals.', 'fastfood_menu.pdf', 'images/fastfood2.png', 10),
 
     ('Dragon Fire', 'Saint Paul', 'BBQ', 'Traditional Chinese meals with bold flavors, including dim sum, noodles, and stir-fry.', 'bbq_menu.pdf', 'images/bbq1.png', 10),
@@ -59,7 +59,7 @@ VALUES
 -- Brooklyn Park
 INSERT INTO restaurants (name, city, cuisine_type, description, menu_pdf, image_path, max_guests)
 VALUES
-    ('Burger Express', 'Brooklyn Park', 'Fast Food', 'Classic fast food with a modern twist, offering a variety of quick bites.', 'fastfood_menu.pdf', 'images/fastfood1.png', 10),
+    ('Burger Express', 'Brooklyn Park', 'Fast Food', 'Classic fast food with a modern twist, offering a variety of quick bites.', 'fastfood_menu.pdf', 'images/BurgerGod.png', 10),
     ('Snack Stop', 'Brooklyn Park', 'Fast Food', 'Serving quick and delicious meals for on-the-go customers.', 'fastfood_menu.pdf', 'images/fastfood2.png', 10),
 
     ('Grill Nation', 'Brooklyn Park', 'BBQ', 'Unlimited BBQ with bold flavors, including ribs, brisket, and smoked sausages.', 'bbq_menu.pdf', 'images/bbq1.png', 10),
@@ -77,7 +77,7 @@ VALUES
 -- Maple Grove
 INSERT INTO restaurants (name, city, cuisine_type, description, menu_pdf, image_path, max_guests)
 VALUES
-    ('Burger Block', 'Maple Grove', 'Fast Food', 'Delicious burgers with all the fixings, served with crispy sides and house-made sauces.', 'fastfood_menu.pdf', 'images/fastfood1.png', 10),
+    ('Burger Block', 'Maple Grove', 'Fast Food', 'Delicious burgers with all the fixings, served with crispy sides and house-made sauces.', 'fastfood_menu.pdf', 'images/BurgerGod.png', 10),
     ('Fast Feast', 'Maple Grove', 'Fast Food', 'Affordable and quick meals with great flavor.', 'fastfood_menu.pdf', 'images/fastfood2.png', 10),
 
     ('Grove Grill', 'Maple Grove', 'BBQ', 'Grilled dishes including juicy steaks, chicken, and vegetables, prepared with care.', 'bbq_menu.pdf', 'images/bbq1.png', 10),
@@ -95,7 +95,7 @@ VALUES
 -- Bloomington
 INSERT INTO restaurants (name, city, cuisine_type, description, menu_pdf, image_path, max_guests)
 VALUES
-    ('Burger Zone', 'Bloomington', 'Fast Food', 'Fast food with a focus on flavor, offering tasty meals for everyone.', 'fastfood_menu.pdf', 'images/fastfood1.png', 10),
+    ('Burger Zone', 'Bloomington', 'Fast Food', 'Fast food with a focus on flavor, offering tasty meals for everyone.', 'fastfood_menu.pdf', 'images/BurgerGod.png', 10),
     ('Fries N\'Burgers', 'Bloomington', 'Fast Food', 'Delicious fast food burgers, fries, and shakes in a casual setting.', 'fastfood_menu.pdf', 'images/fastfood2.png', 10),
 
     ('The Grill Room', 'Bloomington', 'BBQ', 'Slow-smoked BBQ meats served with a variety of house-made sides.', 'bbq_menu.pdf', 'images/bbq1.png', 10),
@@ -125,7 +125,7 @@ CREATE TABLE time_slots (
 );
 
 INSERT INTO users (username, password) VALUES
-    ('admin', 'admin'),
+    ('admin', 'password');
 
 
 
@@ -180,7 +180,7 @@ INSERT INTO tables (restaurant_id, table_number, number_of_seats, booking_fee)
 VALUES
 (2, 'T1', 4, 40),
 (2, 'T2', 2, 20),
-(2, 'T3', 6, 90);
+(2, 'T3', 6, 90),
 (2, 'T4', 8, 120);
 
 -- Insert tables for restaurant_id 3

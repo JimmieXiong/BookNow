@@ -8,6 +8,7 @@ import java.sql.SQLException;
  * The DBConnection class is responsible for managing the database connection.
  * It provides a method to establish a connection to the database.
  */
+
 public class DBConnection {
     private static final String url = "jdbc:mysql://localhost:3306/booknow";
     private static final String user = "root";

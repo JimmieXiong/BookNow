@@ -1,4 +1,9 @@
 # ChangeLog
+
+## [1.2.8] - 2024-11-29 - Jimmie Xiong
+- renamed UserService to AuthenticationService
+- fix error with dbscript 
+
 ## [1.2.7] - 2024-11-18 - Jimmie Xiong
 - Updated architecure.md, and requirements.md
 
