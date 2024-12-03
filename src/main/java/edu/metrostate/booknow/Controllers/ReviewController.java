@@ -27,12 +27,10 @@ public class ReviewController {
     @FXML
     private TableColumn<Review, String> feedbackColumn;
 
-    private final ReviewService reviewService;
     private final ReviewUIManager reviewUIManager;
 
     public ReviewController() {
-        reviewService = new ReviewService(new ReviewDAO(new DBConnection()));
-        reviewUIManager = new ReviewUIManager();
+        this.reviewUIManager = new ReviewUIManager();
     }
 
     @FXML

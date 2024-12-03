@@ -12,7 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RestaurantDAO {
+
     private final DBConnection dbConnection;
+
     private final String AVAILABLE_RESTAURANTS_QUERY = "SELECT DISTINCT r.* " +
             "FROM restaurants r " +
             "JOIN tables t ON r.restaurant_id = t.restaurant_id " +

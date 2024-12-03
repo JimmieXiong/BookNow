@@ -41,7 +41,7 @@ public class ReservationsController {
 
     private void loadReservations() {
         // Pass the ObservableList directly from the TableView
-        reservationUIManager.loadReservations(UIUtil.USER, reservationsTable.getItems());
+        this.reservationUIManager.loadReservations(UIUtil.USER, reservationsTable.getItems());
     }
 
     public void onSearchRestaurantsClick(ActionEvent event) {

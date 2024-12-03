@@ -28,14 +28,14 @@ public class CreateReviewController {
     @FXML
     private TextArea txt_reviewComment;
 
-    private final DBConnection dbHandler;
+    private final DBConnection dbConnection;
     private final ReservationService reservationService;
     private final ReviewService reviewService;
 
     public CreateReviewController() {
-        this.dbHandler = new DBConnection();
+        this.dbConnection = new DBConnection();
         this.reservationService = new ReservationService(new ReservationDAO(new DBConnection()));
-        this.reviewService = new ReviewService(new ReviewDAO(dbHandler));
+        this.reviewService = new ReviewService(new ReviewDAO(dbConnection));
     }
 
     @FXML

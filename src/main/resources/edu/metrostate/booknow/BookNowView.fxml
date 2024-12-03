@@ -16,69 +16,80 @@
 <AnchorPane minHeight="800.0" minWidth="1400.0" xmlns="http://javafx.com/javafx/21.0.5" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.metrostate.booknow.Controllers.BookNowController">
     <children>
         <!-- Top blue background -->
-        <AnchorPane style="-fx-background-color: #003580;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <AnchorPane prefHeight="225.0" style="-fx-background-color: #003580;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
-                <!-- Welcome label -->
-                <Label fx:id="lbl_welcome" maxWidth="Infinity" prefHeight="25.0" style="-fx-font-size: 16px; -fx-text-fill: white;" text="Welcome, User" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0" />
+                <!-- Branding Title -->
+                <Text fill="WHITE" layoutX="50.0" layoutY="80.0" strokeType="OUTSIDE" strokeWidth="0.0" text="BookNow">
+                    <font>
+                        <Font name="System Bold" size="72.0" />
+                    </font>
+                </Text>
 
-                <!-- View My Reservations Button -->
-                <Button onAction="#onViewMyReservationsClick" style="-fx-background-color: #ff9900; -fx-text-fill: white;" text="View My Reservations" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="50.0" />
+                <!-- Subtitle -->
+                <Label layoutX="50.0" layoutY="110.0" style="-fx-font-size: 36px; -fx-font-weight: bold; -fx-text-fill: white;" text="Find your restaurant" />
 
-                <!-- View My Reviews Button -->
-                <Button onAction="#onViewMyReviewsClick" style="-fx-background-color: #ff9900; -fx-text-fill: white;" text="View My Reviews" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="80.0" />
+                <!-- Welcome Label -->
+                <Label fx:id="lbl_welcome" prefHeight="25.0" style="-fx-font-size: 16px; -fx-text-fill: white;" text="Welcome, User" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0" />
 
-                <!-- Main content -->
-                <Label layoutX="34.0" layoutY="97.0" style="-fx-font-size: 36px; -fx-font-weight: bold; -fx-text-fill: white;" text="Find your restaurant" />
+                <!-- Buttons for Reservations and Reviews -->
+                <VBox spacing="10.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="50.0">
+                    <Button fx:id="btn_viewReservations" onAction="#onViewMyReservationsClick" prefHeight="30.0" style="-fx-background-color: #ff9900; -fx-text-fill: white;" text="View My Reservations">
+                        <font>
+                            <Font name="System Bold" size="12.0" />
+                        </font>
+                    </Button>
+                    <Button fx:id="btn_viewReviews" onAction="#onViewMyReviewsClick" prefHeight="30.0" style="-fx-background-color: #ff9900; -fx-text-fill: white;" text="View My Reviews">
+                        <font>
+                            <Font name="System Bold" size="12.0" />
+                        </font>
+                    </Button>
+                </VBox>
 
-                <!-- Location dropdown -->
-                <ComboBox fx:id="locationComboBox" layoutX="34.0" layoutY="150.0" prefWidth="250" promptText="Location" />
+                <!-- Aligned Dropdowns and Search Section -->
+                <HBox layoutX="50.0" layoutY="175.0" spacing="15.0">
+                    <!-- Location Dropdown -->
+                    <ComboBox fx:id="locationComboBox" prefWidth="200" promptText="Location" />
 
-                <!-- Cuisine type dropdown -->
-                <ComboBox fx:id="cb_cuisineType" layoutX="306.0" layoutY="150.0" prefWidth="250" promptText="Cuisine Type" />
+                    <!-- Cuisine Type Dropdown -->
+                    <ComboBox fx:id="cb_cuisineType" prefWidth="200" promptText="Cuisine Type" />
 
-                <!-- Date picker -->
-                <DatePicker fx:id="checkInDate" layoutX="574.0" layoutY="150.0" prefWidth="200" promptText="Check-in Date" />
+                    <!-- Check-in Date Picker -->
+                    <DatePicker fx:id="checkInDate" prefWidth="150" promptText="Check-in Date" />
 
-                <!-- Guest selector combo boxes for adults and children -->
-                <HBox layoutX="789.0" layoutY="150.0" spacing="10.0">
+                    <!-- Adults Dropdown -->
                     <ComboBox fx:id="cb_adults" prefWidth="100" promptText="Adults" />
+
+                    <!-- Children Dropdown -->
                     <ComboBox fx:id="cb_children" prefWidth="100" promptText="Children" />
+
+                    <!-- Search Button -->
+                    <Button onAction="#onSearchButtonClick" prefWidth="100" style="-fx-background-color: #ff9900; -fx-text-fill: white;" text="Search" />
                 </HBox>
-
-                <!-- Search button -->
-                <Button layoutX="1007.0" layoutY="150.0" onAction="#onSearchButtonClick" style="-fx-background-color: #ff9900; -fx-text-fill: white;" text="Search" />
-
-                <!-- Rating dropdown -->
-                <ComboBox fx:id="cb_rating" layoutX="34.0" layoutY="200.0" prefWidth="250" promptText="Rating" />
-
-                <!-- Price Range dropdown -->
-                <ComboBox fx:id="cb_priceRange" layoutX="306.0" layoutY="200.0" prefWidth="250" promptText="Price Range" />
-            <Text fill="WHITE" layoutX="34.0" layoutY="76.0" strokeType="OUTSIDE" strokeWidth="0.0" text="BookNow">
-               <font>
-                  <Font name="System Bold" size="72.0" />
-               </font>
-            </Text>
             </children>
         </AnchorPane>
 
-        <!-- Dividing line -->
-        <Line endX="0.0" endY="1.0" startX="0.0" startY="1.0" stroke="black" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="200.0" />
+        <!-- Dividing Line -->
+        <Line endX="1400.0" endY="1.0" stroke="black" AnchorPane.topAnchor="225.0" />
 
-        <!-- Bottom white section for displaying restaurants with scroll pane -->
-        <ScrollPane fitToHeight="true" fitToWidth="true" style="-fx-background-color: white;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="201.0">
+        <!-- Scrollable Restaurant List Section -->
+        <ScrollPane fitToWidth="true" style="-fx-background-color: white;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="226.0">
             <content>
-                <HBox alignment="CENTER" prefWidth="1100">
-                    <VBox fx:id="restaurantListVBox" maxWidth="1000" minWidth="800" style="-fx-spacing: 20;" VBox.vgrow="ALWAYS">
-                        <padding>
-                            <Insets bottom="10" left="10" right="10" top="10" />
-                        </padding>
-                    </VBox>
+                <HBox alignment="CENTER" prefHeight="575.0" prefWidth="1400.0">
+                    <children>
+                        <VBox fx:id="restaurantListVBox" maxWidth="1000.0" minWidth="800.0" style="-fx-spacing: 20;">
+                            <padding>
+                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                            </padding>
+                        </VBox>
+                    </children>
                 </HBox>
             </content>
         </ScrollPane>
 
-        <VBox fx:id="reviewsOverlay" style="-fx-background-color: rgba(255, 255, 255, 0.9);" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="200.0" />
+        <!-- Reviews Overlay -->
+        <VBox fx:id="reviewsOverlay" style="-fx-background-color: rgba(255, 255, 255, 0.9);" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="225.0" />
 
-        <VBox fx:id="availabilityVBox" layoutY="220.0" spacing="10" style="-fx-padding: 20;" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="200.0" />
+        <!-- Availability Section -->
+        <VBox fx:id="availabilityVBox" spacing="10.0" style="-fx-padding: 20.0;" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="225.0" />
     </children>
 </AnchorPane>

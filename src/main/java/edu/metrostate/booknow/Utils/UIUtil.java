@@ -66,6 +66,13 @@ public class UIUtil {
         alert.showAndWait();
     }
 
+    /**
+     * Populates the specified ComboBox with a list of items and selects the first item if the list is not empty.
+     *
+     * @param <T> the type of the elements in the ComboBox
+     * @param comboBox the ComboBox to be populated
+     * @param items the list of items to add to the ComboBox
+     */
     public static <T> void populateComboBox(ComboBox<T> comboBox, List<T> items) {
         comboBox.setItems(FXCollections.observableArrayList(items));
         if (!items.isEmpty()) {

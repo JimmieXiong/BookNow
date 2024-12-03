@@ -11,9 +11,6 @@ public class Restaurant {
     private String imagePath;
     private int maxGuests;
 
-    public Restaurant() {
-    }
-
     public Restaurant(int restaurantId, String name, String city, String cuisineType, String description, String menuPdf, String imagePath, int maxGuests) {
         this.restaurantId = restaurantId;
         this.name = name;

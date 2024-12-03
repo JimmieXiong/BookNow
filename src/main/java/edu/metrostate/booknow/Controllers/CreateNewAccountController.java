@@ -1,6 +1,8 @@
 package edu.metrostate.booknow.Controllers;
 
+import edu.metrostate.booknow.DAO.UserDAO;
 import edu.metrostate.booknow.Services.AuthenticationService;
+import edu.metrostate.booknow.Utils.DBConnection;
 import edu.metrostate.booknow.Utils.UIUtil;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -18,12 +20,13 @@ public class CreateNewAccountController {
     @FXML
     private PasswordField confirmPasswordField;
 
-    private final AuthenticationService userService;
+    private final AuthenticationService authenticationService;
 
     public CreateNewAccountController() {
-        this.userService = new AuthenticationService();
+        DBConnection dbConnection = new DBConnection();
+        UserDAO userDAO = new UserDAO(dbConnection);
+        this.authenticationService = new AuthenticationService(userDAO);
     }
-
 
     public void onCreateAccountButtonAction(ActionEvent event) {
         String username = usernameField.getText();
@@ -31,7 +34,7 @@ public class CreateNewAccountController {
         String confirmPassword = confirmPasswordField.getText();
 
         try {
-            String resultMessage = userService.validateAndCreateAccount(username, password, confirmPassword);
+            String resultMessage = authenticationService.validateAndCreateAccount(username, password, confirmPassword);
             if (resultMessage.equals("Success")) {
                 UIUtil.USER = username;
                 UIUtil.displayAlert("Success", "Account created successfully");

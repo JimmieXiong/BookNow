@@ -74,7 +74,18 @@ public class RestaurantUIManager {
 
     private static final String REVIEW_BOX_STYLE = "-fx-padding: 15; -fx-spacing: 8; -fx-border-color: #d3d3d3; -fx-border-width: 1; -fx-border-radius: 8; -fx-background-color: #f9f9f9; -fx-background-radius: 8; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 3, 3);";
 
-    public void populateRestaurantListVBox(VBox restaurantListVBox, List<Restaurant> restaurants, Consumer<Restaurant> onReadReviews, Consumer<Restaurant> onViewMenu, Consumer<Restaurant> onShowAvailability) {
+    /**
+     * Populates the given VBox with a list of restaurants. Each restaurant is represented as an HBox
+     * within the VBox, created using the provided list of restaurants and actions.
+     *
+     * @param restaurantListVBox the VBox that will be populated with the restaurant HBoxes
+     * @param restaurants the list of Restaurant objects to be displayed in the VBox
+     * @param onReadReviews a Consumer to handle the action of reading reviews for a restaurant
+     * @param onViewMenu a Consumer to handle the action of viewing the menu of a restaurant
+     * @param onShowAvailability a Consumer to handle the action of showing table availability for a restaurant
+     */
+    public void populateRestaurantListVBox(VBox restaurantListVBox, List<Restaurant> restaurants, Consumer<Restaurant> onReadReviews, Consumer<Restaurant> onViewMenu,
+                                           Consumer<Restaurant> onShowAvailability) {
         restaurantListVBox.getChildren().clear();
         for (Restaurant restaurant : restaurants) {
             HBox restaurantBox = createRestaurantBox(restaurant, onReadReviews, onViewMenu, onShowAvailability);
@@ -82,6 +93,15 @@ public class RestaurantUIManager {
         }
     }
 
+    /**
+     * Creates an HBox that contains the details and interaction buttons for a given restaurant.
+     *
+     * @param restaurant the Restaurant object containing information and resources for display
+     * @param onReadReviews a Consumer to handle actions triggered for reading reviews of the restaurant
+     * @param onViewMenu a Consumer to handle actions for viewing the restaurant's menu
+     * @param onShowAvailability a Consumer to handle actions for checking table availability at the restaurant
+     * @return an HBox containing the restaurant's image, details, and action buttons
+     */
     private HBox createRestaurantBox(Restaurant restaurant, Consumer<Restaurant> onReadReviews, Consumer<Restaurant> onViewMenu, Consumer<Restaurant> onShowAvailability) {
         HBox restaurantBox = new HBox();
         restaurantBox.setStyle(RESTAURANT_BOX_STYLE);

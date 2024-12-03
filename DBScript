@@ -9,6 +9,9 @@ CREATE TABLE users (
     password VARCHAR(50) NOT NULL
 );
 
+INSERT INTO users (username, password) VALUES
+    ('admin', 'password');
+
 CREATE TABLE restaurants (
     restaurant_id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
@@ -123,10 +126,6 @@ CREATE TABLE time_slots (
     slot_id INT AUTO_INCREMENT PRIMARY KEY,
     slot_label VARCHAR(50) NOT NULL
 );
-
-INSERT INTO users (username, password) VALUES
-    ('admin', 'password');
-
 
 
 INSERT INTO time_slots (slot_label) VALUES
