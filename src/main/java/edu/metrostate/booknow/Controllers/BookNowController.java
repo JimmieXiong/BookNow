@@ -67,13 +67,14 @@ public class BookNowController {
 
     public void onSearchButtonClick(ActionEvent event) {
         showRestaurantListView();
-        // Gets user selections
+        // Retrieve user selections
         selectedCity = locationComboBox.getSelectionModel().getSelectedItem();
         selectedCuisineType = cb_cuisineType.getSelectionModel().getSelectedItem();
         Integer selectedAdults = cb_adults.getSelectionModel().getSelectedItem();
         Integer selectedChildren = cb_children.getSelectionModel().getSelectedItem();
         selectedDate = checkInDate.getValue();
 
+        // Delegate to FacadeService for restaurant search
         BookNowFacadeService.searchRestaurants(selectedCity, selectedCuisineType, selectedAdults, selectedChildren, selectedDate, restaurantListVBox, this);
     }
 

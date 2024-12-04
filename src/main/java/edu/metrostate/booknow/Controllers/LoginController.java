@@ -19,7 +19,6 @@ public class LoginController {
     private PasswordField passwordField;
 
     private final AuthenticationService authenticationService;
-
     // Called during the loading of LoginView.fxml
     public LoginController() {
         // Initialize dependencies for authentication
@@ -29,11 +28,9 @@ public class LoginController {
         // Handles authentication using UserDAO
         this.authenticationService = new AuthenticationService(userDAO);
     }
-
     public void onLoginButtonAction(ActionEvent event) {
         String username = usernameField.getText();
         String password = passwordField.getText();
-
         try {
             boolean success = authenticationService.login(username, password);
             if (success) {

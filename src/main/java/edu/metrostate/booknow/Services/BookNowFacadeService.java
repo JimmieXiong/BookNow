@@ -97,8 +97,7 @@ public class BookNowFacadeService {
 
             List<Restaurant> restaurants = getAvailableRestaurants(city, cuisineType, totalGuests, date);
             restaurantUIManager.populateRestaurantListVBox(restaurantListVBox, restaurants, controller::handleReadReviews,
-                    controller::handleViewMenu, controller::handleShowAvailability
-            );
+                    controller::handleViewMenu, controller::handleShowAvailability);
         }
     }
 }
