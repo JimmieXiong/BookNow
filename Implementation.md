@@ -43,7 +43,7 @@
 
 # 1. User Authentication and Account Creation
 
-The **User Authentication** feature encompasses two essential functionalities: **Login** and **Account Creation**. 
+The **User Authentication and Account Creation** feature encompasses two essential functionalities: **Login** and **Account Creation**. 
 
 ### Functionalities
 
@@ -649,33 +649,6 @@ public void cancelReservation(int reservationId) {
   
 ---
 
-# Phase 3
-
-# Application Infrastructure and User Experience Framework
-
-The **Application Infrastructure and User Experience Framework** is designed to streamline application functionality while maintaining a seamless user experience. This feature combines essential components such as **Scene Management**, **Alerts and Notifications**, **UI Element Management**, and **Database Schema and Seed Data Initialization** to create a robust foundation for the application.
-
----
-
-## Functions
-
-### **Scene Management**
-- Handles seamless transitions between views.
-- Maintains consistent window dimensions and maximization state.
-- Supports custom controller initialization during scene transitions.
-
-### **Alerts and Notifications**
-- Displays error and success alerts to guide users during operations.
-
-### **UI Element Management**
-- Dynamically manages UI components such as `ComboBox`, ensuring proper population and default selections.
-
-### **Database Schema and Seed Data Initialization**
-- Establishes the structural framework of the application.
-- Defines core entities, relationships, and initial data for development and testing.
-
----
-
 ## Phase 3
 
 ## Commit 12/4/25
@@ -1046,5 +1019,4 @@ VALUES
 - **Expected Results**:
     - If you are able to use all the features of BookNow without issues, the functionality is working.
 
-
-o
+    

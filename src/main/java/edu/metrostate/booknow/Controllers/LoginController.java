@@ -28,6 +28,7 @@ public class LoginController {
         // Handles authentication using UserDAO
         this.authenticationService = new AuthenticationService(userDAO);
     }
+
     public void onLoginButtonAction(ActionEvent event) {
         String username = usernameField.getText();
         String password = passwordField.getText();
