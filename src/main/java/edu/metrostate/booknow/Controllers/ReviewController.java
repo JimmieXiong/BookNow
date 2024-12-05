@@ -1,9 +1,6 @@
 package edu.metrostate.booknow.Controllers;
 
-import edu.metrostate.booknow.DAO.ReviewDAO;
-import edu.metrostate.booknow.Utils.DBConnection;
 import edu.metrostate.booknow.Models.Review;
-import edu.metrostate.booknow.Services.ReviewService;
 import edu.metrostate.booknow.Utils.UIUtil;
 import edu.metrostate.booknow.Utils.ReviewUIManager;
 import javafx.collections.ObservableList;
