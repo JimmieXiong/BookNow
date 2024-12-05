@@ -45,7 +45,6 @@ public class BookNowController {
         this.BookNowFacadeService = new BookNowFacadeService(new DBConnection());
     }
 
-    @FXML
     public void initialize() {
         lbl_welcome.setText("Welcome, " + UIUtil.USER);
 
@@ -80,10 +79,7 @@ public class BookNowController {
 
     public void handleShowAvailability(Restaurant restaurant) {
         showAvailabilityView(); // Manage UI visibility
-        BookNowFacadeService.prepareAvailabilityView(
-                restaurant, selectedDate, totalGuests, availabilityVBox,
-                table -> handleReserveTable(restaurant, table),
-                selectedTimeSlot -> setSelectedTimeSlot(selectedTimeSlot)
+        BookNowFacadeService.prepareAvailabilityView(restaurant, selectedDate, totalGuests, availabilityVBox, table -> handleReserveTable(restaurant, table), selectedTimeSlot -> setSelectedTimeSlot(selectedTimeSlot)
         );
     }
 

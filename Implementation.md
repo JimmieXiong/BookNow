@@ -41,13 +41,9 @@
 
 ---
 
-# 1. User Authentication Feature
+# 1. User Authentication and Account Creation
 
-The **User Authentication** feature encompasses two essential functionalities: **Login** and **Account Creation**. Below is a detailed breakdown of how these components are implemented and executed.
-
-## Overview
-
-The User Authentication feature aims to securely handle user access to the application by enabling users to log in with existing account credentials or create a new account.
+The **User Authentication** feature encompasses two essential functionalities: **Login** and **Account Creation**. 
 
 ### Functionalities
 
@@ -62,40 +58,57 @@ The User Authentication feature aims to securely handle user access to the appli
 
 # Login
 
-# Login Process Description
+## Controller Initialization
+When the `LoginController` is instantiated, the constructor initializes the following components:
+- **`DBConnection`**: Manages database access.
+- **`UserDAO`**: Handles user-related database operations.
+- **`AuthenticationService`**: Manages authentication logic.
 
-When a user arrives at the Login Screen, they enter their username and password into the designated fields. They click the Login button. This action sets off a chain of events, starting with the `LoginController`.
+This initialization ensures that all required dependencies are prepared, enabling the application to handle user authentication seamlessly when interacting with the login screen.
 
-The `LoginController` first reacts to the button press by invoking the method `onLoginButtonAction`. This method gathers the entered information from the `usernameField.getText()` and `passwordField.getText()` fields. It now has the user’s username and password and is ready to validate them.
+## Scene Creation
+- A scene is created using the layout from `LoginView.fxml`.
+- The scene is configured with:
+  - **Width**: 1400
+  - **Height**: 800
+- The scene is attached to the `primaryStage`, which represents the application's main window.
+- Additional configurations include:
+  - Setting the window title to **“BookNow”**.
+  - Making the `primaryStage` visible to the user.
 
-Instead of directly handling the validation, the `LoginController` delegates this responsibility to the `AuthenticationService` by calling its method `login(username, password)`. The `AuthenticationService` is designed to handle this exact task. It now steps into action, prepared to confirm whether these credentials are genuine.
+Once initialized, the application displays the login screen and waits for user interaction, such as clicking the **Login** button or the **Create Account** button.
 
-To check the credentials, the `AuthenticationService` calls `UserDAO.login(username, password)`. The `UserDAO` is the bridge to the database. Within this method, the `UserDAO` crafts a SQL query:
+## Login Button Functionality
 
-```sql
-SELECT * FROM users WHERE username = ? AND password = ?
-```
+### Event Trigger
+When the **Login** button is clicked, it triggers the `onLoginButtonAction(ActionEvent event)` method, which performs the following tasks:
 
-The placeholders (`?`) are populated with the user-provided username and password. To execute this query, the `UserDAO` relies on the `DBConnection` utility. It calls `DBConnection.getConnection()` to establish a connection to the database.
+1. **Retrieve User Input**
+  - Retrieves the text from `usernameField` and `passwordField`.
 
-Once the connection is secured, the `UserDAO` prepares a `PreparedStatement` using its `prepareStatement` helper method, ensuring the parameters are securely injected into the query. The query is executed, and the `ResultSet` is analyzed to see if any matching user exists in the database.
+2. **Authenticate User**
+  - Calls `authenticationService.login(username, password)`.
+  - This method delegates the authentication process to the `UserDAO.login()` method.
 
-- If the `ResultSet.next()` method returns true, it means a match was found—signaling a valid login. The `UserDAO.login()` method then returns `true` to the `AuthenticationService`.
-- If no match is found, the method returns `false`.
+3. **Database Query**
+  - The `UserDAO.login()` method:
+    - Prepares a SQL query to check if the credentials exist in the `users` table.
+    - Uses placeholders to prevent SQL injection.
+    - Establishes a database connection, executes the query, and checks the result set.
 
-The `AuthenticationService` receives this result and sends it back to the `LoginController`, which now knows whether the login was successful.
-
-In the `LoginController`, depending on the result:
-
-- **If Successful:**
-  - The username is stored globally in the application by assigning it to `UIUtil.USER`.
-  - A success alert is displayed using `UIUtil.displayAlert("Success", "Login successful")`.
-  - The user is redirected to the main application view by calling `UIUtil.displayScene(getClass().getResource("/edu/metrostate/booknow/BookNowView.fxml"), event)`.
-
-- **If Failed:**
-  - An error alert is shown via `UIUtil.displayAlert("Error", "Invalid username or password")`.
-
-Meanwhile, if a database error occurs at any stage (e.g., during the connection or query execution), the catch block in the `onLoginButtonAction` method handles it. The user is informed of the issue using `UIUtil.displayAlert("Error", "Database error: " + e.getMessage())`.
+4. **Handle Results**
+  - **Success**:
+    - If credentials are valid:
+      - Returns `true`.
+      - Stores the username in `UIUtil.User.USER`.
+      - Displays a success alert.
+      - Switches the scene to `BookNowView.fxml`.
+  - **Failure**:
+    - If credentials are invalid:
+      - Displays an error alert with the message: **“Invalid username or password.”**
+  - **Database Error**:
+    - In case of an `SQLException`:
+      - Displays an error alert with the message: **“Database error”**, along with exception details.
 
 ## Testing
 
@@ -118,94 +131,66 @@ Meanwhile, if a database error occurs at any stage (e.g., during the connection 
     - The user remains on the login page.
 
 ---
+
+# Create New Account 
+
 ## Implementation
 
-# Account Creation
+## Scene and Controller Initialization
+- When `CreateAccountView.fxml` loads, it links the following UI elements to the corresponding fields in the `CreateAccountController`:
+  - `usernameField`
+  - `passwordField`
+  - `confirmPasswordField`
+- The `CreateAccountController` constructor initializes the following components:
+  - **`DBConnection`**: Manages database access.
+  - **`UserDAO`**: Handles user-related database operations.
+  - **`AuthenticationService`**: Manages account creation logic.
 
-The account creation process begins when a user decides to join the BookNow platform. They are directed to the "Create Account" page, where they encounter a user-friendly interface prompting them to fill in three essential fields:
+At this point, the **Create New Account** button waits for user input, while the **Login** button acts as a back button, switching back to the `LoginView`.
 
-- **Username**
-- **Password**
-- **Confirm Password**
+## Create New Account Button Functionality
 
-The user enters their desired username into the `usernameField`, sets a secure password in the `passwordField`, and retypes the same password in the `confirmPasswordField` to confirm it. They click the "Create Account" button, initiating the process managed by the `CreateNewAccountController`.
+### Event Trigger
+When the **Create New Account** button is clicked, it triggers the `onCreateAccountButtonAction(ActionEvent event)` method, which performs the following steps:
 
-When the button is clicked, the `onCreateAccountButtonAction` method in `CreateNewAccountController` is triggered. This method gathers the inputs from the FXML fields:
+1. **Retrieve User Input**
+  - Retrieves the text from:
+    - `usernameField`
+    - `passwordField`
+    - `confirmPasswordField`
 
-```java
-String username = usernameField.getText();
-String password = passwordField.getText();
-String confirmPassword = confirmPasswordField.getText();
-```
+2. **Validate and Create Account**
+  - Calls `authenticationService.validateAndCreateAccount(username, password, confirmPassword)` to handle account creation.
 
-The gathered input is passed to the `validateAndCreateAccount` method in the `AuthenticationService`:
+3. **Validation Logic**
+  - The `validateAccountDetails` method checks:
+    - All fields are filled.
+    - `username` and `password` meet the minimum length requirement (8 characters).
+    - `password` and `confirmPassword` match.
+  - If validation fails:
+    - An error message is returned (e.g., **“Passwords do not match.”**).
 
-```java
-String resultMessage = authenticationService.validateAndCreateAccount(username, password, confirmPassword);
-```
+4. **Check Username Availability**
+  - If validation passes:
+    - Calls `userDAO.login(username, password)` to check if the username already exists.
+    - If the username is taken:
+      - Returns the message: **“Username already exists!”**
 
-The `AuthenticationService` acts as the core business logic handler, ensuring the integrity of the account creation process. Here’s how it works:
+5. **Create Account**
+  - If the username is available:
+    - Calls `userDAO.createAccount(username, password)`:
+      - Prepares and executes an `INSERT` query using placeholders for `username` and `password` to prevent SQL injection.
+    - If the query executes successfully:
+      - Sets `UIUtil.USER` to the `username`.
+      - Displays a success alert: **“Account created successfully”**.
+      - Switches the scene to `BookNowView.fxml`.
 
-### Validation of User Input
+6. **Handle Errors**
+  - If the account creation is unsuccessful:
+    - Displays an error alert with the relevant message.
+  - If an `SQLException` occurs:
+    - Catches the exception and displays an alert with the error details.
 
-The first step in the `validateAndCreateAccount` method is validating the provided data through the `validateAccountDetails` method. This method ensures that the following conditions are met:
-
-- **All Fields Are Filled**: No input field is left empty.
-- **Username Length**: The username must have at least 8 characters.
-- **Password Length**: The password must also be at least 8 characters long.
-- **Passwords Match**: The password and confirm password fields must contain the same value.
-
-If any of these checks fail, an appropriate error message is returned, such as "All fields must be filled!" or "Passwords do not match."
-
-### Checking for Username Availability
-
-If validation passes, the `AuthenticationService` ensures that the username is unique. It calls the `UserDAO` method `login` to query the database and check if the username already exists:
-
-```sql
-SELECT * FROM users WHERE username = ? AND password = ?
-```
-
-If the query returns a result, it means the username is already taken, and the service returns the message "Username already exists!".
-
-### Creating the Account
-
-If the username is available, the `AuthenticationService` proceeds to create the new account by calling `userDAO.createAccount`:
-
-```java
-boolean accountCreated = userDAO.createAccount(username, password);
-```
-
-In the `UserDAO`, the `createAccount` method executes the following SQL statement to insert the new user into the database:
-
-```sql
-INSERT INTO users (username, password) VALUES (?, ?)
-```
-
-If the database insertion is successful, the method returns `true`, indicating that the account has been created.
-
-### Responding to the Outcome
-
-Back in the `CreateNewAccountController`, the result from the `validateAndCreateAccount` method determines the next steps:
-
-- **Success**:
-  - The controller updates the application's state with:
-    ```java
-    UIUtil.USER = username;
-    ```
-  - It displays a success message to the user:
-    ```java
-    UIUtil.displayAlert("Success", "Account created successfully");
-    ```
-  - Finally, it transitions the user to the main application interface:
-    ```java
-    UIUtil.displayScene(getClass().getResource("/edu/metrostate/booknow/BookNowView.fxml"), event);
-    ```
-
-- **Failure**:
-  - If the service returned an error message, the controller displays an alert:
-    ```java
-    UIUtil.displayAlert("Error", resultMessage);
-    ```
     
 ## Testing
 
@@ -253,129 +238,104 @@ Back in the `CreateNewAccountController`, the result from the `validateAndCreate
 
 ---
 
-# 2. Restaurant Search Process
+# Restaurant Discovery and Interaction
 
 ## Implementation
 
-### Last Commit 12/04/24
+## Features
+The Restaurant Discovery and Interaction module includes the following functionality:
+- **Restaurant Search**: Allows users to filter restaurants by location, cuisine, date, and guest count.
+- **View Menus**: Provides PDF-based menu viewing for selected restaurants.
+- **Read Reviews**: Displays reviews left by other users for a given restaurant.
+- **Table Availability**: Shows available tables for reservation, allowing users to choose a specific time slot and guest count.
+- **Reserve a Table**: Enables users to book a table with confirmation and error handling.
 
-## 1. User Input 
+## Initialization
+The process begins when `BookNowView.fxml` is loaded using `UIUtil.displayScene`, linking UI elements to fields in the `BookNowController`. During initialization:
+- A `BookNowFacadeService` is instantiated to manage database interactions through `DBConnection`.
+- The `BookNowFacadeService` initializes service classes:
+  - `RestaurantService`, `ReviewService`, and `TableService`, each relying on their corresponding DAOs (`RestaurantDAO`, `ReviewDAO`, `TableDAO`) for database operations.
+- A `RestaurantUIManager` is created to handle UI interactions, such as displaying reviews, table availability, and reservation data.
 
-The process begins when the user interacts with the UI (`BookNowView.fxml`) to input their search criteria:
+Once `BookNowView.fxml` is fully loaded, the `initialize()` method:
+1. Displays a personalized welcome message using `UIUtil.USER`.
+2. Populates combo boxes for location, cuisine, and guest counts using data from `BookNowFacadeService`.
+3. Sets up numeric ranges for adults (1–10) and children (0–10).
+4. Awaits user input for location, cuisine type, date, and guest count selection.
 
-- **Dropdowns**: The user selects options from various dropdowns, including:
-  - **City** (`locationComboBox`)
-  - **Cuisine Type** (`cb_cuisineType`)
-  - **Number of Adults** (`cb_adults`)
-  - **Number of Children** (`cb_children`)
+## Restaurant Search
+When the **Search** button is clicked, the `onSearchButtonClick(ActionEvent event)` method is triggered. This method:
+1. Calls `showRestaurantListView()` to display the restaurant list and retrieve user input.
+2. Delegates the search operation to `BookNowFacadeService.searchRestaurants`, which:
+  - Validates user inputs using `validateSearchInputs`. Alerts are shown for invalid inputs.
+  - Calculates the total guest count.
+  - Calls `getAvailableRestaurants` to fetch restaurants matching the filters via `restaurantService` and `restaurantDAO`.
+  - Maps the query results to `Restaurant` objects using `mapResultSetToRestaurant`.
 
-- **Date Picker**: The user chooses a reservation date using the `checkInDate` component.
+3. Passes the list of `Restaurant` objects to `restaurantUIManager.populateRestaurantListVBox`, which:
+  - Clears previous content.
+  - Iterates over the restaurant list, creating an `HBox` for each using `createRestaurantBox`.
 
-- **Search Button**: Clicking this button triggers the `onSearchButtonClick` event.
+### Restaurant Box Creation
+- **ImageView**: Created by `createRestaurantImageView` using the restaurant's image path or a placeholder.
+- **Details VBox**: Created by `createRestaurantDetails` with the restaurant’s name, location, and description.
+- **Buttons VBox**: Includes:
+  - Buttons for reviews, menus, and availability using consumer callbacks (`onReadReviews`, `onViewMenu`, `onShowAvailability`).
+  - Reviews and rating display using `createReviewsAndRatingBox`.
 
-## 2. Controller: BookNowController
+## Read Reviews
+When the **Read Reviews** button is clicked:
+1. `handleReadReviews(Restaurant restaurant)` is triggered, making the `reviewsOverlay` visible.
+2. It calls `BookNowFacadeService.showRestaurantReviews`:
+  - Retrieves reviews using `reviewService.getReviewsByRestaurantId` via `reviewDAO`.
+  - Processes the `ResultSet` to extract review details and maps them to `Review` objects.
 
-The `onSearchButtonClick` method in the `BookNowController` manages the user's search request. It follows these steps:
+3. `restaurantUIManager.displayReviews` populates the `reviewsOverlay`:
+  - Clears existing content.
+  - Calls `createEmptyReviewBox` if no reviews are available.
+  - Otherwise, iterates through reviews, generating styled `VBox` components with:
+    - Partially masked usernames.
+    - Star ratings (★ for filled stars, ☆ for empty).
+    - Feedback text.
+    - Formatted dates.
 
-- **Retrieve User Inputs**: Captures the values selected by the user from the UI components.
-  ```java
-  String selectedCity = locationComboBox.getSelectionModel().getSelectedItem();
-  String selectedCuisineType = cb_cuisineType.getSelectionModel().getSelectedItem();
-  LocalDate selectedDate = checkInDate.getValue();
-  Integer selectedAdults = cb_adults.getSelectionModel().getSelectedItem();
-  Integer selectedChildren = cb_children.getSelectionModel().getSelectedItem();
-  ```
+Each review includes a close button to dynamically remove it from the overlay.
 
-- **Calculate Total Guests**: Adds adults and children to determine the total number of guests.
-  ```java
-  int totalGuests = selectedAdults + selectedChildren;
-  ```
+## View Menus
+When the **View Menu** button is clicked:
+1. `handleViewMenu(Restaurant restaurant)` is triggered.
+2. It calls `RestaurantUIManager.viewMenu(restaurant)`:
+  - Loads the menu PDF using the `loadPDF` method.
+  - Opens the file in the system's default PDF viewer if the `Desktop` class is supported.
+  - Displays an alert if the menu is unavailable or an error occurs.
 
-- **Delegate Search Logic**: Invokes `BookNowFacadeService.searchRestaurants` to handle the search and update the UI.
+## Show Availability
+When the **Show Availability** button is clicked:
+1. `handleShowAvailability(Restaurant restaurant)` is triggered, which:
+  - Hides the restaurant list and displays the availability view.
+  - Calls `BookNowFacadeService.prepareAvailabilityView`, passing details like restaurant, date, guest count, and `availabilityVBox`.
 
-## 3. Service Layer: BookNowFacadeService
+2. `prepareAvailabilityView`:
+  - Clears the `availabilityVBox`.
+  - Adds a `TableView` created by `restaurantUIManager.createTableView`, showing:
+    - Table details (number, seats, price).
+    - Interactive elements for selecting time slots and reserving tables.
 
-The `searchRestaurants` method in `BookNowFacadeService` serves as the central processing unit for the search functionality.
+### Table Reservation
+If the user reserves a table:
+1. `handleReserveTable(Restaurant restaurant, Table table)` is triggered.
+2. It calls `BookNowFacadeService.handleTableReservation`, which:
+  - Verifies if a reservation already exists via helper methods:
+    - `getTimeSlotIdByTimeSlot`
+    - `getUserIdByUserName`
+    - `isReservationAlreadyExists`
+  - If a reservation exists:
+    - Returns `-1` and displays a "Reservation Failed" alert.
+  - Otherwise:
+    - Creates the reservation using `tableService.reserveTable` via `tableDAO`.
 
-- **Steps in `searchRestaurants`**:
-  - **Validate Inputs**: Ensures inputs are complete and the date is valid (e.g., not in the past).
-    ```java
-    if (selectedCity == null || selectedCuisineType == null || selectedAdults == null || selectedChildren == null || selectedDate == null || selectedDate.isBefore(LocalDate.now())) {
-        UIUtil.displayAlert("Error", "Please fill in all fields correctly.");
-        return;
-    }
-    ```
-  - **Query Database**: Fetches filtered restaurants based on the user's selections using `RestaurantService.getAvailableRestaurants`.
-    ```java
-    List<Restaurant> restaurants = restaurantService.getAvailableRestaurants(selectedCity, selectedCuisineType, totalGuests, selectedDate);
-    ```
+Finally, the `availabilityVBox` is updated with the latest `TableView`, showing table details and user interactions.
 
-  - **Update UI**: Passes the retrieved list of restaurants to `RestaurantUIManager.populateRestaurantListVBox` to display the results.
-
-## 4. Service Layer: RestaurantService
-
-The `RestaurantService` is responsible for database interactions via `RestaurantDAO`.
-
-- **Steps in `RestaurantService`**:
-  - **Fetch Data**: Calls `RestaurantDAO.getAvailableRestaurants` using the specified criteria.
-    ```java
-    return restaurantDAO.getAvailableRestaurants(selectedCity, selectedCuisineType, totalGuests, selectedDate);
-    ```
-
-## 5. DAO Layer: RestaurantDAO
-
-The `RestaurantDAO` directly interacts with the database to find matching restaurants.
-
-- **Steps in `RestaurantDAO`**:
-
-  - **Execute SQL Query**: Uses an SQL query to find available restaurants.
-    ```sql
-    SELECT DISTINCT r.*
-    FROM restaurants r
-    JOIN tables t ON r.restaurant_id = t.restaurant_id
-    LEFT JOIN reservations res ON t.table_number = res.table_number
-    AND res.reservation_date = ?
-    WHERE r.city = ?
-    AND r.cuisine_type = ?
-    AND t.number_of_seats >= ?
-    AND (res.reservation_id IS NULL OR ts.slot_id IS NULL);
-    ```
-
-  - **Map Results to Restaurant Objects**: Converts each row in the result set into a `Restaurant` object.
-    ```java
-    return new Restaurant(
-        rs.getInt("restaurant_id"),
-        rs.getString("name"),
-        rs.getString("city"),
-        rs.getString("cuisine_type"),
-        rs.getString("description"),
-        rs.getString("menu_pdf"),
-        rs.getString("image_path"),
-        rs.getInt("max_guests")
-    );
-    ```
-
-## 6. UI Update: RestaurantUIManager
-
-The `RestaurantUIManager.populateRestaurantListVBox` method handles the rendering of search results.
-
-- **Steps in `populateRestaurantListVBox`**:
-  - **Clear Existing Results**: Removes any previous results from `restaurantListVBox`.
-    ```java
-    restaurantListVBox.getChildren().clear();
-    ```
-
-  - **Render Results**: Iterates through the `Restaurant` objects list, creating an `HBox` for each restaurant:
-    - Displays restaurant details such as name, description, and location.
-    - Includes action buttons for viewing reviews, menus, and table availability.
-
-## 7. End of Flow
-
-The user sees the filtered list of restaurants displayed in the UI (`restaurantListVBox`). Each restaurant entry includes buttons for additional actions:
-
-- **View Reviews**: Opens an overlay to show reviews.
-- **View Menu**: Displays the restaurant's menu in a PDF viewer.
-- **Show Availability**: Shows available tables for reservation.
 
 # Test Scenarios
 
@@ -419,320 +379,669 @@ The user sees the filtered list of restaurants displayed in the UI (`restaurantL
 
 # Phase 2
 
-## 1. Table Availability Check
+## commit 12/4/24
 
-### Last Commit 12/04/24
+# Reservation and Review Management
 
-**Implementation**  
-The Table Availability Check process is initiated when the user selects a restaurant and clicks the "Show Availability" button in the application. This action triggers a series of method calls to fetch and display available tables and time slots for the selected restaurant and reservation details.
-
-### User Action
-
-- **User Interaction**: The user selects a restaurant and clicks the "Show Availability" button.
-
-### Method Chain
-
-1. **`handleShowAvailability(Restaurant restaurant)` in `BookNowController`**
-
-  - **Objective**: Manages the transition to the availability view and initiates data retrieval.
-  - **Steps**:
-    - **Show Availability View**: Calls `showAvailabilityView()` to update the UI, ensuring that the availability view is displayed.
-    - **Prepare Availability Data**: Invokes the `prepareAvailabilityView` method in `BookNowFacadeService`, passing the selected restaurant, date, and guest count.
-
-2. **`prepareAvailabilityView` in `BookNowFacadeService`**
-
-  - **Objective**: Centralizes logic for fetching availability data and updating the UI.
-  - **Steps**:
-    - **Fetch Available Tables**:
-      - Calls `TableDAO.getAvailableTables`, passing the restaurant ID, reservation date, and required guest count.
-      - Retrieves a list of tables that meet the criteria.
-    - **Fetch Available Time Slots**:
-      - Calls `TableDAO.getAvailableTimeSlots`, providing the restaurant ID and reservation date.
-      - Returns the time slots that are unreserved for the specified date.
-    - **UI Update**:
-      - Dynamically updates the UI to display the available tables and time slots.
-    - **Callbacks**:
-      - **Table Selection**: Attaches a callback to invoke `handleReserveTable` when a user selects a table.
-      - **Time Slot Selection**: Sets up a callback to invoke `setSelectedTimeSlot` for time slot selection.
-
-3. **Database Queries in `TableDAO`**
-
-  - **`getAvailableTables`**
-    - **Purpose**: Executes a SQL query to retrieve tables that:
-      - Match the restaurant's ID.
-      - Meet the guest count requirement.
-      - Are not reserved for the specified date.
-    - **Result**: Returns a list of `Table` objects representing the available tables.
-
-  - **`getAvailableTimeSlots`**
-    - **Purpose**: Queries the database to identify unreserved time slots for the specified restaurant and date.
-    - **Result**: Provides the time slots available for reservation.
-
-### Completion of Table Availability Check
-
-At this stage, the user is presented with a list of available tables and time slots, preparing the system for the next step: reservation booking.
-
-# Test Case: Table Availability Check
-
-## Test Objective
-
-Verify that the application correctly fetches and displays available tables and time slots for a selected restaurant based on the user’s input.
-
-## Test Setup
-
-**Preconditions**:
-- Install Mysql, Mysql workbench
-- Execute the dbscript
-- Log in as a valid user to access the `BookNowController`.
-
-## Steps
-
-1. **Navigate to the Search Page**.
-2. **Select**:
-  - A valid **Location**
-  - A valid **Cuisine Type**
-  - At least one **Adult Guest**
-  - Select number of **children**
-  - A valid **Reservation Date** in the future using the `checkInDate` picker, or present.
-3. **Click Search** to populate the list of restaurants.
-4. From the restaurant list, select a restaurant and click the **"Show Availability"** button.
-
-## Expected Results
-
-### UI Behavior:
-
-- The application switches to the **Availability View**.
-- Tables and time slots are displayed dynamically in the availability section.
-- Users can see table numbers, available seats, and time slots.
-
-### Data Accuracy:
-
-- Only tables with sufficient seating capacity are shown.
-- Time slots displayed should not overlap with existing reservations.
-
-### Error Handling:
-
-- If no tables or time slots are available, an error message such as "No tables or time slots available for the selected date." is displayed.
-
-## Validation
-
-- Confirm the tables displayed correspond to the data in the `tables` table in the database.
-- Verify the time slots match the available entries in the `time_slots` table.
 ---
 
-# 2. Reservation Booking
+# Functions
+- **View Reservations**: Displays all reservations made by the user, including restaurant name, reservation date, time slot, and table number.
+- **Cancel Reservation**: Enables users to cancel upcoming reservations, removing them from the database.
+- **Leave a Review**: Allows users to submit reviews for completed reservations.
+- **View Your Reviews**: Displays user-submitted reviews in a structured table format.
+
+---
 
 ## Implementation
 
-Once the user selects a table and time slot, they can proceed to book a reservation. The system processes the booking request and ensures that no conflicts exist before confirming the reservation.
+### Step 1: Viewing Reservations
 
-### User Action
+The user initiates the process by clicking the **View My Reservations** button in the `BookNowView` interface. This triggers the `onViewMyReservationsClick()` method:
 
-- **User Interaction**: The user selects a table and time slot and clicks the "Reserve" button.
+```java
+public void onViewMyReservationsClick(ActionEvent event) {
+    UIUtil.displayScene(getClass().getResource("/edu/metrostate/booknow/ReservationsView.fxml"), event);
+}
+```
 
-### Method Chain
+This switches the scene to `ReservationsView.fxml` and links it to the `ReservationsController`.
 
-1. **`handleReserveTable(Restaurant restaurant, Table table)` in `BookNowController`**
-  - **Objective**: Handles the reservation process by delegating it to the service layer.
-  - **Steps**:
-    - **Gather Reservation Details**:
-      - Collects the necessary details, including:
-        - The logged-in user (`UIUtil.USER`).
-        - Selected restaurant and table.
-        - Reservation date.
-        - Chosen time slot.
-    - **Initiate Reservation**:
-      - Calls `BookNowFacadeService.handleTableReservation` to process the reservation.
+### Step 2: Initializing Reservations Controller
 
-2. **`handleTableReservation` in `BookNowFacadeService`**
-  - **Objective**: Validates and processes the reservation request.
-  - **Steps**:
-    - **Check for Existing Reservation**:
-      - Calls `TableDAO.isReservationAlreadyExists` to verify that no reservation exists for the same user, restaurant, date, and time slot.
-    - **Reserve Table**:
-      - If no conflict is detected, calls `TableDAO.reserveTable` to save the reservation details in the database.
+The `ReservationsController` initializes the `ReservationUIManager`, which handles the UI interactions and data operations for reservations:
 
-3. **Database Queries in `TableDAO`**
-  - **`isReservationAlreadyExists`**
-    - **Purpose**: Checks the database for conflicting reservations by executing a SQL query that matches:
-      - User ID.
-      - Restaurant ID.
-      - Reservation date.
-      - Time slot ID.
-    - **Result**: Prevents duplicate reservations by returning true if a conflict exists.
+```java
+public ReservationsController() {
+    this.reservationUIManager = new ReservationUIManager();
+}
+```
 
-  - **`reserveTable`**
-    - **Purpose**: Executes a SQL `INSERT` query to store reservation details in the database, including:
-      - User ID.
-      - Restaurant ID.
-      - Reservation date.
-      - Time slot ID.
-      - Table number.
-    - **Result**: Saves the reservation and returns a status code:
-      - > 0: Success.
-      - 0: Failure.
-      - -1: Conflict.
+The `ReservationUIManager` is initialized with dependencies for data retrieval and management:
 
-### Completion of Reservation Booking
+```java
+public ReservationUIManager() {
+    this.reservationService = new ReservationService(new ReservationDAO(new DBConnection()));
+}
+```
 
-- **Result Evaluation**:
-  - **Successful Reservation**: Displays a confirmation message: "Reservation Confirmed."
-  - **Existing Reservation**: Shows an error: "Reservation already exists for the selected time slot."
-  - **Failure**: Notifies the user: "An error occurred while trying to reserve the table."
+### Step 3: Setting Up the Reservations View
 
-This step concludes the reservation process, ensuring that the user has successfully booked a table or is informed of any issues.
+Once `ReservationsView.fxml` is loaded, the `initialize()` method is called. This method performs the following tasks:
 
-# Test Cases for Reservation Booking
+- Displays a personalized welcome message.
+- Sets up `TableView` columns for reservation details.
+- Loads reservations using the `loadReservations()` method.
 
-## 1. Successful Reservation
+```java
+public void initialize() {
+    lbl_welcome.setText("Welcome, " + UIUtil.USER);
+    reservationUIManager.setUpTableColumns(restaurantNameColumn, reservationDateColumn, timeSlotColumn, tableNumberColumn, actionColumn);
+    loadReservations();
+}
+```
 
-**Steps**:
-1. Log in to the application.
-2. Search for a restaurant by selecting location, cuisine, date, and guest count.
-3. Click "Show Availability" for a restaurant.
-4. Select an available table and time slot.
-5. Click the "Reserve" button.
-6. Observe the confirmation message displayed on the screen.
+#### Setting Up Table Columns
 
-**Expected Outcome**:
-- A message appears: "Reservation Confirmed."
+The `setUpTableColumns()` method maps the `TableView` columns to the corresponding fields in the `Reservation` model:
+
+```java
+public void setUpTableColumns(TableColumn<Reservation, String> restaurantNameColumn,
+                              TableColumn<Reservation, String> reservationDateColumn,
+                              TableColumn<Reservation, String> timeSlotColumn,
+                              TableColumn<Reservation, String> tableNumberColumn,
+                              TableColumn<Reservation, Button> actionColumn) {
+    restaurantNameColumn.setCellValueFactory(new PropertyValueFactory<>("restaurantName"));
+    reservationDateColumn.setCellValueFactory(new PropertyValueFactory<>("reservationDate"));
+    timeSlotColumn.setCellValueFactory(new PropertyValueFactory<>("timeSlot"));
+    tableNumberColumn.setCellValueFactory(new PropertyValueFactory<>("tableNumber"));
+    actionColumn.setCellValueFactory(new PropertyValueFactory<>("actionButton"));
+}
+```
+
+### Step 4: Loading Reservations
+
+The `loadReservations()` method populates reservations into the `TableView` and assigns action buttons:
+
+```java
+private void loadReservations() {
+    this.reservationUIManager.loadReservations(UIUtil.USER, reservationsTable.getItems());
+}
+
+public void loadReservations(String username, ObservableList<Reservation> reservationsList) {
+    reservationsList.clear();
+    reservationsList.addAll(reservationService.getUserReservations(username));
+    for (Reservation reservation : reservationsList) {
+        reservation.setActionButton(createActionButton(reservation, reservationsList));
+    }
+}
+```
+
+### Step 5: Adding Action Buttons
+
+The `createActionButton()` method generates buttons for three key actions based on the reservation's status:
+
+- **Cancel Reservation**: Available if the reservation time has not passed.
+- **View Your Review**: Enabled if a review exists for the reservation.
+- **Leave a Review**: Available for completed reservations without a review.
+
+```java
+private Button createActionButton(Reservation reservation, ObservableList<Reservation> reservationsList) {
+    Button actionButton;
+    if (!reservation.checkReservationDateTimePassed()) {
+        actionButton = new Button("Cancel Reservation");
+        actionButton.setOnAction(e -> cancelReservation(reservation.getReservationId(), reservationsList));
+    } else if (reservationService.checkReservationHasReview(reservation.getReservationId())) {
+        actionButton = new Button("View Your Review");
+        actionButton.setOnAction(e -> UIUtil.displayScene(getClass().getResource("/edu/metrostate/booknow/ReviewView.fxml"), e));
+    } else {
+        actionButton = new Button("Leave a Review");
+        actionButton.setOnAction(e -> handleLeaveReviewAction(e, reservation.getReservationId()));
+    }
+    return actionButton;
+}
+```
+
+### Step 6: View Your Review
+
+If the user clicks **View Your Review**, the application switches to `ReviewView.fxml`. This process mirrors the View My Review functionality, which displays user-submitted reviews in a structured `TableView`.
+
+### Step 7: Leaving a Review
+
+Clicking the **Leave a Review** button triggers the following method:
+
+```java
+private void handleLeaveReviewAction(ActionEvent event, int reservationId) {
+    URL url = getClass().getResource("/edu/metrostate/booknow/CreateReviewView.fxml");
+    UIUtil.displaySceneWithController(url, event, controller -> {
+        ((CreateReviewController) controller).setReservationId(reservationId);
+    });
+}
+```
+
+This switches the scene to `CreateReviewView.fxml`, where the `CreateReviewController` is initialized with the reservation ID and details.
+
+#### Submitting the Review
+
+When the user submits the review, the `onSubmitReviewClickAction()` method validates and saves the review:
+
+```java
+public void onSubmitReviewClickAction(ActionEvent event) {
+    Integer rating = combo_rating.getValue();
+    String feedback = txt_reviewComment.getText();
+
+    try {
+        String resultMessage = reviewService.validateAndSubmitReview(UIUtil.USER, reservation.getRestaurantId(), reservation.getReservationId(), rating, feedback, reservation.getReservationDate());
+        if (resultMessage.equals("Success")) {
+            UIUtil.displayAlert("Success", "Review successfully submitted!");
+        } else {
+            UIUtil.displayAlert("Error", resultMessage);
+        }
+    } catch (Exception e) {
+        UIUtil.displayAlert("Error", e.getMessage());
+    }
+}
+```
+
+### Step 8: Canceling a Reservation
+
+If the user clicks **Cancel Reservation**, the reservation is removed from the database. The following code handles the process:
+
+#### UI Manager Layer
+
+```java
+public void cancelReservation(int reservationId, ObservableList<Reservation> reservationsList) {
+    reservationService.cancelReservation(reservationId);
+    reservationsList.removeIf(reservation -> reservation.getReservationId() == reservationId);
+}
+```
+
+#### Service Layer
+
+```java
+public void cancelReservation(int reservationId) {
+    reservationDAO.cancelReservation(reservationId);
+}
+```
+
+#### DAO Layer
+
+```java
+public void cancelReservation(int reservationId) {
+    try (Connection connection = dbConnection.getConnection();
+         PreparedStatement preparedStatement = connection.prepareStatement(DELETE_RESERVATION_QUERY)) {
+        preparedStatement.setInt(1, reservationId);
+        preparedStatement.executeUpdate();
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+}
+```
+
+# Test Cases for Reservation and Review Management
+
+## Test Case 1: View Reservations
+
+
+**Steps:**
+1. Log in to the application with a valid user account.
+2. Make a reservation
+2. Click the **View My Reservations** button on the main screen.
+
+**Expected Outcome:**
+- The `ReservationsView.fxml` scene is displayed.
+- The `TableView` is populated with reservations, displaying:
+    - Restaurant name
+    - Reservation date
+    - Time slot
+    - Table number
+    - Action buttons (Cancel Reservation, View Your Review, Leave a Review).
 
 ---
 
-## 2. Duplicate Reservation
+## Test Case 2: Cancel Reservation
 
-**Steps**:
-1. Log in to the application.
-2. Search for the same restaurant and date as a previous reservation.
-3. Click "Show Availability" again.
-4. Try reserving the same table and time slot used in the previous reservation.
-5. Click the "Reserve" button.
 
-**Expected Outcome**:
-- An error message appears: "Reservation already exists for the selected time slot."
+**Steps:**
+1. Log in and make sure to have a reservation then hit the `View My Reservation" button.
+2. Identify a reservation with the **Cancel Reservation** button enabled.
+3. Click the **Cancel Reservation** button.
 
----
-
-## 3. Invalid Input Handling
-
-**Steps**:
-1. Log in to the application.
-2. Search for a restaurant and proceed to the Show Availability page.
-3. Attempt to reserve a table without selecting a time slot.
-4. Click the "Reserve" button.
-
-**Expected Outcome**:
-- An error message appears: "Please select a table and time slot before proceeding."
-- The reservation process does not continue.
+**Expected Outcome:**
+- The reservation is removed from the `TableView`.
+- The reservation is deleted from the database.
+- A confirmation alert is displayed: "Reservation canceled successfully."
 
 ---
 
-## 4. Database Connection Error
+## Test Case 3: Leave a Review
 
-**Steps**:
-1. Log in to the application.
-2. Simulate a database error (e.g., by disconnecting the database if possible).
-3. Search for a restaurant and try to reserve a table.
-4. Click the "Reserve" button.
+**Objective:** Ensure users can submit reviews for completed reservations.
 
-**Expected Outcome**:
-- An error message appears: "An error occurred while trying to reserve the table."
-- The booking does not proceed.
+**Steps:**
+1. Log in and make sure to have a reservation then hit the `View My Reservation" button.
+2. Identify a completed reservation this is based on your current time make sure you reserve a time before current so leave a review button will be enabled.
+3. Click the **Leave a Review** button.
+4. Enter a valid rating and feedback in the review form.
+5. Click the **Submit Review** button.
+
+**Expected Outcome:**
+- A success alert is displayed: "Review successfully submitted!"
+- The review is saved in the database.
+- The reservation’s action button changes to **View My Review**.
 
 ---
 
-These test cases cover scenarios related to reservation booking, ensuring that the application behaves correctly under various conditions such as successful booking, duplicate entries, invalid input handling, and system errors like a database connection issue.
+## Test Case 4: View Your Review
 
+
+**Steps:**
+1. Log in, make a reservation, and hit the `View My Reviews` button.
+2. Verify data
+
+**Expected Outcome:**
+- The `ReviewView.fxml` scene is displayed.
+- The `TableView` shows:
+    - Restaurant name
+    - Rating
+    - Feedback
+    - Date of experience.
+  
 ---
 
 # Phase 3
 
-## 1. View My Reservations
+# Application Infrastructure and User Experience Framework
 
-### Implementation
-
-The "View My Reservations" feature allows users to see their active and past reservations in a user-friendly interface, offering management options such as canceling upcoming reservations or leaving reviews for completed ones.
-
-### How it Works
-
-**Flow in the Application**:
-1. **BookNowController**: When a user clicks the "View My Reservations" button, it activates `onViewMyReservationsClick`.
-2. **Reservations View**: The user is navigated to `ReservationsView.fxml`.
-3. **ReservationsController**:
-  - Calls `initialize()` to set up table columns and load reservation data.
-  - Uses `ReservationUIManager.loadReservations` to fetch reservations for the logged-in user.
-  - Retrieves reservation data through `ReservationDAO.getUserReservations`.
-  - Displays data in a `TableView`, complete with interactive buttons per reservation (e.g., Cancel, Leave a Review).
-
-### Testing Notes
-
-**Objective**: Ensure users can view and manage their reservations effectively.
-
-**Steps for Testing**:
-
-- **View Active Reservations**:
-  1. Log in with an account containing active reservations.
-  2. Click "View My Reservations."
-  3. Verify display includes restaurant name, reservation date/time, table number, and action buttons.
-
-- **View Past Reservations**:
-  1. Log in with an account with past reservations.
-  2. Click "View My Reservations."
-  3. Ensure past reservations show without "Cancel" buttons, but allow reviews if pending.
-
-- **Cancel an Upcoming Reservation**:
-  1. Click "Cancel" on a future reservation.
-  2. Confirm cancellation.
-  3. Verify removal from the list and database.
-
-- **Database Error Handling**:
-  1. Simulate a database disconnection.
-  2. Try to view reservations.
-  3. Check for error message: "Unable to load your reservations. Please try again later."
+The **Application Infrastructure and User Experience Framework** is designed to streamline application functionality while maintaining a seamless user experience. This feature combines essential components such as **Scene Management**, **Alerts and Notifications**, **UI Element Management**, and **Database Schema and Seed Data Initialization** to create a robust foundation for the application.
 
 ---
 
-## 2. Leave a Review
+## Functions
 
-### Implementation
+### **Scene Management**
+- Handles seamless transitions between views.
+- Maintains consistent window dimensions and maximization state.
+- Supports custom controller initialization during scene transitions.
 
-The "Leave a Review" feature enables users to provide feedback and ratings after completing a reservation.
+### **Alerts and Notifications**
+- Displays error and success alerts to guide users during operations.
 
-### How it Works
+### **UI Element Management**
+- Dynamically manages UI components such as `ComboBox`, ensuring proper population and default selections.
 
-**Flow in the Application**:
-1. **Reservations View**: Users select "Leave a Review" for eligible reservations.
-2. **Review Page Navigation**: Redirects to `CreateReviewView.fxml`.
-3. **CreateReviewController**:
-  - Initializes form with `setReservationId`.
-  - Users input a rating and feedback.
-  - `onSubmitReviewClickAction` validates and submits the review:
-    - Validated through `ReviewService.validateAndSubmitReview`.
-    - Saved via `ReviewDAO.submitReview`.
+### **Database Schema and Seed Data Initialization**
+- Establishes the structural framework of the application.
+- Defines core entities, relationships, and initial data for development and testing.
 
-### Testing Notes
+---
 
-**Objective**: Confirm users can successfully leave reviews for completed reservations.
+## Phase 3
 
-**Steps for Testing**:
+## Commit 12/4/25
 
-- **Submit a Valid Review**:
-  1. Log in with a valid account.
-  2. Navigate to "View My Reservations."
-  3. Select "Leave a Review" for a completed reservation.
-  4. Fill the form: rating (1-5) and feedback.
-  5. Submit and confirm success message: "Review successfully submitted!"
+# Application Infrastructure and User Experience Framework
 
-- **Missing Input Validation**:
-  1. Leave rating or feedback blank.
-  2. Submit and check for error: "Please select a rating and provide feedback."
+The **Application Infrastructure and User Experience Framework** is designed to streamline application functionality while maintaining a 
+seamless user experience. This feature combines essential components such as **Scene Management**, **Alerts and Notifications**, **UI Element Management**, and 
+**Database Schema and Seed Data Initialization** to create a robust foundation for the application.
 
-- **Duplicate Review Prevention**:
-  1. Submit a review.
-  2. Try another review for the same reservation.
-  3. Ensure button changes to "View Your Review."
+---
 
-- **Database Error Handling**:
-  1. Simulate database disconnection.
-  2. Try submitting a review.
-  3. Check for error message: "Failed to save review. Please try again later."
+## Functions
+
+### **Scene Management**
+- Handles seamless transitions between views.
+- Maintains consistent window dimensions and maximization state.
+- Supports custom controller initialization during scene transitions.
+
+### **Alerts and Notifications**
+- Displays error and success alerts to guide users during operations.
+
+### **UI Element Management**
+- Dynamically manages UI components such as `ComboBox`, ensuring proper population and default selections.
+
+### **Database Schema and Seed Data Initialization**
+- Establishes the structural framework of the application.
+- Defines core entities, relationships, and initial data for development and testing.
+
+---
+
+## Code Implementation
+
+### **Scene Management**
+
+Scene management begins with the `UIUtil` utility class, which provides methods for transitioning between scenes while preserving the application window's state.
+
+#### **Key Methods**
+
+##### **`setScene`**
+Maintains consistent window dimensions and maximization state during scene transitions.
+
+```java
+private static void setScene(Stage window, Parent parent) {
+    boolean isMaximized = window.isMaximized();
+    double currentWidth = window.getWidth();
+    double currentHeight = window.getHeight();
+    Scene scene = new Scene(parent, currentWidth, currentHeight);
+    window.setScene(scene);
+    if (isMaximized) {
+        window.setMaximized(true);
+    } else {
+        window.setWidth(currentWidth);
+        window.setHeight(currentHeight);
+    }
+    window.show();
+}
+```
+
+##### **`displayScene`**
+Switches scenes by loading a new FXML layout.
+
+```java
+public static void displayScene(URL url, ActionEvent event) {
+    try {
+        FXMLLoader loader = new FXMLLoader(url);
+        Parent parent = loader.load();
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        setScene(window, parent);
+    } catch (IOException e) {
+        displayAlert("Scene Switch Error", "Failed to switch scenes.");
+    }
+}
+```
+
+##### **`displaySceneWithController`**
+Extends scene-switching functionality by initializing controllers with custom logic before displaying the scene.
+
+```java
+public static <T> void displaySceneWithController(URL url, ActionEvent event, Consumer<T> controllerConsumer) {
+    try {
+        FXMLLoader loader = new FXMLLoader(url);
+        Parent parent = loader.load();
+        T controller = loader.getController();
+        controllerConsumer.accept(controller);
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        setScene(window, parent);
+    } catch (IOException e) {
+        displayAlert("Scene Switch Error", "Failed to switch scenes.");
+    }
+}
+```
+
+### **Alerts and Notifications**
+This feature ensures effective user communication through information dialogs for errors and successes.
+
+##### **`displayAlert`**
+Displays a modal alert dialog with a title and message.
+
+```java
+public static void displayAlert(String title, String message) {
+    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+    alert.setTitle(title);
+    alert.setHeaderText(null);
+    alert.setContentText(message);
+    alert.showAndWait();
+}
+```
+
+### **UI Element Management**
+
+Dynamic UI elements like `ComboBox` are managed with methods such as `populateComboBox`, ensuring they are properly populated and default selections are applied.
+
+##### **`populateComboBox`**
+Populates a `ComboBox` with a list of items and selects the first item if available.
+
+```java
+public static <T> void populateComboBox(ComboBox<T> comboBox, List<T> items) {
+    comboBox.setItems(FXCollections.observableArrayList(items));
+    if (!items.isEmpty()) {
+        comboBox.getSelectionModel().selectFirst();
+    }
+}
+```
+
+# Database Schema and Seed Data Initialization
+
+**Purpose:**  
+This script establishes the structural foundation and initial dataset for the application, enabling features like user management, restaurant discovery, table reservations, and customer reviews.
+
+---
+
+## Schema Overview
+
+### Users Table
+
+**Purpose:**  
+Stores user credentials for authentication.
+
+**Fields:**
+- `user_id`: Unique identifier for each user (Primary Key).
+- `username`: User's unique login name.
+- `password`: User's hashed password.
+
+```sql
+CREATE TABLE users (
+    user_id INT PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    password VARCHAR(50) NOT NULL
+);
+```
+
+### Restaurants Table
+
+**Purpose:**  
+Contains restaurant details such as name, city, cuisine type, and menu information.
+
+**Fields:**
+- `restaurant_id`: Unique identifier (Primary Key).
+- `name`: Restaurant name.
+- `city`: Location of the restaurant.
+- `cuisine_type`: Type of cuisine offered (e.g., Fast Food, BBQ, Vegan).
+- `description`: Brief description of the restaurant.
+- `menu_pdf`: Path to the restaurant's menu file.
+- `image_path`: Path to the restaurant's image file.
+- `max_guests`: Maximum seating capacity.
+
+```sql
+CREATE TABLE restaurants (
+    restaurant_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    city VARCHAR(255) NOT NULL,
+    cuisine_type VARCHAR(50) NOT NULL,
+    description TEXT NOT NULL,
+    menu_pdf VARCHAR(255),
+    image_path VARCHAR(255),
+    max_guests INT
+);
+```
+
+### Tables Table
+
+**Purpose:**  
+Tracks table details for each restaurant, including seating capacity and booking fees.
+
+**Fields:**
+- `table_id`: Unique identifier (Primary Key).
+- `restaurant_id`: Associated restaurant (Foreign Key).
+- `table_number`: Identifier for the table.
+- `number_of_seats`: Seating capacity of the table.
+- `booking_fee`: Cost to reserve the table.
+
+```sql
+CREATE TABLE tables (
+    table_id INT AUTO_INCREMENT PRIMARY KEY,
+    restaurant_id INT NOT NULL,
+    table_number VARCHAR(50) NOT NULL,
+    number_of_seats INT NOT NULL,
+    booking_fee DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (restaurant_id) REFERENCES restaurants(restaurant_id)
+);
+```
+
+### Time Slots Table
+
+**Purpose:**  
+Stores predefined time slots for restaurant reservations.
+
+**Fields:**
+- `slot_id`: Unique identifier (Primary Key).
+- `slot_label`: Descriptive time slot (e.g., "9:00 AM - 11:00 AM").
+
+```sql
+CREATE TABLE time_slots (
+    slot_id INT AUTO_INCREMENT PRIMARY KEY,
+    slot_label VARCHAR(50) NOT NULL
+);
+```
+
+### Reservations Table
+
+**Purpose:**  
+Tracks reservation details, linking users, restaurants, and time slots.
+
+**Fields:**
+- `reservation_id`: Unique identifier (Primary Key).
+- `user_id`: Associated user (Foreign Key).
+- `restaurant_id`: Associated restaurant (Foreign Key).
+- `booking_time`: Timestamp for reservation creation.
+- `reservation_date`: Date of the reservation.
+- `time_slot_id`: Associated time slot (Foreign Key).
+- `table_number`: Reserved table identifier.
+
+```sql
+CREATE TABLE reservations (
+    reservation_id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT,
+    restaurant_id INT,
+    booking_time DATETIME NOT NULL,
+    reservation_date DATE NOT NULL,
+    time_slot_id INT,
+    table_number VARCHAR(20),
+    FOREIGN KEY (time_slot_id) REFERENCES time_slots(slot_id),
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (restaurant_id) REFERENCES restaurants(restaurant_id)
+);
+```
+
+### Reviews Table
+
+**Purpose:**  
+Stores user reviews for restaurants.
+
+**Fields:**
+- `review_id`: Unique identifier (Primary Key).
+- `user_id`: Associated user (Foreign Key).
+- `restaurant_id`: Associated restaurant (Foreign Key).
+- `reservation_id`: Associated reservation (Foreign Key).
+- `rating`: User's rating (1 to 5).
+- `feedback`: Text feedback.
+- `date_of_experience`: Date of the experience.
+
+```sql
+CREATE TABLE reviews (
+    review_id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT,
+    restaurant_id INT,
+    reservation_id INT,
+    rating INT NOT NULL CHECK (rating >= 1 AND rating <= 5),
+    feedback TEXT,
+    date_of_experience DATE NOT NULL,
+    FOREIGN KEY (reservation_id) REFERENCES reservations(reservation_id),
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (restaurant_id) REFERENCES restaurants(restaurant_id)
+);
+```
+
+---
+
+## Seed Data Initialization
+
+### Predefined Entries
+
+- **Users**: Includes a default admin user.
+- **Restaurants**: Categorized by city and cuisine.
+- **Tables**: Each restaurant has defined tables with seating capacity and booking fees.
+- **Time Slots**: Predefined time slots for consistent scheduling.
+- **Reservations**: Sample data to validate schema relationships.
+
+#### Example for Time Slots:
+
+```sql
+INSERT INTO time_slots (slot_label) VALUES
+('9:00 AM - 11:00 AM'),
+('11:00 AM - 1:00 PM'),
+('1:00 PM - 3:00 PM'),
+('3:00 PM - 5:00 PM'),
+('5:00 PM - 7:00 PM'),
+('7:00 PM - 9:00 PM'),
+('9:00 PM - 11:00 PM');
+```
+
+#### Example for Restaurants in Minneapolis:
+
+```sql
+INSERT INTO restaurants (name, city, cuisine_type, description, menu_pdf, image_path, max_guests)
+VALUES
+('Burger God', 'Minneapolis', 'Fast Food', 'Serving fast, delicious food with a variety of quick meal options for people on the go.', 'fastfood_menu.pdf', 'images/BurgerGod.png', 10),
+('Charcoal Flame', 'Minneapolis', 'BBQ', 'Experience perfectly grilled meats and smoky flavors from the finest barbeque in town.', 'bbq_menu.pdf', 'images/bbq1.png', 10);
+```
+
+#### Example for Tables:
+
+```sql
+INSERT INTO tables (restaurant_id, table_number, number_of_seats, booking_fee)
+VALUES
+(1, 'T1', 4, 40),
+(1, 'T2', 6, 90),
+(1, 'T3', 2, 20);
+```
+
+#### Example for Reservations:
+
+```sql
+INSERT INTO reservations
+(reservation_id, user_id, restaurant_id, booking_time, reservation_date, time_slot_id, table_number)
+VALUES
+(1, 1, 1, '2024-10-08 01:05:29', '2024-10-08', 1, 'T1');
+```
+
+# Test Cases
+
+## Scene Management
+- **Test Objective**: Verify that scene transitions work correctly.
+- **Test Steps**:
+    1. Navigate through various views in the application (e.g., Login to Dashboard, Dashboard to Reservations).
+    2. Observe the scene transitions.
+- **Expected Results**:
+    - If the scene switches as intended, the functionality is working.
+
+---
+
+## Alerts and Notifications
+- **Test Objective**: Validate that alerts (success and error) are displayed correctly.
+- **Test Steps**:
+    1. Perform an action that triggers an alert (e.g., login with incorrect credentials or successfully create a reservation).
+    2. Observe if the alert appears.
+- **Expected Results**:
+    - If alerts are popping up as expected, the functionality is working.
+
+---
+
+## UI Element Management
+- **Test Objective**: Ensure that UI elements, such as `ComboBox`, are properly populated.
+- **Test Steps**:
+    1. Navigate to a dropdown selection (e.g., the Adults and Children dropdown in the reservation form).
+    2. Observe the displayed text in the dropdown menu.
+- **Expected Results**:
+    - If the text "Adults" and "Children" appears on the dropdown, the functionality is working.
+
+---
+
+## Database Schema and Seed Data Initialization
+- **Test Objective**: Validate that the database schema and seed data enable all application features.
+- **Test Steps**:
+    1. Launch the application and execute all its main features (e.g., login, search restaurants, make reservations, leave reviews).
+    2. Observe if the features run without errors.
+- **Expected Results**:
+    - If you are able to use all the features of BookNow without issues, the functionality is working.

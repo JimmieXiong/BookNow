@@ -1,4 +1,6 @@
 # ChangeLog
+## [1.2.9] - 2024-12-04 - Jimmie Xiong
+- Updated implementation.md
 
 ## [1.2.8] - 2024-11-29 - Jimmie Xiong
 - renamed UserService to AuthenticationService

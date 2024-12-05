@@ -32,7 +32,6 @@ public class ReservationsController {
         this.reservationUIManager = new ReservationUIManager();
     }
 
-    @FXML
     public void initialize() {
         lbl_welcome.setText("Welcome, " + UIUtil.USER);
         reservationUIManager.setUpTableColumns(restaurantNameColumn, reservationDateColumn, timeSlotColumn, tableNumberColumn, actionColumn);

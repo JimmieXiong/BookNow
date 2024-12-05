@@ -33,7 +33,6 @@ public class ReviewController {
         this.reviewUIManager = new ReviewUIManager();
     }
 
-    @FXML
     public void initialize() {
         lbl_welcome.setText("Welcome, " + UIUtil.USER);
         reviewUIManager.setUpTableColumns(restaurantNameColumn, dateOfExperienceColumn, ratingColumn, feedbackColumn);

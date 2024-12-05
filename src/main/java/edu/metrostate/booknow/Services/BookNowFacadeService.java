@@ -100,4 +100,6 @@ public class BookNowFacadeService {
                     controller::handleViewMenu, controller::handleShowAvailability);
         }
     }
+
+
 }
