@@ -1045,3 +1045,6 @@ VALUES
     2. Observe if the features run without errors.
 - **Expected Results**:
     - If you are able to use all the features of BookNow without issues, the functionality is working.
+
+
+o
